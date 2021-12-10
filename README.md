@@ -1,0 +1,4 @@
+# Plugin AutoExportSearches for GLPI
+
+
+

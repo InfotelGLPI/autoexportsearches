@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+    <name>AutoExportSearches</name>
+    <key>autoexportsearches</key>
+    <state>stable</state>
+    <logo></logo>
+    <description>
+        <short>
+            <fr><![CDATA[Ce plugin permet de créer des exports automatiques de recherches sauvegardées]]></fr>
+            <en><![CDATA[This plugin allows you to create automatic exports from saved searches]]></en>
+        </short>
+        <long>
+            <fr><![CDATA[Ce plugin permet de créer des exports automatiques de recherches sauvegardées]]></fr>
+            <en><![CDATA[This plugin allows you to create automatic exports from saved searches]]></en>
+        </long>
+    </description>
+    <homepage></homepage>
+    <download></download>
+    <issues></issues>
+    <readme></readme>
+    <authors>
+        <author>Alban Lesellier</author>
+        <author>Infotel</author>
+    </authors>
+    <versions>
+        <version>
+            <num>1.0.0</num>
+            <compatibility>~9.5</compatibility>
+        </version>
+    </versions>
+    <langs>
+        <lang>en_GB</lang>
+        <lang>fr_FR</lang>
+    </langs>
+    <license><![CDATA[GPL v2+]]></license>
+    <tags>
+        <fr>
+            <tag>Export</tag>
+            <tag>Recherche sauvegardée</tag>
+
+        </fr>
+        <en>
+            <tag>Export</tag>
+            <tag>Saved searches</tag>
+        </en>
+    </tags>
+<!--    <screenshots>-->
+<!--      <screenshot></screenshot>-->
+<!--   </screenshots>-->
+</root>

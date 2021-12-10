@@ -1,0 +1,131 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR AutoExportSearches Development Team
+# This file is distributed under the same license as the GLPI - AutoExportSearches plugin package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: GLPI - AutoExportSearches plugin\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-04-01 09:37+0200\n"
+"PO-Revision-Date: 2021-04-01 09:38+0200\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: fr_FR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Generator: Poedit 2.2.3\n"
+
+#: setup.php:61
+msgid "Auto export searches"
+msgid_plural "Auto exports searches"
+msgstr[0] "Export automatique de recherches"
+msgstr[1] "Exports automatiques de recherches"
+
+#: front/config.form.php:54
+msgid "Please activate the plugin"
+msgstr "Veuillez activer le plugin"
+
+#: front/files.php:56
+msgid "File successfully deleted"
+msgstr "Fichier supprimé avec succès"
+
+#: front/files.php:58
+msgid "No file selected"
+msgstr "Pas de fichier sélectionné"
+
+#: inc/config.class.php:58
+msgid "Folder"
+msgstr "Dossier"
+
+#: inc/config.class.php:65
+msgid "Number of months before purge files"
+msgstr "Nombre de mois avant la purge des fichiers"
+
+#: inc/exportconfig.class.php:52 inc/profile.class.php:186
+msgid "Auto export config"
+msgstr "Configuration de l'export automatique"
+
+#: inc/exportconfig.class.php:93 inc/exportconfig.class.php:143
+msgid "User who owns the saved search"
+msgstr "Utilisateur ayant la vue à exporter"
+
+#: inc/exportconfig.class.php:101 inc/exportconfig.class.php:159
+msgid "Saved search to export"
+msgstr "Recherche sauvegardée à exporter"
+
+#: inc/exportconfig.class.php:110 inc/exportconfig.class.php:183
+msgid "Periodicity (in days)"
+msgstr "Périodicité ( en jours)"
+
+#: inc/exportconfig.class.php:118
+msgid "Last export"
+msgstr "Dernier export"
+
+#: inc/exportconfig.class.php:466
+msgid "Export saved searches"
+msgstr "Recherches sauvegardées exportées"
+
+#: inc/files.class.php:40
+msgid "Download files"
+msgstr "Téléchargements des fichiers"
+
+#: inc/files.class.php:96
+msgid "No export files available"
+msgstr "Pas de fichiers exportés disponibles"
+
+#: inc/files.class.php:128
+msgid "Files"
+msgstr "Fichiers"
+
+#: inc/files.class.php:193
+msgid "File name"
+msgstr "Nom du fichier"
+
+#: inc/files.class.php:194
+msgid "Generation date"
+msgstr "Date de génération"
+
+#: inc/files.class.php:195
+msgid "Generation month"
+msgstr "Mois de génération"
+
+#: inc/files.class.php:260
+msgid "No file to download in the directory"
+msgstr "Pas de fichier à télécharger dans le dossier"
+
+#: inc/files.class.php:263
+msgid "The folder doesn't exist"
+msgstr "Le dossier n'existe pas"
+
+#: inc/files.class.php:370
+msgid "Delete export files"
+msgstr "Supprimer les fichiers exportés"
+
+#: inc/menu.class.php:41
+msgid "Auto export"
+msgid_plural "Auto exports"
+msgstr[0] "Export automatique"
+msgstr[1] "Exports automatiques"
+
+#: inc/menu.class.php:109
+msgid "Menu"
+msgstr "Menu"
+
+#: inc/menu.class.php:117
+msgid "Export config list to export"
+msgstr "Liste des configurations d'export à exporter"
+
+#: inc/menu.class.php:126
+msgid "List of export files"
+msgstr "Liste des fichiers exportés"
+
+#: inc/profile.class.php:193
+msgid "Access export files"
+msgstr "Accès aux fichiers exportés"
+
+#: inc/profile.class.php:198
+msgid "Configuration"
+msgstr ""
