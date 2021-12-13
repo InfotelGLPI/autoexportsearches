@@ -14,7 +14,6 @@ CREATE TABLE `glpi_plugin_autoexportsearches_exportconfigs` (
   `last_export` timestamp  NULL DEFAULT NULL,
   `is_active`   tinyint(1) NOT NULL DEFAULT '1',
   `is_deleted`  tinyint(1) NOT NULL DEFAULT '0',
-
   PRIMARY KEY (`id`),
   KEY `users_id` (`users_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;

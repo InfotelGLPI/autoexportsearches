@@ -217,7 +217,7 @@ class PluginAutoexportsearchesExportconfig extends CommonDBTM {
 
       $menu['icon'] = static::getIcon();
       if (self::canCreate()) {
-         $menu['links']['add'] = "/plugins/autoexportsearches/front/exportconfig.form.php";
+         $menu['links']['add'] = PLUGIN_AUTOEXPORTSEARCH_DIR_NOFULL."/front/exportconfig.form.php";
       }
 
 
@@ -226,7 +226,7 @@ class PluginAutoexportsearchesExportconfig extends CommonDBTM {
 
 
    static function getIcon() {
-      return "fas fa-tags";
+      return "ti ti-tags";
    }
 
 

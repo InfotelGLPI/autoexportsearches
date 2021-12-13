@@ -43,16 +43,16 @@ class PluginAutoexportsearchesMenu extends CommonDBTM {
    }
 
    static function getIcon() {
-      return "fas fa-file-export"; //todo find a other
+      return "ti ti-file-export"; //todo find a other
    }
 
    static function getMenuContent() {
-      $plugin_page   = "/plugins/autoexportsearches/front/menu.php";
+
       $menu          = [];
       $menu['icon']  = self::getIcon();
       $menu['title'] = self::getMenuName(2);
 
-      $menu['page']                                                     = $plugin_page;
+      $menu['page']                                                     = self::getSearchURL(false);
       $menu['options'][PluginAutoexportsearchesExportconfig::getType()] = [
          'title' => PluginAutoexportsearchesExportconfig::getTypeName(2),
          'page'  => PluginAutoexportsearchesExportconfig::getSearchURL(false),
@@ -68,32 +68,24 @@ class PluginAutoexportsearchesMenu extends CommonDBTM {
 
       ];
 
+      $menu['links']['config']                      = PluginAutoexportsearchesConfig::getFormURL(false);
+      //Link to config page in admin plugins list
+      $menu['config_page']                          = PluginAutoexportsearchesConfig::getFormURL(false);
+
+      $menu['options']['config']['title']           = __('Setup');
+      $menu['options']['config']['page']            = PluginAutoexportsearchesConfig::getFormURL(false);
+      $menu['options']['config']['links']['search'] = PluginAutoexportsearchesConfig::getFormURL(false);
+      $menu['options']['config']['links']['add']    = PluginAutoexportsearchesConfig::getFormURL(false);
+
 
       return $menu;
    }
-
-   static function getMainMenuContent() {
-      $plugin_page = "/plugins/autoexportsearches/front/menu.php";
-      $menu        = [];
-
-      $menu['pluginautoexportsearches']['title'] = self::getMenuName();
-
-      $menu['pluginautoexportsearches']['page'] = $plugin_page;
-
-      return $menu;
-   }
-
 
    static function removeRightsFromSession() {
       if (isset($_SESSION['glpimenu']['pluginautoexportsearches'])) {
          unset($_SESSION['glpimenu']['pluginautoexportsearches']);
       }
 
-   }
-
-   static function getUrl() {
-      global $CFG_GLPI;
-      return $CFG_GLPI ['root_doc'] . "/plugins/autoexportsearches/front/menu.php";
    }
 
    static function showMenu() {

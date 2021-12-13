@@ -29,6 +29,12 @@
 
 define('PLUGIN_AUTOEXPORTSEARCH_VERSION', '2.0.0');
 
+if (!defined("PLUGIN_AUTOEXPORTSEARCH_DIR")) {
+   define("PLUGIN_AUTOEXPORTSEARCH_DIR", Plugin::getPhpDir("AUTOEXPORTSEARCH"));
+   define("PLUGIN_AUTOEXPORTSEARCH_DIR_NOFULL", Plugin::getPhpDir("AUTOEXPORTSEARCH",false));
+   define("PLUGINAUTOEXPORTSEARCH_WEBDIR", Plugin::getWebDir("AUTOEXPORTSEARCH"));
+}
+
 // Init the hooks of the plugins -Needed
 function plugin_init_autoexportsearches() {
    global $PLUGIN_HOOKS;

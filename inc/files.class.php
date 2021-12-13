@@ -144,7 +144,7 @@ class PluginAutoexportsearchesFiles extends CommonDBTM {
             } else {
                $limitNb = 0;
             }
-            $target = $CFG_GLPI['root_doc'] . '/plugins/autoexportsearches/front/files.php?type='.$type;
+            $target = PLUGINAUTOEXPORTSEARCH_WEBDIR . '/front/files.php?type='.$type;
             if(isset($_GET['orderType'])){
                $parameters = "orderCol=".$_GET['orderCol']."&orderType=".$_GET['orderType'];
             } else{
@@ -245,7 +245,7 @@ class PluginAutoexportsearchesFiles extends CommonDBTM {
                   $config->getFromDB(1);
 
                   $folder = $config->getField("folder");
-                  echo "<td><a href='" . $CFG_GLPI['root_doc'] . "/plugins/autoexportsearches/front/document.send.php?file=_plugins" . $folder. "" . $file . "' target='_blank'>" . $file . "</a></td>";
+                  echo "<td><a href='" . PLUGINAUTOEXPORTSEARCH_WEBDIR . "/front/document.send.php?file=_plugins" . $folder. "" . $file . "' target='_blank'>" . $file . "</a></td>";
                   echo "<td>" . $date . "</td>";
                   echo "<td>" . $monthStr . "</td>";
                   echo "</tr>";

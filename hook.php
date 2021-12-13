@@ -34,10 +34,8 @@
 function plugin_autoexportsearches_install() {
    global $DB;
 
-//   include_once(GLPI_ROOT . "/plugins/autoexportsearches/inc/profile.class.php");
-
    if (!$DB->tableExists("glpi_plugin_autoexportsearches")) {
-      $DB->runFile(GLPI_ROOT . "/plugins/autoexportsearches/install/sql/empty-2.0.0.sql");
+      $DB->runFile(PLUGIN_AUTOEXPORTSEARCH_DIR . "/install/sql/empty-2.0.0.sql");
    }
    $rep_files_autoexportsearches = GLPI_PLUGIN_DOC_DIR."/autoexportsearches";
    if (!is_dir($rep_files_autoexportsearches)) {
