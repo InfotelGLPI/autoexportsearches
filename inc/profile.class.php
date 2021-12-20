@@ -47,7 +47,9 @@ class PluginAutoexportsearchesProfile extends CommonDBTM {
    public function getTabNameForItem(CommonGLPI $item, $withtemplate = 0) {
 
       if ($item->getType() == 'Profile') {
-         return PluginAutoexportsearchesMenu::getMenuName(2);
+         if ($item->getField('interface') == 'central') {
+            return PluginAutoexportsearchesMenu::getMenuName(2);
+         }
       }
       return '';
    }
@@ -148,7 +150,7 @@ class PluginAutoexportsearchesProfile extends CommonDBTM {
 
       $effective_rights = ProfileRight::getProfileRights($profiles_id, ['plugin_autoexportsearches_accessfiles', 'plugin_autoexportsearches_configs']);
       echo "<tr class='tab_bg_2'>";
-      echo "<td width='20%'>" . __('Access to download files') . "</td>";
+      echo "<td width='20%'>" . __('Access to download files', 'autoexportsearches') . "</td>";
       echo "<td colspan='5'>";
       Html::showCheckbox(['name'    => '_plugin_autoexportsearches_accessfiles',
                           'checked' => $effective_rights['plugin_autoexportsearches_accessfiles']]);
@@ -167,7 +169,7 @@ class PluginAutoexportsearchesProfile extends CommonDBTM {
       ) {
          echo "<div class='center'>";
          echo Html::hidden('id', ['value' => $profiles_id]);
-         echo Html::submit(_sx('button', 'Save'), ['name' => 'update']);
+         echo Html::submit(_sx('button', 'Save'), ['name' => 'update', 'class' => 'btn btn-primary']);
          echo "</div>\n";
          Html::closeForm();
       }

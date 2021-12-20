@@ -253,7 +253,7 @@ class PluginAutoexportsearchesFiles extends CommonDBTM {
             }
             echo "</table>";
             echo "<br />";
-            echo Html::submit(__("Delete"),['confirm' => __('Confirm the final deletion?')]);
+            echo Html::submit(__("Delete"),['confirm' => __('Confirm the final deletion?'), 'class' => 'btn btn-primary']);
             echo Html::closeForm(false);
             echo "</div>";
          } else {
