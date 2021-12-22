@@ -234,7 +234,7 @@ class PluginAutoexportsearchesFiles extends CommonDBTM {
                   $langue = $CFG_GLPI["languages"][$_SESSION['glpilanguage']][4];
                   setlocale(LC_TIME, $langue);
 
-                  $monthStr = utf8_encode(strftime('%B', strtotime($dateFile)));
+                  $monthStr = utf8_encode(date('B', strtotime($dateFile)));
 
                   $date = $day . "/" . $month . "/" . $year;
 
