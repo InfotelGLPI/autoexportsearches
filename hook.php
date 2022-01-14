@@ -3,7 +3,7 @@
  * @version $Id: HEADER 15930 2011-10-30 15:47:55Z tsmr $
  -------------------------------------------------------------------------
  Autoexportsearches plugin for GLPI
- Copyright (C) 2018-2019 by the Autoexportsearches Development Team.
+ Copyright (C) 2020-2022 by the Autoexportsearches Development Team.
 
  https://github.com/InfotelGLPI/autoexportsearches
  -------------------------------------------------------------------------
