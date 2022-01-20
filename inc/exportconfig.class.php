@@ -441,7 +441,7 @@ class PluginAutoexportsearchesExportconfig extends CommonDBTM {
          $p["display_type"] = Search::CSV_OUTPUT;
          $p["export_all"]   = 1;
          $itemtype = $search->fields["itemtype"];
-         $params = Search::manageParams($itemtype, $p,1,1);,
+         $params = Search::manageParams($itemtype, $p,1,1);
          $name = Dropdown::getDropdownName('glpi_savedsearches',$export->fields['searches_id']);
          $name .="_".date('Ymd').".csv";
          $filename = GLPI_PLUGIN_DOC_DIR . "/autoexportsearches/".$name;
