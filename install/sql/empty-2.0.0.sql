@@ -21,7 +21,7 @@ CREATE TABLE `glpi_plugin_autoexportsearches_exportconfigs` (
 
 DROP TABLE IF EXISTS `glpi_plugin_autoexportsearches_configs`;
 CREATE TABLE `glpi_plugin_autoexportsearches_configs` (
-   `id` int(11) NOT NULL auto_increment,
+   `id` int unsigned NOT NULL auto_increment,
    `folder` varchar(255) collate utf8mb4_unicode_ci NOT NULL default '',
    `monthBeforePurge` int unsigned NOT NULL DEFAULT '0',
    PRIMARY KEY  (`id`)
