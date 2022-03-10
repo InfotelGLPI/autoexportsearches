@@ -3,7 +3,7 @@
  * @version $Id: HEADER 15930 2011-10-30 15:47:55Z tsmr $
  -------------------------------------------------------------------------
  Autoexportsearches plugin for GLPI
- Copyright (C) 2020-2022 by the Autoexportsearches Development Team.
+ Copyright (C) 2018-2019 by the Autoexportsearches Development Team.
 
  https://github.com/InfotelGLPI/autoexportsearches
  -------------------------------------------------------------------------
@@ -35,7 +35,7 @@ function plugin_autoexportsearches_install() {
    global $DB;
 
    if (!$DB->tableExists("glpi_plugin_autoexportsearches")) {
-      $DB->runFile(PLUGIN_AUTOEXPORTSEARCH_DIR . "/install/sql/empty-2.0.0.sql");
+      $DB->runFile(PLUGIN_AUTOEXPORTSEARCH_DIR . "/install/sql/empty-1.0.0.sql");
    }
    $rep_files_autoexportsearches = GLPI_PLUGIN_DOC_DIR."/autoexportsearches";
    if (!is_dir($rep_files_autoexportsearches)) {

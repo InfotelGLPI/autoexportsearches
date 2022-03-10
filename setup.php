@@ -3,7 +3,7 @@
  * @version $Id: HEADER 15930 2011-10-30 15:47:55Z tsmr $
  -------------------------------------------------------------------------
  autoexportsearches plugin for GLPI
- Copyright (C) 2020-2022 by the autoexportsearches Development Team.
+ Copyright (C) 2018-2019 by the autoexportsearches Development Team.
 
  https://github.com/InfotelGLPI/autoexportsearches
  -------------------------------------------------------------------------
@@ -27,7 +27,7 @@
  --------------------------------------------------------------------------
  */
 
-define('PLUGIN_AUTOEXPORTSEARCH_VERSION', '2.0.0');
+define('PLUGIN_AUTOEXPORTSEARCH_VERSION', '1.0.0');
 
 if (!defined("PLUGIN_AUTOEXPORTSEARCH_DIR")) {
    define("PLUGIN_AUTOEXPORTSEARCH_DIR", Plugin::getPhpDir("autoexportsearches"));
@@ -71,10 +71,32 @@ function plugin_version_autoexportsearches() {
       'homepage'       => '',
       'requirements'   => [
          'glpi' => [
-            'min' => '10.0',
-            'max' => '11.0',
+            'min' => '9.5',
             'dev' => false
          ]
-      ]
-   ];
+      ]];
+}
+
+// Optional : check prerequisites before install : may print errors or add to message after redirect
+/**
+ * @return bool
+ */
+function plugin_autoexportsearches_check_prerequisites() {
+   if (version_compare(GLPI_VERSION, '9.5', 'lt')
+         || version_compare(GLPI_VERSION, '9.6', 'ge')) {
+      if (method_exists('Plugin', 'messageIncompatible')) {
+         echo Plugin::messageIncompatible('core', '9.5');
+      }
+      return false;
+   }
+
+   return true;
+}
+
+// Uninstall process for plugin : need to return true if succeeded : may display messages or add to message after redirect
+/**
+ * @return bool
+ */
+function plugin_autoexportsearches_check_config() {
+   return true;
 }

@@ -50,7 +50,7 @@ class PluginAutoexportsearchesFiles extends CommonDBTM {
       echo "</tr>";
       $types = Self::getTypes();
       $max = count($types);
-      for ($i=0;$i<$max;$i=+3){
+      for ($i=0;$i<$max;$i+=3){
          echo "<tr>";
          if(($max-$i) >=3){
             $size = 2;

@@ -43,7 +43,7 @@ class PluginAutoexportsearchesMenu extends CommonDBTM {
    }
 
    static function getIcon() {
-      return "ti ti-file-export"; //todo find a other
+      return "fas fa-file-export"; //todo find a other
    }
 
    static function getMenuContent() {
