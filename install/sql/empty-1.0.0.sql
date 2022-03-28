@@ -14,7 +14,7 @@ CREATE TABLE `glpi_plugin_autoexportsearches_exportconfigs` (
   `last_export` timestamp  NULL DEFAULT NULL,
   `is_active`   tinyint(1) NOT NULL DEFAULT '1',
   `is_deleted`  tinyint(1) NOT NULL DEFAULT '0',
-
+  `sendto` VARCHAR(255) NULL,
   PRIMARY KEY (`id`),
   KEY `users_id` (`users_id`)
 )

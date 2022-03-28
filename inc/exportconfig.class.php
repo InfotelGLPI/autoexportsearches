@@ -193,6 +193,14 @@ class PluginAutoexportsearchesExportconfig extends CommonDBTM {
       echo "</tr>";
 
       echo "<tr class='tab_bg_1'>";
+      echo "<td>" . __('Send mail to','autoexportsearches') . "</td>";
+      echo "<td>";
+      echo Html::input('sendto',['type' => 'mail','value' => $this->fields['sendto']]);
+      echo "</td>";
+
+      echo "</tr>";
+
+      echo "<tr class='tab_bg_1'>";
       echo "<td>" . __('Active') . "</td>";
       echo "<td>";
       Dropdown::showYesNo("is_active", $this->fields['is_active']);
@@ -246,7 +254,7 @@ class PluginAutoexportsearchesExportconfig extends CommonDBTM {
       if (class_exists($data['itemtype'])) {
          $item = new $data['itemtype']();
       }
-
+      $data['display_type'] = Search::CSV_OUTPUT;
       if (!isset($data['data']) || !isset($data['data']['totalcount'])) {
          return false;
       }
@@ -264,7 +272,7 @@ class PluginAutoexportsearchesExportconfig extends CommonDBTM {
 //         $parameters .= "&amp;_in_modal=1";
 //      }
 
-      //      print_r($data);
+//            print_r($data);
 
       // If the begin of the view is before the number of items
       if ($data['data']['count'] > 0) {
@@ -350,12 +358,7 @@ class PluginAutoexportsearchesExportconfig extends CommonDBTM {
 
             $headers_line_top .= $headers_line;
 
-
-            //            $headers_line_top    .= self::showEndHeader($data['display_type']);
-            // $headers_line_bottom .= self::showEndHeader($data['display_type']);
-
             fwrite($file, $headers_line_top);
-
 
             // Num of the row (1=header_line)
             $row_num = 1;
@@ -406,7 +409,6 @@ class PluginAutoexportsearchesExportconfig extends CommonDBTM {
                // End Line
                $line .= Search::showEndLine($data['display_type']);
 
-
                fwrite($file, $line);
 
             }
@@ -416,6 +418,41 @@ class PluginAutoexportsearchesExportconfig extends CommonDBTM {
       }
 
       fclose($file);
+   }
+
+
+
+   static function sendMail($title,$recipient, $filename, $filepath) {
+      global $CFG_GLPI;
+
+      $mmail = new GLPIMailer();
+
+      $mmail->AddCustomHeader("Auto-Submitted: auto-generated");
+      // For exchange
+      $mmail->AddCustomHeader("X-Auto-Response-Suppress: OOF, DR, NDR, RN, NRN");
+      $mmail->SetFrom($CFG_GLPI["admin_email"], $CFG_GLPI["admin_email_name"], false);
+
+      $text = __('Mail autoexportsearches');
+
+      $mmail->AddAddress($recipient, $CFG_GLPI["admin_email_name"]);
+      $mmail->Subject = "[GLPI] ". $title;
+      $mmail->Body    = $text;
+
+      $mmail->AddEmbeddedImage($filepath,
+                               0,
+                               $filename,
+                               'base64',
+                               'text/csv');
+
+      if (!$mmail->Send()) {
+         Session::addMessageAfterRedirect(__('Failed to send email to '.$recipient), false,
+                                          ERROR);
+         GLPINetwork::addErrorMessageAfterRedirect();
+         return false;
+      } else {
+         Session::addMessageAfterRedirect(__('Mail send to '.$recipient));
+         return true;
+      }
    }
 
    static function executeExport($plugin_exportconfigs_id) {
@@ -435,9 +472,13 @@ class PluginAutoexportsearchesExportconfig extends CommonDBTM {
          $itemtype          = $search->fields["itemtype"];
          $params            = Search::manageParams($itemtype, $p, 1, 1);
          $name              = Dropdown::getDropdownName('glpi_savedsearches', $export->fields['searches_id']);
+         $titleMail = $name;
          $name              .= "_" . date('Ymd') . ".csv";
          $filename          = GLPI_PLUGIN_DOC_DIR . "/autoexportsearches/" . $name;
          self::createCSVFile(Search::getDatas($itemtype, $params), $filename);
+         if(!empty($export->fields['sendto'])){
+            self::sendMail($titleMail,$export->fields['sendto'], $name, $filename);
+         }
       }
 
 
