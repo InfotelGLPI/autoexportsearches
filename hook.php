@@ -85,9 +85,7 @@ function plugin_autoexportsearches_uninstall() {
  */
 function plugin_autoexportsearches_getDropdown() {
 
-   $plugin = new Plugin();
-
-   if ($plugin->isActivated("autoexportsearches")) {
+   if (Plugin::isPluginActive("autoexportsearches")) {
       return [
       ];
    } else {
@@ -113,8 +111,7 @@ function plugin_pre_item_purge_autoexportsearches($item) {
  */
 function plugin_autoexportsearches_getDatabaseRelations() {
 
-   $plugin = new Plugin();
-   if ($plugin->isActivated("autoexportsearches")) {
+   if (Plugin::isPluginActive("autoexportsearches")) {
       return [
          "glpi_savedsearches" => ["glpi_plugin_autoexportsearches_exportconfigs" => "searches_id"],
          "glpi_users"         => ["glpi_plugin_autoexportsearches_exportconfigs" => "users_id"],
