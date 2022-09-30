@@ -475,7 +475,8 @@ class PluginAutoexportsearchesExportconfig extends CommonDBTM {
 
 
       $cron_status = 0;
-
+       $old_memory = ini_set("memory_limit", "-1");
+       $old_execution = ini_set("max_execution_time", "0");
       $exportConfig  = new PluginAutoexportsearchesExportconfig();
       $exportConfigs = $exportConfig->find(['is_deleted' => 0, 'is_active' => 1]);
       $count         = 0;
@@ -525,6 +526,8 @@ class PluginAutoexportsearchesExportconfig extends CommonDBTM {
 
 
       }
+       ini_set("memory_limit", $old_memory);
+       ini_set("max_execution_time", $old_execution);
 
       $task->addVolume($count);
 
