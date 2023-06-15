@@ -231,10 +231,13 @@ class PluginAutoexportsearchesFiles extends CommonDBTM {
                   $dateFile = $this->getDateFile($file);
 
                   //Set language for mounth in str
-                  $langue = $CFG_GLPI["languages"][$_SESSION['glpilanguage']][4];
-                  setlocale(LC_TIME, $langue);
+//                  $langue = $CFG_GLPI["languages"][$_SESSION['glpilanguage']][4];
+//                  setlocale(LC_TIME, $langue);
 
-                  $monthStr = utf8_encode(date('B', strtotime($dateFile)));
+//                  $monthStr = date('B', strtotime($dateFile));
+
+//                   $from_charset = mb_detect_encoding($monthStr);
+//                   $monthStr = mb_convert_encoding($monthStr, "UTF-8", $from_charset);
 
                   $date = $day . "/" . $month . "/" . $year;
 
@@ -247,7 +250,7 @@ class PluginAutoexportsearchesFiles extends CommonDBTM {
                   $folder = $config->getField("folder");
                   echo "<td><a href='" . PLUGINAUTOEXPORTSEARCH_WEBDIR . "/front/document.send.php?file=_plugins" . $folder. "" . $file . "' target='_blank'>" . $file . "</a></td>";
                   echo "<td>" . $date . "</td>";
-                  echo "<td>" . $monthStr . "</td>";
+                  echo "<td>" . $month . "</td>";
                   echo "</tr>";
                }
             }

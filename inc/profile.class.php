@@ -157,7 +157,7 @@ class PluginAutoexportsearchesProfile extends CommonDBTM {
       echo "</td></tr>\n";
 
       echo "<tr class='tab_bg_2'>";
-      echo "<td width='20%'>" . __('Configuration') . "</td>";
+      echo "<td width='20%'>" . __('Setup', 'autoexportsearches') . "</td>";
       echo "<td colspan='5'>";
       Html::showCheckbox(['name'    => '_plugin_autoexportsearches_configs',
                           'checked' => $effective_rights['plugin_autoexportsearches_configs']]);

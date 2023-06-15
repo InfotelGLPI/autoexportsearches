@@ -113,7 +113,7 @@ function plugin_autoexportsearches_getDatabaseRelations() {
 
    if (Plugin::isPluginActive("autoexportsearches")) {
       return [
-         "glpi_savedsearches" => ["glpi_plugin_autoexportsearches_exportconfigs" => "searches_id"],
+//         "glpi_savedsearches" => ["glpi_plugin_autoexportsearches_exportconfigs" => "searches_id"],
          "glpi_users"         => ["glpi_plugin_autoexportsearches_exportconfigs" => "users_id"],
       ];
    } else {
