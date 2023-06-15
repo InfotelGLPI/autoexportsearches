@@ -197,7 +197,7 @@ class PluginAutoexportsearchesProfile extends CommonDBTM {
          ];
 
          $rights[] = ['itemtype' => 'PluginAutoexportsearchesExportconfig',
-                      'label'    => __('Configuration', 'autoexportsearches'),
+                      'label'    => __('Setup', 'autoexportsearches'),
                       'field'    => 'plugin_autoexportsearches_configs'
          ];
       }
