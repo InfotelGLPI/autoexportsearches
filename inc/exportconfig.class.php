@@ -3,7 +3,7 @@
  * @version $Id: HEADER 15930 2011-10-30 15:47:55Z tsmr $
  -------------------------------------------------------------------------
  autoexportsearches plugin for GLPI
- Copyright (C) 2020-2022 by the autoexportsearches Development Team.
+ Copyright (C) 2018-2019 by the autoexportsearches Development Team.
 
  https://github.com/InfotelGLPI/autoexportsearches
  -------------------------------------------------------------------------
@@ -193,6 +193,14 @@ class PluginAutoexportsearchesExportconfig extends CommonDBTM {
       echo "</tr>";
 
       echo "<tr class='tab_bg_1'>";
+       echo "<td>" . __('Send mail to','autoexportsearches') . "</td>";
+       echo "<td>";
+       echo Html::input('sendto',['type' => 'mail','value' => $this->fields['sendto']]);
+       echo "</td>";
+
+       echo "</tr>";
+
+       echo "<tr class='tab_bg_1'>";
       echo "<td>" . __('Active') . "</td>";
       echo "<td>";
       Dropdown::showYesNo("is_active", $this->fields['is_active']);
@@ -246,7 +254,7 @@ class PluginAutoexportsearchesExportconfig extends CommonDBTM {
       if (class_exists($data['itemtype'])) {
          $item = new $data['itemtype']();
       }
-
+      $data['display_type'] = Search::CSV_OUTPUT;
       if (!isset($data['data']) || !isset($data['data']['totalcount'])) {
          return false;
       }
@@ -264,7 +272,7 @@ class PluginAutoexportsearchesExportconfig extends CommonDBTM {
 //         $parameters .= "&amp;_in_modal=1";
 //      }
 
-      //      print_r($data);
+//            print_r($data);
 
       // If the begin of the view is before the number of items
       if ($data['data']['count'] > 0) {
@@ -350,12 +358,7 @@ class PluginAutoexportsearchesExportconfig extends CommonDBTM {
 
             $headers_line_top .= $headers_line;
 
-
-            //            $headers_line_top    .= self::showEndHeader($data['display_type']);
-            // $headers_line_bottom .= self::showEndHeader($data['display_type']);
-
             fwrite($file, $headers_line_top);
-
 
             // Num of the row (1=header_line)
             $row_num = 1;
@@ -406,7 +409,6 @@ class PluginAutoexportsearchesExportconfig extends CommonDBTM {
                // End Line
                $line .= Search::showEndLine($data['display_type']);
 
-
                fwrite($file, $line);
 
             }
@@ -436,8 +438,12 @@ class PluginAutoexportsearchesExportconfig extends CommonDBTM {
          $params            = Search::manageParams($itemtype, $p, 1, 1);
          $name              = Dropdown::getDropdownName('glpi_savedsearches', $export->fields['searches_id']);
          $name              .= "_" . date('Ymd') . ".csv";
-         $filename          = GLPI_PLUGIN_DOC_DIR . "/autoexportsearches/" . $name;
+          $titleMail = $name;
+          $filename          = GLPI_PLUGIN_DOC_DIR . "/autoexportsearches/" . $name;
          self::createCSVFile(Search::getDatas($itemtype, $params), $filename);
+          if(!empty($export->fields['sendto'])){
+              self::sendMail($titleMail,$export->fields['sendto'], $name, $filename);
+          }
       }
 
 
@@ -461,6 +467,42 @@ class PluginAutoexportsearchesExportconfig extends CommonDBTM {
       return [];
    }
 
+    static function sendMail($title,$recipient, $filename, $filepath) {
+        global $CFG_GLPI;
+
+        $mmail = new GLPIMailer();
+
+        $mmail->AddCustomHeader("Auto-Submitted: auto-generated");
+        // For exchange
+        $mmail->AddCustomHeader("X-Auto-Response-Suppress: OOF, DR, NDR, RN, NRN");
+        $mmail->SetFrom($CFG_GLPI["from_email"], $CFG_GLPI["from_email_name"], false);
+
+        $text = __('Mail autoexportsearches');
+
+        $mmail->AddAddress($recipient, $recipient);
+        $mmail->Subject = "[GLPI] ". $title;
+        $mmail->Body    = $text;
+
+//      $mmail->AddEmbeddedImage($filepath,
+//                               0,
+//                               $filename,
+//                               'base64',
+//                               'text/csv');
+        $mmail->addAttachment($filepath,
+            $filename
+        );
+
+
+        if (!$mmail->Send()) {
+            Session::addMessageAfterRedirect(__('Failed to send email to '.$recipient), false,
+                ERROR);
+            GLPINetwork::addErrorMessageAfterRedirect();
+            return false;
+        } else {
+            Session::addMessageAfterRedirect(__('Mail send to '.$recipient));
+            return true;
+        }
+    }
 
    /**
     * Cron action on badges : ExpiredBadges or BadgesWhichExpire
@@ -480,6 +522,8 @@ class PluginAutoexportsearchesExportconfig extends CommonDBTM {
       $exportConfig  = new PluginAutoexportsearchesExportconfig();
       $exportConfigs = $exportConfig->find(['is_deleted' => 0, 'is_active' => 1]);
       $count         = 0;
+       $user_id_back = Session::getLoginUserID();
+       $user = new User();
       foreach ($exportConfigs as $export) {
          $dateActual = strtotime(date("Y-m-d"));
          $delay      = DAY_TIMESTAMP * intval($export['periodicity']);
@@ -489,9 +533,22 @@ class PluginAutoexportsearchesExportconfig extends CommonDBTM {
                $_SESSION["glpicronuserrunning"] = $export['users_id'];
                $_SESSION['glpidefault_entity']  = 0;
                Session::initEntityProfiles($export['users_id']);
+                $user = new User();
+                $user->getFromDB($export['users_id']);
+                $profile = new Profile();
+                $savedProfile = $_SESSION['glpiactiveprofile'];
+                if($profile->getFromDB($user->fields['profiles_id'])) {
+                    $_SESSION['glpiactiveprofile'] =$profile->fields;
+                }
+                Toolbox::logInFile('test_autoexport',print_r($_SESSION['glpiactiveprofile'],true),true);
                $_SESSION['glpiname']           = 'crontab';
                $_SESSION['glpiactiveentities'] = getSonsOf('glpi_entities', 0);
                //               Session::initEntityProfiles(Session::getLoginUserID());
+                $user->getFromDB($export['users_id']);
+                $auth = new Auth();
+                $auth->auth_succeded = true;
+                $auth->user = $user;
+                Session::init($auth);
                Session::loadGroups();
                $user = new  User();
                $user->getFromDB($export['users_id']);
@@ -500,7 +557,8 @@ class PluginAutoexportsearchesExportconfig extends CommonDBTM {
 //               Session::changeProfile($user->fields['profiles_id']);
 
                self::executeExport($export['id']);
-               $export['last_export'] = date("Y-m-d");
+                $_SESSION['glpiactiveprofile'] = $savedProfile;
+                $export['last_export'] = date("Y-m-d");
                $exportConfig->update($export);
                $count++;
             }
@@ -508,9 +566,22 @@ class PluginAutoexportsearchesExportconfig extends CommonDBTM {
             $_SESSION["glpicronuserrunning"] = $export['users_id'];
             $_SESSION['glpidefault_entity']  = 0;
             Session::initEntityProfiles($export['users_id']);
+             $user = new User();
+             $user->getFromDB($export['users_id']);
+             $profile = new Profile();
+             $savedProfile = $_SESSION['glpiactiveprofile'];
+             if($profile->getFromDB($user->fields['profiles_id'])) {
+                 $_SESSION['glpiactiveprofile'] =$profile->fields;
+             }
+             Toolbox::logInFile('test_autoexport',print_r($_SESSION['glpiactiveprofile'],true),true);
             $_SESSION['glpiname']           = 'crontab';
             $_SESSION['glpiactiveentities'] = getSonsOf('glpi_entities', 0);
             //               Session::initEntityProfiles(Session::getLoginUserID());
+             $user->getFromDB($export['users_id']);
+             $auth = new Auth();
+             $auth->auth_succeded = true;
+             $auth->user = $user;
+             Session::init($auth);
             Session::loadGroups();
             $user = new  User();
             $user->getFromDB($export['users_id']);
@@ -519,16 +590,21 @@ class PluginAutoexportsearchesExportconfig extends CommonDBTM {
 
 //            Session::changeProfile($user->fields['profiles_id']);
             self::executeExport($export['id']);
-            $export['last_export'] = date("Y-m-d");
+             $_SESSION['glpiactiveprofile'] = $savedProfile;
+             $export['last_export'] = date("Y-m-d");
             $exportConfig->update($export);
             $count++;
          }
 
 
       }
+       $user->getFromDB($user_id_back);
+       $auth = new Auth();
+       $auth->auth_succeded = true;
+       $auth->user = $user;
+       Session::init($auth);
        ini_set("memory_limit", $old_memory);
        ini_set("max_execution_time", $old_execution);
-
       $task->addVolume($count);
 
       return true;

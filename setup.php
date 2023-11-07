@@ -44,12 +44,14 @@ function plugin_init_autoexportsearches() {
 
 
    if (Session::getLoginUserID()) {
+//if(Session::haveRightsOr('plugin_autoexportsearches_exportconfigs',[READ,CREATE,UPDATE])) {
+if(Session::haveRightsOr('plugin_autoexportsearches_exportconfigs',[READ,CREATE,UPDATE]) || Session::haveRightsOr('plugin_autoexportsearches_accessfiles',[READ,CREATE,UPDATE]) ) {
       $PLUGIN_HOOKS['menu_toadd']['autoexportsearches']          = ['tools' => 'PluginAutoexportsearchesMenu'];
-
+}
       Plugin::registerClass('PluginAutoexportsearchesProfile', ['addtabon' => 'Profile']);
       $PLUGIN_HOOKS['use_massive_action']['autoexportsearches'] = 1;
 
-      if (Session::haveRight("config", UPDATE)) {
+      if (Session::haveRight("config", READ)) {
          $PLUGIN_HOOKS['config_page']['autoexportsearches'] = 'front/config.form.php';
       }
    }
