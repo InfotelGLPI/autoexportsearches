@@ -1,0 +1,1 @@
+ALTER TABLE `glpi_plugin_autoexportsearches` ADD `sendto` VARCHAR(255) DEFAULT '';
