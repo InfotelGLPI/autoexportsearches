@@ -35,8 +35,16 @@ function plugin_autoexportsearches_install() {
    global $DB;
 
    if (!$DB->tableExists("glpi_plugin_autoexportsearches")) {
-      $DB->runFile(PLUGIN_AUTOEXPORTSEARCH_DIR . "/install/sql/empty-2.0.0.sql");
+      $DB->runFile(PLUGIN_AUTOEXPORTSEARCH_DIR . "/install/sql/empty-2.0.1.sql");
+   } else {
+       if (!$DB->fieldExists("glpi_plugin_autoexportsearches_exportconfigs", "sendto")) {
+           $DB->runFile(PLUGIN_MANAGEENTITIES_DIR . "/install/sql/update-2.0.0.sql");
+       }
+       if ($DB->fieldExists("glpi_plugin_autoexportsearches_exportconfigs", "searches_id")) {
+           $DB->runFile(PLUGIN_MANAGEENTITIES_DIR . "/install/sql/update-2.0.1.sql");
+       }
    }
+
    $rep_files_autoexportsearches = GLPI_PLUGIN_DOC_DIR."/autoexportsearches";
    if (!is_dir($rep_files_autoexportsearches)) {
       mkdir($rep_files_autoexportsearches);
@@ -116,7 +124,7 @@ function plugin_autoexportsearches_getDatabaseRelations() {
    $plugin = new Plugin();
    if ($plugin->isActivated("autoexportsearches")) {
       return [
-         "glpi_savedsearches" => ["glpi_plugin_autoexportsearches_exportconfigs" => "searches_id"],
+         "glpi_savedsearches" => ["glpi_plugin_autoexportsearches_exportconfigs" => "savedsearches_id"],
          "glpi_users"         => ["glpi_plugin_autoexportsearches_exportconfigs" => "users_id"],
       ];
    } else {

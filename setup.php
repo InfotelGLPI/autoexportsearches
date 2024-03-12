@@ -27,35 +27,36 @@
  --------------------------------------------------------------------------
  */
 
-define('PLUGIN_AUTOEXPORTSEARCH_VERSION', '2.0.0');
+define('PLUGIN_AUTOEXPORTSEARCH_VERSION', '2.0.1');
 
 if (!defined("PLUGIN_AUTOEXPORTSEARCH_DIR")) {
-   define("PLUGIN_AUTOEXPORTSEARCH_DIR", Plugin::getPhpDir("autoexportsearches"));
-   define("PLUGIN_AUTOEXPORTSEARCH_DIR_NOFULL", Plugin::getPhpDir("autoexportsearches",false));
-   define("PLUGINAUTOEXPORTSEARCH_WEBDIR", Plugin::getWebDir("autoexportsearches"));
+    define("PLUGIN_AUTOEXPORTSEARCH_DIR", Plugin::getPhpDir("autoexportsearches"));
+    define("PLUGIN_AUTOEXPORTSEARCH_DIR_NOFULL", Plugin::getPhpDir("autoexportsearches", false));
+    define("PLUGINAUTOEXPORTSEARCH_WEBDIR", Plugin::getWebDir("autoexportsearches"));
 }
 
 // Init the hooks of the plugins -Needed
-function plugin_init_autoexportsearches() {
-   global $PLUGIN_HOOKS;
+function plugin_init_autoexportsearches()
+{
+    global $PLUGIN_HOOKS;
 
-   $PLUGIN_HOOKS['csrf_compliant']['autoexportsearches'] = true;
-   $PLUGIN_HOOKS['change_profile']['autoexportsearches']   = ['PluginAutoexportsearchesProfile', 'initProfile'];
+    $PLUGIN_HOOKS['csrf_compliant']['autoexportsearches'] = true;
+    $PLUGIN_HOOKS['change_profile']['autoexportsearches'] = ['PluginAutoexportsearchesProfile', 'initProfile'];
 
 
-   if (Session::getLoginUserID()) {
+    if (Session::getLoginUserID()) {
 //if(Session::haveRightsOr('plugin_autoexportsearches_exportconfigs',[READ,CREATE,UPDATE])) {
-if(Session::haveRightsOr('plugin_autoexportsearches_exportconfigs',[READ,CREATE,UPDATE]) || Session::haveRightsOr('plugin_autoexportsearches_accessfiles',[READ,CREATE,UPDATE]) ) {
-      $PLUGIN_HOOKS['menu_toadd']['autoexportsearches']          = ['tools' => 'PluginAutoexportsearchesMenu'];
-}
-      Plugin::registerClass('PluginAutoexportsearchesProfile', ['addtabon' => 'Profile']);
-      $PLUGIN_HOOKS['use_massive_action']['autoexportsearches'] = 1;
+        if (Session::haveRightsOr('plugin_autoexportsearches_exportconfigs', [READ, CREATE, UPDATE]
+            ) || Session::haveRightsOr('plugin_autoexportsearches_accessfiles', [READ, CREATE, UPDATE])) {
+            $PLUGIN_HOOKS['menu_toadd']['autoexportsearches'] = ['tools' => 'PluginAutoexportsearchesMenu'];
+        }
+        Plugin::registerClass('PluginAutoexportsearchesProfile', ['addtabon' => 'Profile']);
+        $PLUGIN_HOOKS['use_massive_action']['autoexportsearches'] = 1;
 
-      if (Session::haveRight("config", READ)) {
-         $PLUGIN_HOOKS['config_page']['autoexportsearches'] = 'front/config.form.php';
-      }
-   }
-
+        if (Session::haveRight("config", READ)) {
+            $PLUGIN_HOOKS['config_page']['autoexportsearches'] = 'front/config.form.php';
+        }
+    }
 }
 
 /**
@@ -63,20 +64,20 @@ if(Session::haveRightsOr('plugin_autoexportsearches_exportconfigs',[READ,CREATE,
  *e
  * @return array
  */
-function plugin_version_autoexportsearches() {
-
-   return [
-      'name'           => _n('Auto export searches', 'Auto exports searches', 2, 'autoexportsearches'),
-      'version'        => PLUGIN_AUTOEXPORTSEARCH_VERSION,
-      'author'         => "<a href='http://blogglpi.infotel.com'>Infotel</a>, Alban Lesellier",
-      'license'        => 'GPLv2+',
-      'homepage'       => '',
-      'requirements'   => [
-         'glpi' => [
-            'min' => '10.0',
-            'max' => '11.0',
-            'dev' => false
-         ]
-      ]
-   ];
+function plugin_version_autoexportsearches()
+{
+    return [
+        'name' => _n('Auto export searches', 'Auto exports searches', 2, 'autoexportsearches'),
+        'version' => PLUGIN_AUTOEXPORTSEARCH_VERSION,
+        'author' => "<a href='http://blogglpi.infotel.com'>Infotel</a>, Alban Lesellier",
+        'license' => 'GPLv2+',
+        'homepage' => '',
+        'requirements' => [
+            'glpi' => [
+                'min' => '10.0',
+                'max' => '11.0',
+                'dev' => false
+            ]
+        ]
+    ];
 }

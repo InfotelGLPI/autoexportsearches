@@ -35,13 +35,13 @@ switch ($_POST['action']) {
    //display locations
    case 'loadSearches':
       if (isset($_POST["users_id"])) {
-         $val = $_POST['searches_id'];
+         $val = $_POST['savedsearches_id'];
          if($_POST['users_id'] != $_POST["current_user"]){
             $val = 0;
          }
          $rand = mt_rand();
          SavedSearch::dropdown([
-                                  'name'   => 'searches_id',
+                                  'name'   => 'savedsearches_id',
                                   'value'  => $val,
                                   'condition' => ['users_id' => $_POST['users_id']],
                                   'rand'   => $_POST["rand"]
