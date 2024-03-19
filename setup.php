@@ -27,7 +27,7 @@
  --------------------------------------------------------------------------
  */
 
-define('PLUGIN_AUTOEXPORTSEARCH_VERSION', '2.0.1');
+define('PLUGIN_AUTOEXPORTSEARCH_VERSION', '2.1.0');
 
 if (!defined("PLUGIN_AUTOEXPORTSEARCH_DIR")) {
     define("PLUGIN_AUTOEXPORTSEARCH_DIR", Plugin::getPhpDir("autoexportsearches"));

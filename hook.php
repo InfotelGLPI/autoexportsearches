@@ -34,15 +34,31 @@
 function plugin_autoexportsearches_install()
 {
     global $DB;
-
-    if (!$DB->tableExists("glpi_plugin_autoexportsearches")) {
-        $DB->runFile(PLUGIN_AUTOEXPORTSEARCH_DIR . "/install/sql/empty-2.0.1.sql");
+    if (!$DB->tableExists("glpi_plugin_autoexportsearches_configs")) {
+        $DB->runFile(PLUGIN_AUTOEXPORTSEARCH_DIR . "/install/sql/empty-2.0.0.sql");
     } else {
         if (!$DB->fieldExists("glpi_plugin_autoexportsearches_exportconfigs", "sendto")) {
-            $DB->runFile(PLUGIN_MANAGEENTITIES_DIR . "/install/sql/update-2.0.0.sql");
+            $DB->runFile(PLUGIN_AUTOEXPORTSEARCH_DIR . "/install/sql/update-2.0.0.sql");
         }
         if ($DB->fieldExists("glpi_plugin_autoexportsearches_exportconfigs", "searches_id")) {
-            $DB->runFile(PLUGIN_MANAGEENTITIES_DIR . "/install/sql/update-2.0.1.sql");
+            $DB->runFile(PLUGIN_AUTOEXPORTSEARCH_DIR . "/install/sql/update-2.0.1.sql");
+        }
+        if (!$DB->tableExists('glpi_plugin_autoexportsearches_customsearchcriterias')) {
+            $DB->runFile(PLUGIN_AUTOEXPORTSEARCH_DIR . "/install/sql/update-2.1.0.sql");
+            $exports = $DB->request(['FROM' => 'glpi_plugin_autoexportsearches_exportconfigs']);
+            foreach ($exports as $export) {
+                //TODO : voir pourquoi le update fonctionne pas
+                $DB->update(
+                    'glpi_plugin_autoexportsearches_exportconfigs',
+                    [
+                        'periodicity_value' => $export['periodicity'],
+                        'periodicity_type' => 'days',
+                        'periodicty_open_days' => 0
+                    ],
+                    ['id' => $export['id']]
+                );
+            }
+            $DB->doQuery('ALTER TABLE glpi_plugin_autoexportsearches_exportconfigs DROP COLUMN periodicity');
         }
     }
 
@@ -84,6 +100,7 @@ function plugin_autoexportsearches_uninstall()
     $tables = [
         "glpi_plugin_autoexportsearches_exportconfigs",
         "glpi_plugin_autoexportsearches_configs",
+        "glpi_plugin_autoexportsearches_customsearchcriterias",
     ];
     foreach ($tables as $table) {
         $DB->query("DROP TABLE IF EXISTS `$table`;");
