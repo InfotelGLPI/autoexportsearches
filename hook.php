@@ -35,7 +35,7 @@ function plugin_autoexportsearches_install()
 {
     global $DB;
     if (!$DB->tableExists("glpi_plugin_autoexportsearches_configs")) {
-        $DB->runFile(PLUGIN_AUTOEXPORTSEARCH_DIR . "/install/sql/empty-2.0.0.sql");
+        $DB->runFile(PLUGIN_AUTOEXPORTSEARCH_DIR . "/install/sql/empty-2.1.0.sql");
     } else {
         if (!$DB->fieldExists("glpi_plugin_autoexportsearches_exportconfigs", "sendto")) {
             $DB->runFile(PLUGIN_AUTOEXPORTSEARCH_DIR . "/install/sql/update-2.0.0.sql");
@@ -45,20 +45,6 @@ function plugin_autoexportsearches_install()
         }
         if (!$DB->tableExists('glpi_plugin_autoexportsearches_customsearchcriterias')) {
             $DB->runFile(PLUGIN_AUTOEXPORTSEARCH_DIR . "/install/sql/update-2.1.0.sql");
-            $exports = $DB->request(['FROM' => 'glpi_plugin_autoexportsearches_exportconfigs']);
-            foreach ($exports as $export) {
-                //TODO : voir pourquoi le update fonctionne pas
-                $DB->update(
-                    'glpi_plugin_autoexportsearches_exportconfigs',
-                    [
-                        'periodicity_value' => $export['periodicity'],
-                        'periodicity_type' => 'days',
-                        'periodicty_open_days' => 0
-                    ],
-                    ['id' => $export['id']]
-                );
-            }
-            $DB->doQuery('ALTER TABLE glpi_plugin_autoexportsearches_exportconfigs DROP COLUMN periodicity');
         }
     }
 
