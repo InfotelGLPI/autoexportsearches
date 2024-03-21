@@ -42,6 +42,10 @@ if (!isset($_GET["withtemplate"])) {
 
 $export = new PluginAutoexportsearchesExportconfig();
 
+if (!isset($_POST['periodicity_open_days'])) {
+    $_POST['periodicity_open_days'] = 0;
+}
+
 if (isset($_POST["add"])) {
 
    $export->check(-1, CREATE, $_POST);

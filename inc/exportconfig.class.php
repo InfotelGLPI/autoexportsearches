@@ -36,6 +36,9 @@ if (!defined('GLPI_ROOT')) {
  */
 class PluginAutoexportsearchesExportconfig extends CommonDBTM
 {
+    const PERIODICITY_DAYS = 0;
+    const PERIODICITY_WEEKLY = 1;
+    const PERIODICITY_MONTHLY = 2;
 
     static $rightname = 'plugin_autoexportsearches_exportconfigs';
     //   static $rightname = 'ticket';
@@ -105,13 +108,13 @@ class PluginAutoexportsearchesExportconfig extends CommonDBTM
             'linkfield' => 'savedsearches_id',
         ];
 
-        $tab[] = [
-            'id' => '4',
-            'table' => self::getTable(),
-            'field' => 'periodicity',
-            'name' => __('Periodicity (in days)', 'autoexportsearches'),
-            'datatype' => 'number'
-        ];
+//        $tab[] = [
+//            'id' => '4',
+//            'table' => self::getTable(),
+//            'field' => 'periodicity_type',
+//            'name' => __('Periodicity type', 'autoexportsearches'),
+//            'datatype' => 'text'
+//        ];
 
         $tab[] = [
             'id' => '5',
@@ -139,6 +142,10 @@ class PluginAutoexportsearchesExportconfig extends CommonDBTM
 
         $this->initForm($ID, $options);
         $this->showFormHeader($options);
+
+        echo "<tr class='tab_bg_1'>";
+        echo "<td colspan='2'><h3>" . __('Search to export', 'autoexportsearches') . "</h3></td>";
+        echo "</tr>";
 
         echo "<tr class='tab_bg_1'>";
 
@@ -181,19 +188,52 @@ class PluginAutoexportsearchesExportconfig extends CommonDBTM
         Ajax::updateItemOnSelectEvent("dropdown_users_id$rand", "savedSearches", $url, $params);
 
         echo "<tr class='tab_bg_1'>";
+        echo "<td colspan='2'><h3>" . __('Periodicity') . "</h3></td>";
+        echo "</tr>";
 
-        echo "<td>" . __('Periodicity (in days)', 'autoexportsearches') . "</td>";
+        echo "<tr class='tab_bg_1'>";
+        echo "<td>" . __('Periodicity type', 'autoexportsearches') . "</td>";
         echo "<td>";
 
         $rand = mt_rand();
-        Dropdown::showNumber(
-            'periodicity',
+        Dropdown::showFromArray(
+            'periodicity_type',
             [
-                'value' => $this->fields['periodicity'],
+                self::PERIODICITY_DAYS => __('Every x days', 'autoexportsearches'),
+                self::PERIODICITY_WEEKLY => _x('periodicity', 'Weekly'),
+                self::PERIODICITY_MONTHLY => _x('periodicity', 'Monthly'),
+            ],
+            [
+                'value' => $this->fields['periodicity_type'],
                 'rand' => $rand
             ]
         );
         echo "</td>";
+        echo "</tr>";
+
+        echo "<tr class='tab_bg_1' id='periodicity_value'>";
+        echo "</tr>";
+        $url = Plugin::getWebDir('autoexportsearches') . "/ajax/periodicityfields.php";
+        // let ajax determine the fields shown depending on the choosen periodicity_type
+        echo "
+            <script>
+                $(document).ready(function() {
+                    const selectType = $('#dropdown_periodicity_type$rand');
+                    const periodicityRow = $('#periodicity_value');
+                    selectType.change(e => {
+                        //periodicityRow.innerHTML = \"<td colspan='2' id='ajax-loader'></td>\";
+                        periodicityRow.load('$url', {
+                            'id' : $ID,
+                            'periodicity_type' : e.target.selectedIndex
+                        });
+                    })
+                    selectType.trigger('change');
+                });
+            </script>
+        ";
+
+        echo "<tr class='tab_bg_1'>";
+        echo "<td colspan='2'><h3>" . __('Options') . "</h3></td>";
         echo "</tr>";
 
         echo "<tr class='tab_bg_1'>";
@@ -551,24 +591,68 @@ class PluginAutoexportsearchesExportconfig extends CommonDBTM
     static function cronAutoexportsearchesExportconfigExport($task = null)
     {
         global $DB, $CFG_GLPI;
+        if (!isset($CFG_GLPI['planning_work_days'])) {
+            $CFG_GLPI['planning_work_days'] = importArrayFromDB($CFG_GLPI['planning_work_days']);
+        }
 
         $cron_status = 0;
         $old_memory = ini_set("memory_limit", "-1");
         $old_execution = ini_set("max_execution_time", "0");
+        $dateActual = strtotime(date("Y-m-d"));
+        $day = date('j');
+        $weekday = date('w');
+        $month = date('m');
+        $monthLength = date('t');
         $exportConfig = new PluginAutoexportsearchesExportconfig();
-        $exportConfigs = $exportConfig->find(['is_deleted' => 0, 'is_active' => 1]);
+        $exportConfigs = $exportConfig->find([
+            'is_deleted' => 0,
+            'is_active' => 1,
+        ]);
         $count = 0;
         $user_id_back = Session::getLoginUserID();
         $user = new User();
         foreach ($exportConfigs as $export) {
-            $dateActual = strtotime(date("Y-m-d"));
-            $delay = DAY_TIMESTAMP * intval($export['periodicity']);
-            if ($export['last_export'] != null) {
-                $dateEnd = strtotime($export['last_export']) + $delay;
-                if ($dateEnd > $dateActual) {
+            // check if export has to be done
+            if ($export['periodicity_type'] == self::PERIODICITY_DAYS) {
+                $delay = DAY_TIMESTAMP * intval($export['periodicity']);
+                if ($export['last_export'] != null) {
+                    $dateEnd = strtotime($export['last_export']) + $delay;
+                    if ($dateEnd > $dateActual) {
+                        continue;
+                    }
+                }
+            } elseif ($export['periodicity_type'] == self::PERIODICITY_WEEKLY) {
+                if ($weekday != $export['periodicity']) {
                     continue;
                 }
+            } elseif ($export['periodicity_type'] == self::PERIODICITY_MONTHLY) {
+                if ($export['last_export'] != null) {
+                    $exportMonth = date('m', strtotime($export['last_export']));
+                    // already done for this month
+                    if ($exportMonth == $month) {
+                        continue;
+                    }
+                    // too early in the month,
+                    // second condition for shorter months
+                    if ($day < $export['periodicity']
+                        && $export['periodicity'] <= $monthLength) {
+                        continue;
+                    }
+                    // for shorter month, do the export on the last day of the month if periodicity > duration of the current month
+                    if ($export['periodicity'] > $monthLength
+                        && $day != $monthLength) {
+                        continue;
+                    }
+                    // second condition ensure that it happens at least once a month even if the last day isn't a workday
+                    if ($export['periodicty_open_days'] == 1 && $day != $monthLength) {
+                        // today's not a work day,
+                        if (!in_array($weekday, $CFG_GLPI['planning_work_days'])) {
+                            continue;
+                        }
+                    }
+                }
             }
+
             $_SESSION["glpicronuserrunning"] = $export['users_id'];
             $_SESSION['glpidefault_entity'] = 0;
             Session::initEntityProfiles($export['users_id']);
