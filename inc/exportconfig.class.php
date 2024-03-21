@@ -167,25 +167,29 @@ class PluginAutoexportsearchesExportconfig extends CommonDBTM
 
         echo "<td>" . __('Saved search to export', 'autoexportsearches') . "</td>";
         echo "<td id='savedSearches'>";
-        //      echo "<div id='savedSearches'>";
-        SavedSearch::dropdown([
-            'name' => 'savedsearches_id',
-            'value' => $this->fields["savedsearches_id"],
-            'condition' => ['users_id' => $this->fields["users_id"]],
-            'rand' => $rand
-        ]);
-        //      echo "</div>";
         echo "</td>";
         echo "</tr>";
         $params = [
             "users_id" => '__VALUE__',
             "current_user" => $this->fields['users_id'],
             'savedsearches_id' => $this->fields["savedsearches_id"],
+            'exportconfigs_id' => $ID,
             "rand" => $rand,
             "action" => "loadSearches"
         ];
         $url = Plugin::getWebDir('autoexportsearches') . "/ajax/dropdownsavedsearches.php";
         Ajax::updateItemOnSelectEvent("dropdown_users_id$rand", "savedSearches", $url, $params);
+
+        echo "
+            <script>
+                $(document).ready(function() {
+                   $('#dropdown_users_id$rand').trigger('change');
+                });
+            </script>
+        ";
+
+        echo "<tr class='tab_bg_1'><td id='custom_search_criterias' colspan='2'>";
+        echo "</td></tr>";
 
         echo "<tr class='tab_bg_1'>";
         echo "<td colspan='2'><h3>" . __('Periodicity') . "</h3></td>";
@@ -663,10 +667,8 @@ class PluginAutoexportsearchesExportconfig extends CommonDBTM
             if ($profile->getFromDB($user->fields['profiles_id'])) {
                 $_SESSION['glpiactiveprofile'] = $profile->fields;
             }
-            Toolbox::logInFile('test_autoexport', print_r($_SESSION['glpiactiveprofile'], true), true);
             $_SESSION['glpiname'] = 'crontab';
             $_SESSION['glpiactiveentities'] = getSonsOf('glpi_entities', 0);
-            //Session::initEntityProfiles(Session::getLoginUserID());
             $user->getFromDB($export['users_id']);
             $auth = new Auth();
             $auth->auth_succeded = true;
@@ -677,7 +679,6 @@ class PluginAutoexportsearchesExportconfig extends CommonDBTM
             $user->getFromDB($export['users_id']);
             $_SESSION["glpiID"] = $export['users_id'];
             $_SESSION["glpicronuserrunning"] = $export['users_id'];
-            //Session::changeProfile($user->fields['profiles_id']);
             self::executeExport($export['id']);
             $_SESSION['glpiactiveprofile'] = $savedProfile;
             $export['last_export'] = date("Y-m-d");

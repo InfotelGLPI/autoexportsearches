@@ -98,7 +98,7 @@ switch ($_POST['periodicity_type']) {
                 <label for='periodicity_open_days' class='me-2'>$openDaysLabel</label>
                 <input name='periodicity_open_days' type='checkbox' class='form-check-input' value='1' $checked>
                 </div>
-                <small></small>
+                <small>$openDaysExplanation</small>
             </div>
         ";
         echo "</td>";

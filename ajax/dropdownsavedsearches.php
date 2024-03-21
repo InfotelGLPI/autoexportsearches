@@ -32,7 +32,6 @@ Html::header_nocache();
 Session::checkLoginUser();
 
 switch ($_POST['action']) {
-   //display locations
    case 'loadSearches':
       if (isset($_POST["users_id"])) {
          $val = $_POST['savedsearches_id'];
@@ -46,6 +45,21 @@ switch ($_POST['action']) {
                                   'condition' => ['users_id' => $_POST['users_id']],
                                   'rand'   => $_POST["rand"]
                                ]);
+         $url = Plugin::getWebDir('autoexportsearches') . "/ajax/customsearchcriterias.php";
+         $exportConfigId = isset($_POST['exportsconfigs_id']) ? $_POST['exportsconfigs_id'] : 0;
+         echo "
+            <script>
+                window.autoexportsearches = {};
+                window.autoexportsearches.searchSelect = $('#dropdown_savedsearches_id{$_POST["rand"]}');
+                autoexportsearches.searchSelect.change(e => {
+                    $('#custom_search_criterias').load('$url', {
+                        'savedsearches_id' : e.target.options[e.target.selectedIndex].value,
+                        'exportconfigs_id' : $exportConfigId
+                    })
+                })
+                autoexportsearches.searchSelect.trigger('change');
+            </script>
+         ";
       }
       break;
 }
