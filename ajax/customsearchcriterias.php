@@ -89,7 +89,8 @@ if ($savedSearchId) {
                             if ($customCriteria->getFromDBByCrit([
                                 'savedsearches_id' => $savedSearchId,
                                 'exportconfigs_id' => $_POST['exportconfigs_id'],
-                                'criteria_field' => $criteria['field']
+                                'criteria_field' => $criteria['field'],
+                                'criteria_searchtype' => $criteria['searchtype']
                             ])) {
                                 $customValue = $customCriteria->fields['criteria_value'];
                             }
@@ -108,7 +109,7 @@ if ($savedSearchId) {
                                     'First day of the month',
                                     'autoexportsearches'
                                 ) : __('First day of the week', 'autoexportsearches');
-                                $inputValue = $timeValue === 'month' ? 'first day of ' : 'last monday';
+                                $inputValue = $timeValue === 'month' ? PluginAutoexportsearchesCustomsearchcriteria::CRITERIA_FIRST_DAY_OF_MONTH : PluginAutoexportsearchesCustomsearchcriteria::CRITERIA_FIRST_DAY_OF_WEEK;
                                 $checked = $customValue === $inputValue ? 'checked' : '';
                                 echo "
                                 <tr class='tab_bg_1 text-center'>
@@ -122,6 +123,7 @@ if ($savedSearchId) {
                                         <label for='custom_criterias[$index][criteria_value]'>$label</label>
                                         <input type='hidden' name='custom_criterias[$index][savedsearches_id]' value='$savedSearchId'>
                                         <input type='hidden' name='custom_criterias[$index][criteria_field]' value='{$criteria['field']}'>
+                                        <input type='hidden' name='custom_criterias[$index][criteria_searchtype]' value='{$criteria['searchtype']}'>
                                         <input type='checkbox' name='custom_criterias[$index][criteria_value]' value='$inputValue' $checked>
                                     </td>
                                 </tr>

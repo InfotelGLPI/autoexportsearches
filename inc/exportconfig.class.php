@@ -504,6 +504,7 @@ class PluginAutoexportsearchesExportconfig extends CommonDBTM
         $export->getFromDB($plugin_exportconfigs_id);
 
         $search = new SavedSearch();
+        $customSearchCriteria = new PluginAutoexportsearchesCustomsearchcriteria();
         if ($search->getFromDB($export->fields['savedsearches_id'])) {
             $url = "?" . $search->fields["query"];
             $url_components = parse_url($url);
@@ -511,6 +512,36 @@ class PluginAutoexportsearchesExportconfig extends CommonDBTM
             $p["display_type"] = Search::CSV_OUTPUT;
             $p["export_all"] = 1;
             $itemtype = $search->fields["itemtype"];
+            $weekday = date('w');
+
+            $customCriterias = $customSearchCriteria->find(['exportconfigs_id' => $plugin_exportconfigs_id]);
+            foreach ($customCriterias as $customCriteria) {
+                $criteria = array_filter($p['criteria'], function ($c) use ($customCriteria) {
+                    return $c['field'] == $customCriteria['criteria_field'] && $c['searchtype'] == $customCriteria['criteria_searchtype'];
+                });
+                $criteria = reset($criteria);
+
+                Toolbox::logInfo($customCriteria);
+                Toolbox::logInfo($criteria);
+                if (preg_match('/^-\d+MONTH$/', $criteria['value'])
+                    && $customCriteria['criteria_value'] == PluginAutoexportsearchesCustomsearchcriteria::CRITERIA_FIRST_DAY_OF_MONTH) {
+                    $normalValue = strtotime($criteria['value']);
+                    $monthYearString = date('F Y', $normalValue);
+                    $newValue = strtotime(PluginAutoexportsearchesCustomsearchcriteria::CRITERIA_FIRST_DAY_OF_MONTH, $monthYearString);
+                    $criteria['value'] = date('Y-m-d h:i:s', $newValue);
+                }
+                if (preg_match('/^-\d+WEEK$/', $criteria['value'])
+                    && $customCriteria['criteria_value'] == PluginAutoexportsearchesCustomsearchcriteria::CRITERIA_FIRST_DAY_OF_WEEK) {
+                    // don't need to adjust if its already monday
+                    if ($weekday != 1) {
+                        $normalValue = strtotime($criteria['value']);
+                        $newValue = strtotime(PluginAutoexportsearchesCustomsearchcriteria::CRITERIA_FIRST_DAY_OF_WEEK, $normalValue);
+                        $criteria['value'] = date('Y-m-d h:i:s', $newValue);
+                    }
+                }
+                Toolbox::logInfo($criteria);
+            }
+
             $params = Search::manageParams($itemtype, $p, 1, 1);
             $name = Dropdown::getDropdownName('glpi_savedsearches', $export->fields['savedsearches_id']);
             $name .= "_" . date('Ymd') . ".csv";

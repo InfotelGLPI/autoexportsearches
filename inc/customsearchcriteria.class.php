@@ -33,6 +33,9 @@ if (!defined('GLPI_ROOT')) {
 
 class PluginAutoexportsearchesCustomsearchcriteria extends CommonDBTM
 {
+    const CRITERIA_FIRST_DAY_OF_MONTH = 'first day of ';
+    const CRITERIA_FIRST_DAY_OF_WEEK = 'last monday';
+
     public static function createCriterias(PluginAutoexportsearchesExportConfig $exportConfig)
     {
         Toolbox::logInfo($exportConfig);
