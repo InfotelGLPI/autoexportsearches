@@ -34,10 +34,10 @@ Session::checkLoginUser();
 use Glpi\Event;
 
 if (!isset($_GET["id"])) {
-   $_GET["id"] = "";
+    $_GET["id"] = "";
 }
 if (!isset($_GET["withtemplate"])) {
-   $_GET["withtemplate"] = "";
+    $_GET["withtemplate"] = "";
 }
 
 $export = new PluginAutoexportsearchesExportconfig();
@@ -47,45 +47,42 @@ if (!isset($_POST['periodicity_open_days'])) {
 }
 
 if (isset($_POST["add"])) {
+    $export->check(-1, CREATE, $_POST);
 
-   $export->check(-1, CREATE, $_POST);
-
-   $newID = $export->add($_POST);
-   if ($_SESSION['glpibackcreated']) {
-      Html::redirect($export->getFormURL() . "?id=" . $newID);
-   }
-   Html::back();
-} else if (isset($_POST["delete"])) {
-
-   $export->check($_POST['id'], DELETE);
-   $export->delete($_POST);
-   $export->redirectToList();
-
-} else if (isset($_POST["restore"])) {
-
-   $export->check($_POST['id'], PURGE);
-   $export->restore($_POST);
-   $export->redirectToList();
-
-} else if (isset($_POST["purge"])) {
-   $export->check($_POST['id'], PURGE);
-   $export->delete($_POST, 1);
-   $export->redirectToList();
-
-} else if (isset($_POST["update"])) {
-
-   $export->check($_POST['id'], UPDATE);
-   $export->update($_POST);
-   Html::back();
-
+    $newID = $export->add($_POST);
+    if ($_SESSION['glpibackcreated']) {
+        Html::redirect($export->getFormURL() . "?id=" . $newID);
+    }
+    Html::back();
+} elseif (isset($_POST["delete"])) {
+    $export->check($_POST['id'], DELETE);
+    $export->delete($_POST);
+    $export->redirectToList();
+} elseif (isset($_POST["restore"])) {
+    $export->check($_POST['id'], PURGE);
+    $export->restore($_POST);
+    $export->redirectToList();
+} elseif (isset($_POST["purge"])) {
+    $export->check($_POST['id'], PURGE);
+    $export->delete($_POST, 1);
+    $export->redirectToList();
+} elseif (isset($_POST["update"])) {
+    $export->check($_POST['id'], UPDATE);
+    $export->update($_POST);
+    Html::back();
 } else {
-
-   $export->checkGlobal(READ);
+    $export->checkGlobal(READ);
 
 //   Html::header(PluginAutoexportsearchesExportconfig::getTypeName(2), '', "tools", PluginAutoexportsearchesExportconfig::getType());
-   Html::header(PluginAutoexportsearchesMenu::getTypeName(2), '', 'tools',"PluginAutoexportsearchesMenu",PluginAutoexportsearchesExportconfig::getType());
+    Html::header(
+        PluginAutoexportsearchesMenu::getTypeName(2),
+        '',
+        'tools',
+        "PluginAutoexportsearchesMenu",
+        PluginAutoexportsearchesExportconfig::getType()
+    );
 
-   $export->display($_GET);
+    $export->display($_GET);
 
-   Html::footer();
+    Html::footer();
 }

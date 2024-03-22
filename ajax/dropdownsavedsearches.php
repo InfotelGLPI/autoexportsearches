@@ -46,7 +46,7 @@ switch ($_POST['action']) {
                                   'rand'   => $_POST["rand"]
                                ]);
          $url = Plugin::getWebDir('autoexportsearches') . "/ajax/customsearchcriterias.php";
-         $exportConfigId = isset($_POST['exportsconfigs_id']) ? $_POST['exportsconfigs_id'] : 0;
+         $exportConfigId = isset($_POST['exportconfigs_id']) ? $_POST['exportconfigs_id'] : 0;
          echo "
             <script>
                 window.autoexportsearches = {};
