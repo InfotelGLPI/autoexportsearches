@@ -515,7 +515,6 @@ class PluginAutoexportsearchesExportconfig extends CommonDBTM
             $weekday = date('w');
 
             $customCriterias = $customSearchCriteria->find(['exportconfigs_id' => $plugin_exportconfigs_id]);
-            Toolbox::logInfo($customCriterias);
             foreach ($customCriterias as $customCriteria) {
                 $criteria = array_filter($p['criteria'], function ($c) use ($customCriteria) {
                     return $c['field'] == $customCriteria['criteria_field'] && $c['searchtype'] == $customCriteria['criteria_searchtype'];
@@ -710,7 +709,6 @@ class PluginAutoexportsearchesExportconfig extends CommonDBTM
                     }
                 }
             }
-            Toolbox::logInfo('THIS EXPORT WILL EXECUTE ' . $export['id']);
 
             $_SESSION["glpicronuserrunning"] = $export['users_id'];
             $_SESSION['glpidefault_entity'] = 0;
@@ -736,6 +734,10 @@ class PluginAutoexportsearchesExportconfig extends CommonDBTM
             $_SESSION["glpicronuserrunning"] = $export['users_id'];
             self::executeExport($export['id']);
             $_SESSION['glpiactiveprofile'] = $savedProfile;
+
+            $customSearchCriteria = new PluginAutoexportsearchesCustomsearchcriteria();
+            $customCriterias = $customSearchCriteria->find(['exportconfigs_id' => $export['id']]);
+            $export['custom_criterias'] = $customCriterias;
             $export['last_export'] = date("Y-m-d");
             $exportConfig->update($export);
             $count++;
