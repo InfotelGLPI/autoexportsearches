@@ -11,6 +11,7 @@ CREATE TABLE `glpi_plugin_autoexportsearches_exportconfigs`
         COMMENT 'RELATION to glpi_users (id)',
     `savedsearches_id`      int unsigned NOT NULL DEFAULT '0'
         COMMENT 'RELATION to glpi_savedsearches (id)',
+    `last_export`           timestamp NULL DEFAULT NULL,
     `periodicity_type`      int     NOT NULL DEFAULT '0',
     `periodicity`           int unsigned NOT NULL DEFAULT '1',
     `periodicity_open_days` tinyint NOT NULL DEFAULT '0',

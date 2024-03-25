@@ -515,36 +515,39 @@ class PluginAutoexportsearchesExportconfig extends CommonDBTM
             $weekday = date('w');
 
             $customCriterias = $customSearchCriteria->find(['exportconfigs_id' => $plugin_exportconfigs_id]);
+            Toolbox::logInfo($customCriterias);
             foreach ($customCriterias as $customCriteria) {
                 $criteria = array_filter($p['criteria'], function ($c) use ($customCriteria) {
                     return $c['field'] == $customCriteria['criteria_field'] && $c['searchtype'] == $customCriteria['criteria_searchtype'];
                 });
                 $criteria = reset($criteria);
-
-                Toolbox::logInfo($customCriteria);
-                Toolbox::logInfo($criteria);
                 if (preg_match('/^-\d+MONTH$/', $criteria['value'])
                     && $customCriteria['criteria_value'] == PluginAutoexportsearchesCustomsearchcriteria::CRITERIA_FIRST_DAY_OF_MONTH) {
                     $normalValue = strtotime($criteria['value']);
                     $monthYearString = date('F Y', $normalValue);
-                    $newValue = strtotime(PluginAutoexportsearchesCustomsearchcriteria::CRITERIA_FIRST_DAY_OF_MONTH, $monthYearString);
-                    $criteria['value'] = date('Y-m-d h:i:s', $newValue);
+                    $newValue = strtotime(
+                        PluginAutoexportsearchesCustomsearchcriteria::CRITERIA_FIRST_DAY_OF_MONTH,
+                        strtotime($monthYearString)
+                    );
+                    $criteria['value'] = date('Y-m-d', $newValue). '00:00:00';
                 }
                 if (preg_match('/^-\d+WEEK$/', $criteria['value'])
                     && $customCriteria['criteria_value'] == PluginAutoexportsearchesCustomsearchcriteria::CRITERIA_FIRST_DAY_OF_WEEK) {
                     // don't need to adjust if its already monday
                     if ($weekday != 1) {
                         $normalValue = strtotime($criteria['value']);
-                        $newValue = strtotime(PluginAutoexportsearchesCustomsearchcriteria::CRITERIA_FIRST_DAY_OF_WEEK, $normalValue);
-                        $criteria['value'] = date('Y-m-d h:i:s', $newValue);
+                        $newValue = strtotime(
+                            PluginAutoexportsearchesCustomsearchcriteria::CRITERIA_FIRST_DAY_OF_WEEK,
+                            $normalValue
+                        );
+                        $criteria['value'] = date('Y-m-d', $newValue). '00:00:00';
                     }
                 }
-                Toolbox::logInfo($criteria);
             }
 
             $params = Search::manageParams($itemtype, $p, 1, 1);
             $name = Dropdown::getDropdownName('glpi_savedsearches', $export->fields['savedsearches_id']);
-            $name .= "_" . date('Ymd') . ".csv";
+            $name .= "_" . date('Y_m_d') . ".csv";
             $titleMail = $name;
             $filename = GLPI_PLUGIN_DOC_DIR . "/autoexportsearches/" . $name;
             self::createCSVFile(Search::getDatas($itemtype, $params), $filename);
@@ -634,10 +637,10 @@ class PluginAutoexportsearchesExportconfig extends CommonDBTM
         $old_memory = ini_set("memory_limit", "-1");
         $old_execution = ini_set("max_execution_time", "0");
         $dateActual = strtotime(date("Y-m-d"));
-        $day = date('j');
-        $weekday = date('w');
-        $month = date('m');
-        $monthLength = date('t');
+        $day = date('j'); // 1 to 31, today
+        $weekday = date('w'); // 0 to 6, today
+        $month = date('m'); // 01 to 12, current month
+        $monthLength = date('t'); // 28 to 31, length of the current month
         $exportConfig = new PluginAutoexportsearchesExportconfig();
         $exportConfigs = $exportConfig->find([
             'is_deleted' => 0,
@@ -649,6 +652,13 @@ class PluginAutoexportsearchesExportconfig extends CommonDBTM
         foreach ($exportConfigs as $export) {
             // check if export has to be done
             if ($export['periodicity_type'] == self::PERIODICITY_DAYS) {
+                // every worked day
+                if ($export['periodicity'] == 1) {
+                    if (!in_array($weekday, $CFG_GLPI['planning_work_days'])) {
+                        continue;
+                    }
+                }
+                // regular every x days
                 $delay = DAY_TIMESTAMP * intval($export['periodicity']);
                 if ($export['last_export'] != null) {
                     $dateEnd = strtotime($export['last_export']) + $delay;
@@ -679,14 +689,28 @@ class PluginAutoexportsearchesExportconfig extends CommonDBTM
                         continue;
                     }
                     // second condition ensure that it happens at least once a month even if the last day isn't a workday
-                    if ($export['periodicty_open_days'] == 1 && $day != $monthLength) {
+                    if ($export['periodicity_open_days'] == 1 && $day != $monthLength) {
                         // today's not a work day,
+                        if (!in_array($weekday, $CFG_GLPI['planning_work_days'])) {
+                            continue;
+                        }
+                    }
+                } else {
+                    // for the first export, only done on the exact date or the last day of the month
+                    if ($day != $export['periodicity'] && $export['periodicity'] <= $monthLength) {
+                        continue;
+                    }
+                    if ($export['periodicity'] > $monthLength && $day != $monthLength) {
+                        continue;
+                    }
+                    if ($export['periodicity_open_days'] == 1 && $day != $monthLength) {
                         if (!in_array($weekday, $CFG_GLPI['planning_work_days'])) {
                             continue;
                         }
                     }
                 }
             }
+            Toolbox::logInfo('THIS EXPORT WILL EXECUTE ' . $export['id']);
 
             $_SESSION["glpicronuserrunning"] = $export['users_id'];
             $_SESSION['glpidefault_entity'] = 0;

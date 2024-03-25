@@ -49,8 +49,8 @@ switch ($_POST['action']) {
          $exportConfigId = isset($_POST['exportconfigs_id']) ? $_POST['exportconfigs_id'] : 0;
          echo "
             <script>
-                window.autoexportsearches = {};
-                window.autoexportsearches.searchSelect = $('#dropdown_savedsearches_id{$_POST["rand"]}');
+                if (!window.autoexportsearches) window.autoexportsearches = {};
+                autoexportsearches.searchSelect = $('#dropdown_savedsearches_id{$_POST["rand"]}');
                 autoexportsearches.searchSelect.change(e => {
                     $('#custom_search_criterias').load('$url', {
                         'savedsearches_id' : e.target.options[e.target.selectedIndex].value,

@@ -38,7 +38,6 @@ class PluginAutoexportsearchesCustomsearchcriteria extends CommonDBTM
 
     public static function createCriterias(PluginAutoexportsearchesExportConfig $exportConfig)
     {
-        Toolbox::logInfo($exportConfig);
         global $DB;
         // clear old relations (in case of update with the saved search criterias changed)
         $DB->delete(

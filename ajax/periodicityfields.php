@@ -45,6 +45,7 @@ switch ($_POST['periodicity_type']) {
         echo "<td>" . __('Periodicity (in days)', 'autoexportsearches') . "</td>";
         echo "<td>";
 
+        echo '<div>';
         $rand = mt_rand();
         Dropdown::showNumber(
             'periodicity',
@@ -54,6 +55,34 @@ switch ($_POST['periodicity_type']) {
                 'min' => 1
             ]
         );
+        $openDaysLabel = __('Work day only', 'autoexportsearches');
+        $checked = $exportConfig ? $exportConfig->fields['periodicity_open_days'] == 1 ? 'checked' : '' : '';
+        $openDaysExplanation = __('If this option is checked, the export will be done only on worked day', 'autoexportsearches');
+        echo "
+            </div>
+            <div id='periodicity_open_days'>
+                <div>
+                <label for='periodicity_open_days' class='me-2'>$openDaysLabel</label>
+                <input name='periodicity_open_days' type='checkbox' class='form-check-input' value='1' $checked>
+                </div>
+                <small>$openDaysExplanation</small>
+            </div>
+        ";
+        echo "
+            <script>
+                if (!window.autoexportsearches) window.autoexportsearches = {};
+                autoexportsearches.periodicitySelect = $('#dropdown_periodicity$rand');
+                autoexportsearches.openDaysContainer = $('#periodicity_open_days');
+                autoexportsearches.periodicitySelect.change(e => {
+                    if (e.target.options[e.target.selectedIndex].value == 1) {
+                        autoexportsearches.openDaysContainer[0].style.display = '';
+                    } else {
+                        autoexportsearches.openDaysContainer[0].style.display = 'none';
+                    }
+                })
+                autoexportsearches.periodicitySelect.trigger('change');
+            </script>
+         ";
         echo "</td>";
         break;
 

@@ -68,22 +68,26 @@ if ($savedSearchId) {
                 $headerAdded = false;
                 foreach ($p['criteria'] as $index => $criteria) {
                     if (in_array($criteria['field'], $dateFieldsIds)) {
-                        if (!$headerAdded) {
-                            echo "<tr class='tab_bg_1'>";
-                            echo "<td colspan='3'><h4>" . __('Customise the export of : ', 'autoexportsearches') . __(
-                                    $p['itemtype']
-                                ) . "</h4></td>";
-                            echo "</tr>";
-                            echo "<tr class='tab_bg_1 text-center'>";
-                            echo "<td><h5>" . __('Criterion') . "</h5></td>";
-                            echo "<td><h5>" . __('Value', 'autoexportsearches') . "</h5></td>";
-                            echo "<td><h5>" . __('Customise', 'autoexportsearches') . "</h5></td>";
-                            echo "</tr>";
-                            $headerAdded = true;
-                        }
-
                         $value = $criteria['value'];
-                        if (str_starts_with($value, '-')) {
+                        if (str_starts_with($value, '-')
+                            && (str_contains($value, 'MONTH') || str_contains($value, 'WEEK'))) {
+                            if (!$headerAdded) {
+                                echo "<tr class='tab_bg_1'>";
+                                echo "<td colspan='3'><h4>" . __(
+                                        'Customise the export of : ',
+                                        'autoexportsearches'
+                                    ) . __(
+                                        $p['itemtype']
+                                    ) . "</h4></td>";
+                                echo "</tr>";
+                                echo "<tr class='tab_bg_1 text-center'>";
+                                echo "<td><h5>" . __('Criterion') . "</h5></td>";
+                                echo "<td><h5>" . __('Value', 'autoexportsearches') . "</h5></td>";
+                                echo "<td><h5>" . __('Customise', 'autoexportsearches') . "</h5></td>";
+                                echo "</tr>";
+                                $headerAdded = true;
+                            }
+
                             $customValue = null;
                             $customCriteria = new PluginAutoexportsearchesCustomsearchcriteria();
                             if ($customCriteria->getFromDBByCrit([
@@ -99,19 +103,16 @@ if ($savedSearchId) {
                                 return $f['id'] == $criteria['field'];
                             });
                             $field = reset($field);
-                            if (str_contains($value, 'MONTH') || str_contains($value, 'WEEK')) {
-                                $timeValue = str_contains($value, 'MONTH') ? 'month' : 'week';
-                                $searchValue = $translations[$criteria['searchtype']] . ' : -' . sprintf(
-                                        _n("%d $timeValue", "%d $timeValue" . 's', $value[1]),
-                                        $value[1]
-                                    );
-                                $label = $timeValue === 'month' ? __(
-                                    'First day of the month',
-                                    'autoexportsearches'
-                                ) : __('First day of the week', 'autoexportsearches');
-                                $inputValue = $timeValue === 'month' ? PluginAutoexportsearchesCustomsearchcriteria::CRITERIA_FIRST_DAY_OF_MONTH : PluginAutoexportsearchesCustomsearchcriteria::CRITERIA_FIRST_DAY_OF_WEEK;
-                                $checked = $customValue === $inputValue ? 'checked' : '';
-                                echo "
+
+                            $timeValue = str_contains($value, 'MONTH') ? 'month' : 'week';
+                            $searchValue = $translations[$criteria['searchtype']] . ' : -' . sprintf(
+                                    _n("%d $timeValue", "%d $timeValue" . 's', $value[1]),
+                                    $value[1]
+                                );
+                            $label = $timeValue === 'month' ? __('Beginning of the month') : __('Monday');
+                            $inputValue = $timeValue === 'month' ? PluginAutoexportsearchesCustomsearchcriteria::CRITERIA_FIRST_DAY_OF_MONTH : PluginAutoexportsearchesCustomsearchcriteria::CRITERIA_FIRST_DAY_OF_WEEK;
+                            $checked = $customValue === $inputValue ? 'checked' : '';
+                            echo "
                                 <tr class='tab_bg_1 text-center'>
                                     <td>
                                         <label>{$field['name']}</label>
@@ -128,7 +129,6 @@ if ($savedSearchId) {
                                     </td>
                                 </tr>
                             ";
-                            }
                         }
                     }
                 }

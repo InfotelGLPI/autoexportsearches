@@ -192,7 +192,6 @@ class PluginAutoexportsearchesFiles extends CommonDBTM {
 
             echo "<th><a href='files.php?orderCol=name&orderType=$type&start=$start'>" . __('File name', 'autoexportsearches') . "</a></th>";
             echo "<th><a href='files.php?orderCol=date&orderType=$type&start=$start'>" . __('Generation date', 'autoexportsearches') . "</a></th>";
-            echo "<th><a href='files.php?orderCol=month&orderType=$type&start=$start'>" . __('Generation month', 'autoexportsearches') . "</a></th>";
 
             echo "</thead></tr>";
 
@@ -234,8 +233,6 @@ class PluginAutoexportsearchesFiles extends CommonDBTM {
                   $langue = $CFG_GLPI["languages"][$_SESSION['glpilanguage']][4];
                   setlocale(LC_TIME, $langue);
 
-                  $monthStr = utf8_encode(date('B', strtotime($dateFile)));
-
                   $date = $day . "/" . $month . "/" . $year;
 
                   echo "<td width='10' valign='top'>";
@@ -247,7 +244,6 @@ class PluginAutoexportsearchesFiles extends CommonDBTM {
                   $folder = $config->getField("folder");
                   echo "<td><a href='" . PLUGINAUTOEXPORTSEARCH_WEBDIR . "/front/document.send.php?file=_plugins" . $folder. "" . $file . "' target='_blank'>" . $file . "</a></td>";
                   echo "<td>" . $date . "</td>";
-                  echo "<td>" . $monthStr . "</td>";
                   echo "</tr>";
                }
             }
