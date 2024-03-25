@@ -61,12 +61,28 @@ switch ($_POST['periodicity_type']) {
         echo "
             </div>
             <div id='periodicity_open_days'>
-                <div>
-                <label for='periodicity_open_days' class='me-2'>$openDaysLabel</label>
+                <div style='position:relative'>
+                <label for='periodicity_open_days' class='me-2'>
+                    $openDaysLabel <span class='fas fa-info fa-fw info-icon'></span>
+                  <small class='info-text'>$openDaysExplanation</small>
+                </label>
                 <input name='periodicity_open_days' type='checkbox' class='form-check-input' value='1' $checked>
                 </div>
-                <small>$openDaysExplanation</small>
             </div>
+            <style>
+                .info-text {
+                    display: none;
+                    position: absolute;
+                    top: 0;
+                    right: 0;
+                    background-color: white; /* Optional: Adding a background color for better visibility */
+                    padding: 5px; /* Optional: Adding padding for better spacing */
+                    border: 1px solid #ccc; /* Optional: Adding a border for better separation */
+                }
+                .info-icon:hover + .info-text {
+                    display: block;
+                }
+            </style>
         ";
         echo "
             <script>
@@ -122,13 +138,30 @@ switch ($_POST['periodicity_type']) {
         $checked = $exportConfig ? $exportConfig->fields['periodicity_open_days'] == 1 ? 'checked' : '' : '';
         $openDaysExplanation = __('If this option is checked, the export will be done the first work day from the selected day', 'autoexportsearches');
         echo "
+            </div>
             <div id='periodicity_open_days'>
-                <div>
-                <label for='periodicity_open_days' class='me-2'>$openDaysLabel</label>
+                <div style='position:relative'>
+                <label for='periodicity_open_days' class='me-2'>
+                    $openDaysLabel <span class='fas fa-info fa-fw info-icon'></span>
+                  <small class='info-text'>$openDaysExplanation</small>
+                </label>
                 <input name='periodicity_open_days' type='checkbox' class='form-check-input' value='1' $checked>
                 </div>
-                <small>$openDaysExplanation</small>
             </div>
+            <style>
+                .info-text {
+                    display: none;
+                    position: absolute;
+                    top: 0;
+                    right: 0;
+                    background-color: white; /* Optional: Adding a background color for better visibility */
+                    padding: 5px; /* Optional: Adding padding for better spacing */
+                    border: 1px solid #ccc; /* Optional: Adding a border for better separation */
+                }
+                .info-icon:hover + .info-text {
+                    display: block;
+                }
+            </style>
         ";
         echo "</td>";
         break;

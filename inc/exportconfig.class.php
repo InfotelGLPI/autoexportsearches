@@ -225,7 +225,6 @@ class PluginAutoexportsearchesExportconfig extends CommonDBTM
                     const selectType = $('#dropdown_periodicity_type$rand');
                     const periodicityRow = $('#periodicity_value');
                     selectType.change(e => {
-                        //periodicityRow.innerHTML = \"<td colspan='2' id='ajax-loader'></td>\";
                         periodicityRow.load('$url', {
                             'id' : $ID,
                             'periodicity_type' : e.target.selectedIndex
