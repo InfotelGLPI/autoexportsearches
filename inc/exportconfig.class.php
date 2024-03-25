@@ -735,6 +735,7 @@ class PluginAutoexportsearchesExportconfig extends CommonDBTM
             self::executeExport($export['id']);
             $_SESSION['glpiactiveprofile'] = $savedProfile;
 
+            // add custom criterias for call to createCriterias
             $customSearchCriteria = new PluginAutoexportsearchesCustomsearchcriteria();
             $customCriterias = $customSearchCriteria->find(['exportconfigs_id' => $export['id']]);
             $export['custom_criterias'] = $customCriterias;
