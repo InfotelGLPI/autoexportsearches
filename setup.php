@@ -53,10 +53,18 @@ function plugin_init_autoexportsearches()
         Plugin::registerClass('PluginAutoexportsearchesProfile', ['addtabon' => 'Profile']);
         $PLUGIN_HOOKS['use_massive_action']['autoexportsearches'] = 1;
 
-        $PLUGIN_HOOKS['pre_item_update']['autoexportsearches'] = ['PluginAutoexportsearchesExportconfig' =>
-            ['PluginAutoexportsearchesCustomsearchcriteria', 'createCriterias']];
-        $PLUGIN_HOOKS['item_add']['autoexportsearches'] = ['PluginAutoexportsearchesExportconfig' =>
-            ['PluginAutoexportsearchesCustomsearchcriteria', 'createCriterias']];
+        $PLUGIN_HOOKS['pre_item_update']['autoexportsearches'] = [
+            'PluginAutoexportsearchesExportconfig' =>
+                ['PluginAutoexportsearchesCustomsearchcriteria', 'createCriterias']
+        ];
+        $PLUGIN_HOOKS['item_add']['autoexportsearches'] = [
+            'PluginAutoexportsearchesExportconfig' =>
+                ['PluginAutoexportsearchesCustomsearchcriteria', 'createCriterias']
+        ];
+        $PLUGIN_HOOKS['item_purge']['autoexportsearches'] = [
+            'SavedSearch' => 'plugin_autoexportsearches_item_purge',
+            'PluginAutoexportsearchesExportConfig' => 'plugin_autoexportsearches_item_purge',
+        ];
 
         if (Session::haveRight("config", READ)) {
             $PLUGIN_HOOKS['config_page']['autoexportsearches'] = 'front/config.form.php';

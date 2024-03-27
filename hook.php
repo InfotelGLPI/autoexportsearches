@@ -147,3 +147,20 @@ function plugin_autoexportsearches_getDatabaseRelations()
     }
 }
 
+function plugin_autoexportsearches_item_purge(CommonDBTM $item) {
+    global $DB;
+    // relation field set to 0 by the core when deleted
+    if ($item::getType() === SavedSearch::getType()) {
+        $DB->delete('glpi_plugin_autoexportsearches_exportconfigs', [
+            'savedsearches_id' => 0
+        ]);
+        $DB->delete('glpi_plugin_autoexportsearches_customsearchcriterias', [
+            'savedsearches_id' => 0
+        ]);
+    } elseif ($item::getType() === PluginAutoexportsearchesExportconfig::getType()) {
+        $DB->delete('glpi_plugin_autoexportsearches_customsearchcriterias', [
+            'savedsearches_id' => 0
+        ]);
+    }
+}
+
