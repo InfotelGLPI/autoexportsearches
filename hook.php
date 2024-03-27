@@ -149,8 +149,8 @@ function plugin_autoexportsearches_getDatabaseRelations()
 
 function plugin_autoexportsearches_item_purge(CommonDBTM $item) {
     global $DB;
-    // relation field set to 0 by the core when deleted
     if ($item::getType() === SavedSearch::getType()) {
+        // relation field set to 0 by the core when deleted (because of getDatabaseRelations?)
         $DB->delete('glpi_plugin_autoexportsearches_exportconfigs', [
             'savedsearches_id' => 0
         ]);
@@ -159,7 +159,7 @@ function plugin_autoexportsearches_item_purge(CommonDBTM $item) {
         ]);
     } elseif ($item::getType() === PluginAutoexportsearchesExportconfig::getType()) {
         $DB->delete('glpi_plugin_autoexportsearches_customsearchcriterias', [
-            'savedsearches_id' => 0
+            'exportconfigs_id' => $item->fields['id']
         ]);
     }
 }

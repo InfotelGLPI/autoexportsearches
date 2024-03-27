@@ -63,7 +63,7 @@ function plugin_init_autoexportsearches()
         ];
         $PLUGIN_HOOKS['item_purge']['autoexportsearches'] = [
             'SavedSearch' => 'plugin_autoexportsearches_item_purge',
-            'PluginAutoexportsearchesExportConfig' => 'plugin_autoexportsearches_item_purge',
+            'PluginAutoexportsearchesExportconfig' => 'plugin_autoexportsearches_item_purge'
         ];
 
         if (Session::haveRight("config", READ)) {
