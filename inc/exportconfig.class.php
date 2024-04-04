@@ -651,7 +651,7 @@ class PluginAutoexportsearchesExportconfig extends CommonDBTM
             // check if export has to be done
             if ($export['periodicity_type'] == self::PERIODICITY_DAYS) {
                 // every worked day
-                if ($export['periodicity'] == 1) {
+                if ($export['periodicity'] == 1 && $export['periodicity_open_days'] == 1) {
                     if (!in_array($weekday, $CFG_GLPI['planning_work_days'])) {
                         continue;
                     }
