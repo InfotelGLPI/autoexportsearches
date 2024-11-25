@@ -65,7 +65,7 @@ function plugin_autoexportsearches_uninstall() {
    $tables = ["glpi_plugin_autoexportsearches_exportconfigs",
               "glpi_plugin_autoexportsearches_configs"];
    foreach ($tables as $table) {
-      $DB->query("DROP TABLE IF EXISTS `$table`;");
+      $DB->dropTable($table);
    }
    CronTask::unregister("autoexportsearches");
    $rep_files_autoexportsearches = GLPI_PLUGIN_DOC_DIR."/autoexportsearches";

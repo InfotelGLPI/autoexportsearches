@@ -247,10 +247,14 @@ class PluginAutoexportsearchesProfile extends CommonDBTM {
       }
 
 
-      foreach ($DB->request("SELECT *
-                           FROM `glpi_profilerights` 
-                           WHERE `profiles_id`='" . $_SESSION['glpiactiveprofile']['id'] . "' 
-                              AND `name` LIKE '%plugin_autoexportsearches%'") as $prof) {
+       $it = $DB->request([
+           'FROM' => 'glpi_profilerights',
+           'WHERE' => [
+               'profiles_id' => $_SESSION['glpiactiveprofile']['id'],
+               'name' => ['LIKE', '%plugin_autoexportsearches%']
+           ]
+       ]);
+       foreach ($it as $prof) {
          $_SESSION['glpiactiveprofile'][$prof['name']] = $prof['rights'];
       }
    }
