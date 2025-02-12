@@ -514,43 +514,52 @@ class PluginAutoexportsearchesExportconfig extends CommonDBTM
             $weekday = date('w');
 
             $customCriterias = $customSearchCriteria->find(['exportconfigs_id' => $plugin_exportconfigs_id]);
-            foreach ($customCriterias as $customCriteria) {
-                $criteria = array_filter($p['criteria'], function ($c) use ($customCriteria) {
-                    return $c['field'] == $customCriteria['criteria_field'] && $c['searchtype'] == $customCriteria['criteria_searchtype'];
-                });
-                $criteria = reset($criteria);
-                if (preg_match('/^-\d+MONTH$/', $criteria['value'])
-                    && $customCriteria['criteria_value'] == PluginAutoexportsearchesCustomsearchcriteria::CRITERIA_FIRST_DAY_OF_MONTH) {
-                    $normalValue = strtotime($criteria['value']);
-                    $monthYearString = date('F Y', $normalValue);
-                    $newValue = strtotime(
-                        PluginAutoexportsearchesCustomsearchcriteria::CRITERIA_FIRST_DAY_OF_MONTH,
-                        strtotime($monthYearString)
-                    );
-                    $criteria['value'] = date('Y-m-d', $newValue). '00:00:00';
-                }
-                if (preg_match('/^-\d+WEEK$/', $criteria['value'])
-                    && $customCriteria['criteria_value'] == PluginAutoexportsearchesCustomsearchcriteria::CRITERIA_FIRST_DAY_OF_WEEK) {
-                    // don't need to adjust if its already monday
-                    if ($weekday != 1) {
+            if (count($customCriterias) > 0) {
+                foreach ($customCriterias as $customCriteria) {
+                    $criteria = array_filter($p['criteria'], function ($c) use ($customCriteria) {
+                        return $c['field'] == $customCriteria['criteria_field'] && $c['searchtype'] == $customCriteria['criteria_searchtype'];
+                    });
+                    $criteria = reset($criteria);
+                    if (preg_match('/^-\d+MONTH$/', $criteria['value'])
+                        && $customCriteria['criteria_value'] == PluginAutoexportsearchesCustomsearchcriteria::CRITERIA_FIRST_DAY_OF_MONTH) {
                         $normalValue = strtotime($criteria['value']);
+                        $monthYearString = date('F Y', $normalValue);
                         $newValue = strtotime(
-                            PluginAutoexportsearchesCustomsearchcriteria::CRITERIA_FIRST_DAY_OF_WEEK,
-                            $normalValue
+                            PluginAutoexportsearchesCustomsearchcriteria::CRITERIA_FIRST_DAY_OF_MONTH,
+                            strtotime($monthYearString)
                         );
-                        $criteria['value'] = date('Y-m-d', $newValue). '00:00:00';
+                        $criteria['value'] = date('Y-m-d', $newValue) . '00:00:00';
+                    }
+                    if (preg_match('/^-\d+WEEK$/', $criteria['value'])
+                        && $customCriteria['criteria_value'] == PluginAutoexportsearchesCustomsearchcriteria::CRITERIA_FIRST_DAY_OF_WEEK) {
+                        // don't need to adjust if its already monday
+                        if ($weekday != 1) {
+                            $normalValue = strtotime($criteria['value']);
+                            $newValue = strtotime(
+                                PluginAutoexportsearchesCustomsearchcriteria::CRITERIA_FIRST_DAY_OF_WEEK,
+                                $normalValue
+                            );
+                            $criteria['value'] = date('Y-m-d', $newValue) . '00:00:00';
+                        }
                     }
                 }
-            }
+                $params = Search::manageParams($itemtype, $p, 1, 1);
+                $name = Dropdown::getDropdownName('glpi_savedsearches', $export->fields['savedsearches_id']);
+                $name .= "_" . date('Y_m_d') . ".csv";
+                $titleMail = $name;
+                $filename = GLPI_PLUGIN_DOC_DIR . "/autoexportsearches/" . $name;
+                self::createCSVFile(Search::getDatas($itemtype, $params), $filename);
+                if (!empty($export->fields['sendto'])) {
+                    self::sendMail($titleMail, $export->fields['sendto'], $name, $filename);
+                }
+            }else{
+                if (!empty($export->fields['sendto'])) {
 
-            $params = Search::manageParams($itemtype, $p, 1, 1);
-            $name = Dropdown::getDropdownName('glpi_savedsearches', $export->fields['savedsearches_id']);
-            $name .= "_" . date('Y_m_d') . ".csv";
-            $titleMail = $name;
-            $filename = GLPI_PLUGIN_DOC_DIR . "/autoexportsearches/" . $name;
-            self::createCSVFile(Search::getDatas($itemtype, $params), $filename);
-            if (!empty($export->fields['sendto'])) {
-                self::sendMail($titleMail, $export->fields['sendto'], $name, $filename);
+                    $name = Dropdown::getDropdownName('glpi_savedsearches', $export->fields['savedsearches_id']);
+                    $titleMail = $name;
+
+                    self::sendMail($titleMail, $export->fields['sendto'], '', '');
+                }
             }
         }
     }
@@ -585,17 +594,16 @@ class PluginAutoexportsearchesExportconfig extends CommonDBTM
         $mmail->AddCustomHeader("X-Auto-Response-Suppress: OOF, DR, NDR, RN, NRN");
         $mmail->SetFrom($CFG_GLPI["from_email"], $CFG_GLPI["from_email_name"], false);
 
-        $text = __('Mail autoexportsearches');
+        if($filepath !=""){
+            $text = __("Some datas have been found for this search : $title");
+        }else{
+            $text = __('There are no datas for the search : $title');
+        }
 
         $mmail->AddAddress($recipient, $recipient);
         $mmail->Subject = "[GLPI] " . $title;
         $mmail->Body = $text;
 
-//      $mmail->AddEmbeddedImage($filepath,
-//                               0,
-//                               $filename,
-//                               'base64',
-//                               'text/csv');
         $mmail->addAttachment(
             $filepath,
             $filename
