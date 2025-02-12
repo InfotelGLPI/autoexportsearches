@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - AutoExportSearches plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-03-25 13:55+0100\n"
+"POT-Creation-Date: 2025-02-12 11:21+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 
-#: setup.php:75
+#: setup.php:83
 msgid "Auto export searches"
 msgid_plural "Auto exports searches"
 msgstr[0] ""
@@ -40,7 +40,7 @@ msgstr ""
 msgid "Periodicity (in days)"
 msgstr ""
 
-#: ajax/periodicityfields.php:58 ajax/periodicityfields.php:121
+#: ajax/periodicityfields.php:58 ajax/periodicityfields.php:137
 msgid "Work day only"
 msgstr ""
 
@@ -48,27 +48,27 @@ msgstr ""
 msgid "If this option is checked, the export will be done only on worked day"
 msgstr ""
 
-#: ajax/periodicityfields.php:90
+#: ajax/periodicityfields.php:106
 msgid "Weekday"
 msgstr ""
 
-#: ajax/periodicityfields.php:106
+#: ajax/periodicityfields.php:122
 msgid "Day of the month"
 msgstr ""
 
-#: ajax/periodicityfields.php:119
+#: ajax/periodicityfields.php:135
 msgid ""
 "For months having less days than the selected day, the export will be done "
 "on the last day of the month."
 msgstr ""
 
-#: ajax/periodicityfields.php:123
+#: ajax/periodicityfields.php:139
 msgid ""
 "If this option is checked, the export will be done the first work day from "
 "the selected day"
 msgstr ""
 
-#: front/config.form.php:54
+#: front/config.form.php:55
 msgid "Please activate the plugin"
 msgstr ""
 
@@ -116,43 +116,51 @@ msgstr ""
 msgid "Every x days"
 msgstr ""
 
-#: inc/exportconfig.class.php:244
+#: inc/exportconfig.class.php:243
 msgid "Send mail to"
 msgstr ""
 
-#: inc/exportconfig.class.php:571
+#: inc/exportconfig.class.php:579
 msgid "Export saved searches"
 msgstr ""
 
-#: inc/files.class.php:40
+#: inc/exportconfig.class.php:600
+msgid "Some datas have been found for this search : "
+msgstr ""
+
+#: inc/exportconfig.class.php:602
+msgid "There are no datas for the search : "
+msgstr ""
+
+#: inc/files.class.php:42
 msgid "Download files"
 msgstr ""
 
-#: inc/files.class.php:96
+#: inc/files.class.php:97
 msgid "No export files available"
 msgstr ""
 
-#: inc/files.class.php:128
+#: inc/files.class.php:131
 msgid "Files"
 msgstr ""
 
-#: inc/files.class.php:193
+#: inc/files.class.php:197
 msgid "File name"
 msgstr ""
 
-#: inc/files.class.php:194
+#: inc/files.class.php:201
 msgid "Generation date"
 msgstr ""
 
-#: inc/files.class.php:256
+#: inc/files.class.php:264
 msgid "No file to download in the directory"
 msgstr ""
 
-#: inc/files.class.php:259
+#: inc/files.class.php:269
 msgid "The folder doesn't exist"
 msgstr ""
 
-#: inc/files.class.php:366
+#: inc/files.class.php:389
 msgid "Delete export files"
 msgstr ""
 

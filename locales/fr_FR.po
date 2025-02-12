@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - AutoExportSearches plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-03-25 13:55+0100\n"
-"PO-Revision-Date: 2024-03-25 14:04+0100\n"
+"POT-Creation-Date: 2025-02-12 11:21+0100\n"
+"PO-Revision-Date: 2025-02-12 11:22+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: fr_FR\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Generator: Poedit 3.4.2\n"
 
-#: setup.php:75
+#: setup.php:83
 msgid "Auto export searches"
 msgid_plural "Auto exports searches"
 msgstr[0] "Export automatique de recherches"
@@ -40,24 +40,23 @@ msgstr "Personnaliser"
 msgid "Periodicity (in days)"
 msgstr "Périodicité ( en jours)"
 
-#: ajax/periodicityfields.php:58 ajax/periodicityfields.php:121
+#: ajax/periodicityfields.php:58 ajax/periodicityfields.php:137
 msgid "Work day only"
 msgstr "Seulement les jours ouvrés"
 
 #: ajax/periodicityfields.php:60
 msgid "If this option is checked, the export will be done only on worked day"
-msgstr ""
-"Si cette option est coché, l'export ne sera fait que les jours ouvrés"
+msgstr "Si cette option est coché, l'export ne sera fait que les jours ouvrés"
 
-#: ajax/periodicityfields.php:90
+#: ajax/periodicityfields.php:106
 msgid "Weekday"
 msgstr "Jour de la semaine"
 
-#: ajax/periodicityfields.php:106
+#: ajax/periodicityfields.php:122
 msgid "Day of the month"
 msgstr "Jour du mois"
 
-#: ajax/periodicityfields.php:119
+#: ajax/periodicityfields.php:135
 msgid ""
 "For months having less days than the selected day, the export will be done "
 "on the last day of the month."
@@ -65,7 +64,7 @@ msgstr ""
 "Pour les mois plus court que le jour sélectionné, l'export sera fait le "
 "dernier jour du mois."
 
-#: ajax/periodicityfields.php:123
+#: ajax/periodicityfields.php:139
 msgid ""
 "If this option is checked, the export will be done the first work day from "
 "the selected day"
@@ -73,7 +72,7 @@ msgstr ""
 "Si cette option est cochée, l'export sera fait le jour premier ouvré à "
 "partir du jour sélectionné."
 
-#: front/config.form.php:54
+#: front/config.form.php:55
 msgid "Please activate the plugin"
 msgstr "Veuillez activer le plugin"
 
@@ -121,43 +120,51 @@ msgstr "Type de périodicité"
 msgid "Every x days"
 msgstr "Tout les x jours"
 
-#: inc/exportconfig.class.php:244
+#: inc/exportconfig.class.php:243
 msgid "Send mail to"
 msgstr "Envoyé par mail à l'adresse"
 
-#: inc/exportconfig.class.php:571
+#: inc/exportconfig.class.php:579
 msgid "Export saved searches"
 msgstr "Recherches sauvegardées exportées"
 
-#: inc/files.class.php:40
+#: inc/exportconfig.class.php:600
+msgid "Some datas have been found for this search : "
+msgstr "Des données ont été trouvé pour la rechercher : "
+
+#: inc/exportconfig.class.php:602
+msgid "There are no datas for the search : "
+msgstr "Aucune données n'a été trouvé pour la recherche : "
+
+#: inc/files.class.php:42
 msgid "Download files"
 msgstr "Téléchargements des fichiers"
 
-#: inc/files.class.php:96
+#: inc/files.class.php:97
 msgid "No export files available"
 msgstr "Pas de fichiers exportés disponibles"
 
-#: inc/files.class.php:128
+#: inc/files.class.php:131
 msgid "Files"
 msgstr "Fichiers"
 
-#: inc/files.class.php:193
+#: inc/files.class.php:197
 msgid "File name"
 msgstr "Nom du fichier"
 
-#: inc/files.class.php:194
+#: inc/files.class.php:201
 msgid "Generation date"
 msgstr "Date de génération"
 
-#: inc/files.class.php:256
+#: inc/files.class.php:264
 msgid "No file to download in the directory"
 msgstr "Pas de fichier à télécharger dans le dossier"
 
-#: inc/files.class.php:259
+#: inc/files.class.php:269
 msgid "The folder doesn't exist"
 msgstr "Le dossier n'existe pas"
 
-#: inc/files.class.php:366
+#: inc/files.class.php:389
 msgid "Delete export files"
 msgstr "Supprimer les fichiers exportés"
 

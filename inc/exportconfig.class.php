@@ -293,19 +293,14 @@ class PluginAutoexportsearchesExportconfig extends CommonDBTM
      *
      * @return void
      **/
-    static function createCSVFile(array $data, $filename)
+    static function createCSVFile(array $data, $filepath)
     {
         global $CFG_GLPI;
-        $file = fopen($filename, "w");
-        fwrite($file, pack("CCC", 0xef, 0xbb, 0xbf));
-        $item = null;
-        if (class_exists($data['itemtype'])) {
-            $item = new $data['itemtype']();
-        }
-        $data['display_type'] = Search::CSV_OUTPUT;
+
         if (!isset($data['data']) || !isset($data['data']['totalcount'])) {
-            return false;
+            return;
         }
+
         // Contruct Pager parameters
         $globallinkto
             = Toolbox::append_params([
@@ -315,38 +310,20 @@ class PluginAutoexportsearchesExportconfig extends CommonDBTM
             => Toolbox::stripslashes_deep($data['search']['metacriteria'])
         ],
             '&amp;');
-//      $parameters = "sort=" . $data['search']['sort'] . "&amp;order=" . $data['search']['order'] . '&amp;' .
-//                    $globallinkto;
-//
-//      if (isset($_GET['_in_modal'])) {
-//         $parameters .= "&amp;_in_modal=1";
-//      }
 
-//            print_r($data);
 
-        // If the begin of the view is before the number of items
+        $data['display_type'] = Search::CSV_OUTPUT;
+
         if ($data['data']['count'] > 0) {
-            // Display pager only for HTML
 
-            // Define begin and end var for loop
-            // Search case
-            $begin_display = $data['data']['begin'];
-            $end_display = $data['data']['end'];
-
+            $file = fopen($filepath, "w");
+            fwrite($file, pack("CCC", 0xef, 0xbb, 0xbf));
 
             if ($data['search']['as_map'] == 0) {
-                $massformid = 'massform' . $data['itemtype'];
-
-
-                // Compute number of columns to display
-                // Add toview elements
-                $nbcols = count($data['data']['cols']);
-
 
                 // New Line for Header Items Line
                 $headers_line = '';
                 $headers_line_top = '';
-                $headers_line_bottom = '';
 
                 $header_num = 1;
 
@@ -489,9 +466,10 @@ class PluginAutoexportsearchesExportconfig extends CommonDBTM
                     fwrite($file, $line);
                 }
             }
-        }
 
-        fclose($file);
+            fclose($file);
+
+        }
     }
 
     static function executeExport($plugin_exportconfigs_id)
@@ -514,52 +492,44 @@ class PluginAutoexportsearchesExportconfig extends CommonDBTM
             $weekday = date('w');
 
             $customCriterias = $customSearchCriteria->find(['exportconfigs_id' => $plugin_exportconfigs_id]);
-            if (count($customCriterias) > 0) {
-                foreach ($customCriterias as $customCriteria) {
-                    $criteria = array_filter($p['criteria'], function ($c) use ($customCriteria) {
-                        return $c['field'] == $customCriteria['criteria_field'] && $c['searchtype'] == $customCriteria['criteria_searchtype'];
-                    });
-                    $criteria = reset($criteria);
-                    if (preg_match('/^-\d+MONTH$/', $criteria['value'])
-                        && $customCriteria['criteria_value'] == PluginAutoexportsearchesCustomsearchcriteria::CRITERIA_FIRST_DAY_OF_MONTH) {
+            foreach ($customCriterias as $customCriteria) {
+                $criteria = array_filter($p['criteria'], function ($c) use ($customCriteria) {
+                    return $c['field'] == $customCriteria['criteria_field'] && $c['searchtype'] == $customCriteria['criteria_searchtype'];
+                });
+                $criteria = reset($criteria);
+                if (preg_match('/^-\d+MONTH$/', $criteria['value'])
+                    && $customCriteria['criteria_value'] == PluginAutoexportsearchesCustomsearchcriteria::CRITERIA_FIRST_DAY_OF_MONTH) {
+                    $normalValue = strtotime($criteria['value']);
+                    $monthYearString = date('F Y', $normalValue);
+                    $newValue = strtotime(
+                        PluginAutoexportsearchesCustomsearchcriteria::CRITERIA_FIRST_DAY_OF_MONTH,
+                        strtotime($monthYearString)
+                    );
+                    $criteria['value'] = date('Y-m-d', $newValue) . '00:00:00';
+                }
+                if (preg_match('/^-\d+WEEK$/', $criteria['value'])
+                    && $customCriteria['criteria_value'] == PluginAutoexportsearchesCustomsearchcriteria::CRITERIA_FIRST_DAY_OF_WEEK) {
+                    // don't need to adjust if its already monday
+                    if ($weekday != 1) {
                         $normalValue = strtotime($criteria['value']);
-                        $monthYearString = date('F Y', $normalValue);
                         $newValue = strtotime(
-                            PluginAutoexportsearchesCustomsearchcriteria::CRITERIA_FIRST_DAY_OF_MONTH,
-                            strtotime($monthYearString)
+                            PluginAutoexportsearchesCustomsearchcriteria::CRITERIA_FIRST_DAY_OF_WEEK,
+                            $normalValue
                         );
                         $criteria['value'] = date('Y-m-d', $newValue) . '00:00:00';
                     }
-                    if (preg_match('/^-\d+WEEK$/', $criteria['value'])
-                        && $customCriteria['criteria_value'] == PluginAutoexportsearchesCustomsearchcriteria::CRITERIA_FIRST_DAY_OF_WEEK) {
-                        // don't need to adjust if its already monday
-                        if ($weekday != 1) {
-                            $normalValue = strtotime($criteria['value']);
-                            $newValue = strtotime(
-                                PluginAutoexportsearchesCustomsearchcriteria::CRITERIA_FIRST_DAY_OF_WEEK,
-                                $normalValue
-                            );
-                            $criteria['value'] = date('Y-m-d', $newValue) . '00:00:00';
-                        }
-                    }
                 }
-                $params = Search::manageParams($itemtype, $p, 1, 1);
-                $name = Dropdown::getDropdownName('glpi_savedsearches', $export->fields['savedsearches_id']);
-                $name .= "_" . date('Y_m_d') . ".csv";
-                $titleMail = $name;
-                $filename = GLPI_PLUGIN_DOC_DIR . "/autoexportsearches/" . $name;
-                self::createCSVFile(Search::getDatas($itemtype, $params), $filename);
-                if (!empty($export->fields['sendto'])) {
-                    self::sendMail($titleMail, $export->fields['sendto'], $name, $filename);
-                }
-            }else{
-                if (!empty($export->fields['sendto'])) {
-
-                    $name = Dropdown::getDropdownName('glpi_savedsearches', $export->fields['savedsearches_id']);
-                    $titleMail = $name;
-
-                    self::sendMail($titleMail, $export->fields['sendto'], '', '');
-                }
+            }
+            $params = Search::manageParams($itemtype, $p, 1, 1);
+            $name = Dropdown::getDropdownName('glpi_savedsearches', $export->fields['savedsearches_id']);
+            $name .= "_" . date('Y_m_d') . ".csv";
+            $titleMail = $name;
+            $filepath = GLPI_PLUGIN_DOC_DIR . "/autoexportsearches/" . $name;
+            self::createCSVFile(Search::getDatas($itemtype, $params), $filepath);
+            if (!empty($export->fields['sendto']) && is_file($filepath)) {
+                self::sendMail($titleMail, $export->fields['sendto'], $name, $filepath);
+            }elseif(!empty($export->fields['sendto'])){
+                self::sendMail($titleMail, $export->fields['sendto'], '', '');
             }
         }
     }
@@ -587,6 +557,8 @@ class PluginAutoexportsearchesExportconfig extends CommonDBTM
     {
         global $CFG_GLPI;
 
+        $title = htmlspecialchars($title);
+
         $mmail = new GLPIMailer();
 
         $mmail->AddCustomHeader("Auto-Submitted: auto-generated");
@@ -595,9 +567,9 @@ class PluginAutoexportsearchesExportconfig extends CommonDBTM
         $mmail->SetFrom($CFG_GLPI["from_email"], $CFG_GLPI["from_email_name"], false);
 
         if($filepath !=""){
-            $text = __("Some datas have been found for this search : $title");
+            $text = __("Some datas have been found for this search : ".$title, 'autoexportsearches');
         }else{
-            $text = __('There are no datas for the search : $title');
+            $text = __("There are no datas for the search : ".$title, 'autoexportsearches');
         }
 
         $mmail->AddAddress($recipient, $recipient);
