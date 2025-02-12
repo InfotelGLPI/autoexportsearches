@@ -89,7 +89,7 @@ function plugin_autoexportsearches_uninstall()
         "glpi_plugin_autoexportsearches_customsearchcriterias",
     ];
     foreach ($tables as $table) {
-        $DB->query("DROP TABLE IF EXISTS `$table`;");
+        $DB->dropTable($table);
     }
     CronTask::unregister("autoexportsearches");
     $rep_files_autoexportsearches = GLPI_PLUGIN_DOC_DIR . "/autoexportsearches";
