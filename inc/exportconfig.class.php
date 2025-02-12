@@ -557,8 +557,6 @@ class PluginAutoexportsearchesExportconfig extends CommonDBTM
     {
         global $CFG_GLPI;
 
-        $title = htmlspecialchars($title);
-
         $mmail = new GLPIMailer();
 
         $mmail->AddCustomHeader("Auto-Submitted: auto-generated");

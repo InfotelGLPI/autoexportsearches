@@ -62,6 +62,10 @@ function plugin_autoexportsearches_install()
     PluginAutoexportsearchesProfile::createFirstAccess($_SESSION['glpiactiveprofile']['id']);
     PluginAutoexportsearchesProfile::initProfile();
 
+    plugin_autoexportsearches_create_displaypreferences();
+
+
+
 
     CronTask::Register(
         'PluginAutoexportsearchesFiles',
@@ -101,6 +105,50 @@ function plugin_autoexportsearches_uninstall()
     }
 
     return true;
+}
+
+//create default display preferences
+function plugin_autoexportsearches_create_displaypreferences()
+{
+    global $DB;
+
+    $displayPref = new DisplayPreference();
+
+    $displayPref->add([
+        'itemtype' => 'PluginAutoexportsearchesExportconfig',
+        'num' => '1',
+        'rank' => '1',
+        'users_id' => '0',
+    ]);
+
+    $displayPref->add([
+        'itemtype' => 'PluginAutoexportsearchesExportconfig',
+        'num' => '2',
+        'rank' => '2',
+        'users_id' => '0',
+    ]);
+
+    $displayPref->add([
+        'itemtype' => 'PluginAutoexportsearchesExportconfig',
+        'num' => '3',
+        'rank' => '3',
+        'users_id' => '0',
+    ]);
+
+    $displayPref->add([
+        'itemtype' => 'PluginAutoexportsearchesExportconfig',
+        'num' => '5',
+        'rank' => '5',
+        'users_id' => '0',
+    ]);
+
+    $displayPref->add([
+        'itemtype' => 'PluginAutoexportsearchesExportconfig',
+        'num' => '6',
+        'rank' => '6',
+        'users_id' => '0',
+    ]);
+
 }
 
 // Define Dropdown tables to be manage in GLPI
