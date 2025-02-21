@@ -2,7 +2,7 @@
 
 ## FR
 
-Ce plugin permet d'exporter le résultat de recherches sauvegardés vers des fichiers CSV avec une action automatique.<br>
+Ce plugin permet d'exporter le résultat de recherches sauvegardées vers des fichiers CSV avec une action automatique.<br>
 Pour chaque export configuré, il est possible de définir une adresse courriel à laquelle envoyer le fichier, ainsi qu'une périodicité pour le déclenchement de l'export.
 
 L'interface de configuration des exports est accessible dans le menu **Outils**.
