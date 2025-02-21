@@ -180,12 +180,12 @@ class PluginAutoexportsearchesFiles extends CommonDBTM
                       </label>
                    </div>
                  </th>";
-                $type = "ASC";
+                $ordertype = "ASC";
                 if (isset($_GET['orderType'])) {
                     if ($_GET['orderType'] == "ASC") {
-                        $type = "DESC";
+                        $ordertype = "DESC";
                     } else {
-                        $type = "ASC";
+                        $ordertype = "ASC";
                     }
                 }
 
@@ -194,11 +194,11 @@ class PluginAutoexportsearchesFiles extends CommonDBTM
                     $start = $_GET['start'];
                 }
 
-                echo "<th><a href='files.php?orderCol=name&orderType=$type&start=$start'>" . __(
+                echo "<th><a href='files.php?type=$type&orderCol=name&orderType=$ordertype&start=$start'>" . __(
                         'File name',
                         'autoexportsearches'
                     ) . "</a></th>";
-                echo "<th><a href='files.php?orderCol=date&orderType=$type&start=$start'>" . __(
+                echo "<th><a href='files.php?type=$type&orderCol=date&orderType=$ordertype&start=$start'>" . __(
                         'Generation date',
                         'autoexportsearches'
                     ) . "</a></th>";
