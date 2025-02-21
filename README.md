@@ -3,10 +3,10 @@
 ## FR
 
 Ce plugin permet d'exporter le résultat de recherches sauvegardés vers des fichiers CSV avec une action automatique.<br>
-Pour chaque export configuré, il est possible de définir une adresse mail à laquel envoyé le fichier, ainsi qu'une périodicité pour le déclenchement de l'export.
+Pour chaque export configuré, il est possible de définir une adresse courriel à laquelle envoyer le fichier, ainsi qu'une périodicité pour le déclenchement de l'export.
 
 L'interface de configuration des exports est accessible dans le menu **Outils**.
-Dans le cas d'envoi par mail, l'adresse utilisé pour l'expéditeur est celle définit dans le champ "Courriel de l'expéditeur" de la configuration des notifications par courriel.
+Dans le cas d'envoi par courriel, l'adresse utilisée pour l'expéditeur est celle définie dans le champ "Courriel de l'expéditeur" de la configuration des notifications par courriel.
 
 ## EN
 
