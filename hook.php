@@ -1,36 +1,31 @@
 <?php
 /*
- * @version $Id: HEADER 15930 2011-10-30 15:47:55Z tsmr $
  -------------------------------------------------------------------------
- Autoexportsearches plugin for GLPI
- Copyright (C) 2020-2022 by the Autoexportsearches Development Team.
+ autoexportsearches plugin for GLPI
+ Copyright (C) 2020-2025 by the autoexportsearches Development Team.
 
  https://github.com/InfotelGLPI/autoexportsearches
  -------------------------------------------------------------------------
 
  LICENSE
 
- This file is part of Autoexportsearches.
+ This file is part of autoexportsearches.
 
- Autoexportsearches is free software; you can redistribute it and/or modify
+ autoexportsearches is free software; you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
  the Free Software Foundation; either version 2 of the License, or
  (at your option) any later version.
 
- Autoexportsearches is distributed in the hope that it will be useful,
+ autoexportsearches is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  GNU General Public License for more details.
 
  You should have received a copy of the GNU General Public License
- along with Autoexportsearches. If not, see <http://www.gnu.org/licenses/>.
+ along with autoexportsearches. If not, see <http://www.gnu.org/licenses/>.
  --------------------------------------------------------------------------
  */
 
-/**
- * @return bool
- * @throws \GlpitestSQLError
- */
 function plugin_autoexportsearches_install()
 {
     global $DB;
@@ -62,6 +57,23 @@ function plugin_autoexportsearches_install()
     PluginAutoexportsearchesProfile::createFirstAccess($_SESSION['glpiactiveprofile']['id']);
     PluginAutoexportsearchesProfile::initProfile();
 
+    //Displayprefs
+    $prefs = [2 => 1, 3 => 2, 5 => 32, 6 => 4];
+    foreach ($prefs as $num => $rank) {
+        if (
+            !countElementsInTable(
+                "glpi_displaypreferences",
+                ['itemtype' => 'PluginAutoexportsearchesExportconfig',
+                    'num' => $num,
+                    'users_id' => 0
+                ]
+            )
+        ) {
+            $DB->doQuery("INSERT INTO glpi_displaypreferences
+                                  (`itemtype`, `num`, `rank`, `users_id`)
+                           VALUES ('PluginAutoexportsearchesExportconfig','$num','$rank','0');");
+        }
+    }
 
     CronTask::Register(
         'PluginAutoexportsearchesFiles',
@@ -102,33 +114,6 @@ function plugin_autoexportsearches_uninstall()
 
     return true;
 }
-
-// Define Dropdown tables to be manage in GLPI
-/**
- * @return array
- */
-function plugin_autoexportsearches_getDropdown()
-{
-    $plugin = new Plugin();
-
-    if ($plugin->isActivated("autoexportsearches")) {
-        return [
-        ];
-    } else {
-        return [];
-    }
-}
-
-// Hook done on purge item case
-/**
- * @param $item
- */
-function plugin_pre_item_purge_autoexportsearches($item)
-{
-    switch (get_class($item)) {
-    }
-}
-
 
 // Define dropdown relations
 /**

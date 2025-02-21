@@ -1,10 +1,10 @@
 <?php
-
 /*
  -------------------------------------------------------------------------
  autoexportsearches plugin for GLPI
- Copyright (C) 2016-2024 by the autoexportsearches Development Team.
+ Copyright (C) 2020-2025 by the autoexportsearches Development Team.
 
+ https://github.com/InfotelGLPI/autoexportsearches
  -------------------------------------------------------------------------
 
  LICENSE

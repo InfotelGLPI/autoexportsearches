@@ -1,9 +1,8 @@
 <?php
 /*
- * @version $Id: HEADER 15930 2011-10-30 15:47:55Z tsmr $
  -------------------------------------------------------------------------
  autoexportsearches plugin for GLPI
- Copyright (C) 2018-2019 by the autoexportsearches Development Team.
+ Copyright (C) 2020-2025 by the autoexportsearches Development Team.
 
  https://github.com/InfotelGLPI/autoexportsearches
  -------------------------------------------------------------------------
@@ -236,7 +235,7 @@ class PluginAutoexportsearchesExportconfig extends CommonDBTM
         ";
 
         echo "<tr class='tab_bg_1'>";
-        echo "<td colspan='2'><h3>" . __('Options') . "</h3></td>";
+        echo "<td colspan='2'><h3>" . __('Options', 'autoexportsearches') . "</h3></td>";
         echo "</tr>";
 
         echo "<tr class='tab_bg_1'>";
