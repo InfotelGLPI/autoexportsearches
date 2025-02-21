@@ -14,10 +14,10 @@
             <en><![CDATA[This plugin allows you to create automatic exports from saved searches]]></en>
         </long>
     </description>
-    <homepage></homepage>
-    <download></download>
-    <issues></issues>
-    <readme></readme>
+    <homepage>https://github.com/InfotelGLPI/autoexportsearches</homepage>
+    <download>https://github.com/InfotelGLPI/autoexportsearches/releases</download>
+    <issues>https://github.com/InfotelGLPI/autoexportsearches/issues</issues>
+    <readme>https://github.com/InfotelGLPI/autoexportsearches/blob/master/README.md</readme>
     <authors>
         <author>Alban Lesellier</author>
         <author>Infotel</author>
