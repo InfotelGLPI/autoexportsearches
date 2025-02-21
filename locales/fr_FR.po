@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - AutoExportSearches plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-21 15:59+0000\n"
+"POT-Creation-Date: 2025-02-21 16:15+0000\n"
 "PO-Revision-Date: 2025-02-21 16:08+0000\n"
 "Last-Translator: Xavier CAILLAUD <thetsmr@gmail.com>, 2025\n"
 "Language-Team: French (France) (https://app.transifex.com/infotelGLPI/teams/205440/fr_FR/)\n"
@@ -29,8 +29,8 @@ msgstr[1] "Exports automatiques de recherches"
 msgstr[2] "Exports automatiques de recherches"
 
 #: ajax/customsearchcriterias.php:77
-msgid "Customise the export of : "
-msgstr "Personnaliser l'export de :"
+msgid "Customise the export of"
+msgstr "Personnaliser l'export de"
 
 #: ajax/customsearchcriterias.php:85
 msgid "Value"
