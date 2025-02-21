@@ -74,7 +74,7 @@ if ($savedSearchId) {
                             if (!$headerAdded) {
                                 echo "<tr class='tab_bg_1'>";
                                 echo "<td colspan='3'><h4>" . __(
-                                        'Customise the export of : ',
+                                        'Customise the export of',
                                         'autoexportsearches'
                                     ) . __(
                                         $p['itemtype']
