@@ -3,7 +3,7 @@
     <name>AutoExportSearches</name>
     <key>autoexportsearches</key>
     <state>stable</state>
-    <logo></logo>
+    <logo>https://raw.githubusercontent.com/InfotelGLPI/autoexportsearches/master/export.png</logo>
     <description>
         <short>
             <fr><![CDATA[Ce plugin permet de créer des exports automatiques de recherches sauvegardées]]></fr>
@@ -49,7 +49,9 @@
             <tag>Saved searches</tag>
         </en>
     </tags>
-<!--    <screenshots>-->
-<!--      <screenshot></screenshot>-->
-<!--   </screenshots>-->
+    <screenshots>
+        <screenshot>https://raw.githubusercontent.com/InfotelGLPI/autoexportsearches/master/screenshots/menuAuto.png</screenshot>
+        <screenshot>https://raw.githubusercontent.com/InfotelGLPI/autoexportsearches/master/screenshots/view.png</screenshot>
+        <screenshot>https://raw.githubusercontent.com/InfotelGLPI/autoexportsearches/master/screenshots/params.png</screenshot>
+    </screenshots>
 </root>
