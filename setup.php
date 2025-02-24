@@ -26,7 +26,7 @@
  --------------------------------------------------------------------------
  */
 
-define('PLUGIN_AUTOEXPORTSEARCH_VERSION', '2.1.0');
+define('PLUGIN_AUTOEXPORTSEARCH_VERSION', '2.1.1');
 
 if (!defined("PLUGIN_AUTOEXPORTSEARCH_DIR")) {
     define("PLUGIN_AUTOEXPORTSEARCH_DIR", Plugin::getPhpDir("autoexportsearches"));
@@ -42,9 +42,7 @@ function plugin_init_autoexportsearches()
     $PLUGIN_HOOKS['csrf_compliant']['autoexportsearches'] = true;
     $PLUGIN_HOOKS['change_profile']['autoexportsearches'] = ['PluginAutoexportsearchesProfile', 'initProfile'];
 
-
     if (Session::getLoginUserID()) {
-//if(Session::haveRightsOr('plugin_autoexportsearches_exportconfigs',[READ,CREATE,UPDATE])) {
         if (Session::haveRightsOr('plugin_autoexportsearches_exportconfigs', [READ, CREATE, UPDATE]
             ) || Session::haveRightsOr('plugin_autoexportsearches_accessfiles', [READ, CREATE, UPDATE])) {
             $PLUGIN_HOOKS['menu_toadd']['autoexportsearches'] = ['tools' => 'PluginAutoexportsearchesMenu'];

@@ -42,7 +42,7 @@ class PluginAutoexportsearchesConfig extends CommonDBTM {
     */
    function showConfigForm() {
 
-      if (!$this->canView()) {
+      if (!$this->canView() && !$this->canUpdate()) {
          return false;
       }
 

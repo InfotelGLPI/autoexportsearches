@@ -43,6 +43,12 @@ class PluginAutoexportsearchesFiles extends CommonDBTM
         return __('Download files', 'autoexportsearches');
     }
 
+    static function canDownload()
+    {
+        return ProfileRight::getProfileRights($_SESSION['glpiactiveprofile']['id'], ['plugin_autoexportsearches_accessfiles']);
+
+    }
+
     function showMenu()
     {
         global $CFG_GLPI;
@@ -202,7 +208,6 @@ class PluginAutoexportsearchesFiles extends CommonDBTM
                         'Generation date',
                         'autoexportsearches'
                     ) . "</a></th>";
-
                 echo "</thead></tr>";
 
                 //Sort table order with headers
@@ -229,6 +234,9 @@ class PluginAutoexportsearchesFiles extends CommonDBTM
                             break;
                     }
                 }
+
+                $plugin_dir = PLUGINAUTOEXPORTSEARCH_WEBDIR;
+                $i = 0;
                 foreach ($files as $key => $file) {
                     if ($key >= $limitBegin &&
                         $key < ($limitNb + $limitBegin)) {
@@ -238,16 +246,18 @@ class PluginAutoexportsearchesFiles extends CommonDBTM
                         echo "<td width='10' valign='top'>";
                         echo Html::showCheckbox(["name" => "filedelete[$file]"]);
                         echo "</td>";
-                        $config = new PluginAutoexportsearchesConfig();
-                        $config->getFromDB(1);
-
-                        $folder = $config->getField("folder");
-                        echo "<td><a href='" . PLUGINAUTOEXPORTSEARCH_WEBDIR . "/front/document.send.php?file=_plugins" . $folder . "" . $file . "' target='_blank'>" . $file . "</a></td>";
+                        if($this::canDownload()){
+                            echo "<td><a href='$plugin_dir/front/document.send.php?file=$file' target='_blank'> $file </a></td>";
+                        }else{
+                            echo "<td>$file</td>";
+                        }
                         echo "<td>" . Html::convdate($dateFile) . "</td>";
                         echo "</tr>";
+                        $i++;
                     }
                 }
                 echo "</table>";
+
                 echo "<br />";
                 echo Html::submit(
                     __("Delete"),

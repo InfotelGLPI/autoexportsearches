@@ -26,51 +26,63 @@
  --------------------------------------------------------------------------
  */
 
+
 if (!defined('GLPI_ROOT')) {
    define('GLPI_ROOT', realpath('../../..'));
 }
+
 include(GLPI_ROOT . '/inc/includes.php');
+Session::checkLoginUser();
 
-if (isset($_SESSION['glpiactiveprofile']['interface']) &&
-    $_SESSION['glpiactiveprofile']['interface'] == 'central' &&
-    !isset($_POST['export'])) {
-   Html::header(PluginAutoexportsearchesFiles::getTypeName(2), '', "tools", "PluginAutoexportsearchesMenu",PluginAutoexportsearchesFiles::getType());
+if (Session::haveRight("plugin_autoexportsearches_exportconfigs", READ)) {
+    if (isset($_SESSION['glpiactiveprofile']['interface']) &&
+        $_SESSION['glpiactiveprofile']['interface'] == 'central' &&
+        !isset($_POST['export'])) {
+        Html::header(
+            PluginAutoexportsearchesFiles::getTypeName(2),
+            '',
+            "tools",
+            "PluginAutoexportsearchesMenu",
+            PluginAutoexportsearchesFiles::getType()
+        );
+    } elseif (!isset($_POST['export'])) {
+        Html::helpHeader(PluginAutoexportsearchesFiles::getTypeName(2));
+    }
 
-} else if (!isset($_POST['export'])) {
-   Html::helpHeader(PluginAutoexportsearchesFiles::getTypeName(2));
-}
 
+    $files = new PluginAutoexportsearchesFiles();
+    $config = new PluginAutoexportsearchesConfig();
+    $config->getFromDB(1);
+    $dir = GLPI_PLUGIN_DOC_DIR . $config->getField('folder');
+    if (isset($_POST["filedelete"])) {
+        $noFile = true;
+        foreach ($_POST["filedelete"] as $fileName => $file) {
+            if ($file == 1) {
+                $noFile = false;
+                $files->processFiles("delete", $fileName);
+            }
+        }
+        if (!$noFile) {
+            Session::addMessageAfterRedirect(__('File successfully deleted', 'autoexportsearches'), true, INFO);
+        } else {
+            Session::addMessageAfterRedirect(__('No file selected', 'autoexportsearches'), true, ERROR);
+        }
+        Html::back();
+    }
 
-$files  = new PluginAutoexportsearchesFiles();
-$config = new PluginAutoexportsearchesConfig();
-$config->getFromDB(1);
-$dir = GLPI_PLUGIN_DOC_DIR . $config->getField('folder');
-if(isset($_POST["filedelete"])){
-   $noFile = true;
-   foreach ($_POST["filedelete"] as $fileName => $file){
-      if($file == 1){
-         $noFile = false;
-         $files->processFiles("delete",$fileName);
-      }
-   }
-   if(!$noFile){
-      Session::addMessageAfterRedirect(__('File successfully deleted', 'autoexportsearches'), true, INFO);
-   } else {
-      Session::addMessageAfterRedirect(__('No file selected', 'autoexportsearches'), true, ERROR);
-   }
-   Html::back();
+    if (!isset($_GET['type'])) {
+        $files->showMenu();
+    } else {
+        $type = $_GET['type'];
+        $files->showListFiles($dir, $type);
+    }
 
-}
-
-if(!isset($_GET['type'])){
-   $files->showMenu();
-} else{
-   $type = $_GET['type'];
-   $files->showListFiles($dir,$type);
-}
-if (isset($_SESSION['glpiactiveprofile']['interface']) &&
-    $_SESSION['glpiactiveprofile']['interface'] == 'central') {
-   Html::footer();
-} else {
-   Html::helpFooter();
+    if (isset($_SESSION['glpiactiveprofile']['interface']) &&
+        $_SESSION['glpiactiveprofile']['interface'] == 'central') {
+        Html::footer();
+    } else {
+        Html::helpFooter();
+    }
+}else {
+    Html::displayRightError();
 }

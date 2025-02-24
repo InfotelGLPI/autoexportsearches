@@ -28,23 +28,20 @@
 
 include ('../../../inc/includes.php');
 
-$doc = new Document();
+$files = new PluginAutoexportsearchesFiles();
+$check_download = $files::canDownload();
 
-if (isset($_GET["file"])) { // for other file
-   $splitter = explode("/", $_GET["file"], 2);
-   if (count($splitter) == 2) {
-      $expires_headers = false;
+if (isset($_GET["file"]) && $check_download) { // for other file
 
-      if ($splitter[0] == "_plugins") {
-            $send = GLPI_PLUGIN_DOC_DIR . '/' . $splitter[1];
-      }
-
-      if ($send && file_exists($send)) {
-         Toolbox::sendFile($send, $splitter[1], null, $expires_headers);
-      } else {
-         Html::displayErrorAndDie(__('Unauthorized access to this file'), true);
-      }
-   } else {
-      Html::displayErrorAndDie(__('Invalid filename'), true);
-   }
+    $config = new PluginAutoexportsearchesConfig();
+    $config->getFromDB(1);
+    $dir = GLPI_PLUGIN_DOC_DIR . $config->getField('folder');
+    $filename = $_GET["file"];
+    if(is_file("$dir$filename")){
+        Toolbox::sendFile("$dir$filename", $filename);
+    }else{
+        Html::displayErrorAndDie(__('Invalid filename'), true);
+    }
+}else{
+    Html::displayErrorAndDie(__('Unauthorized access to this file'), true);
 }

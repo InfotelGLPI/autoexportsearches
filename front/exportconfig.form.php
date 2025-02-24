@@ -71,7 +71,6 @@ if (isset($_POST["add"])) {
 } else {
     $export->checkGlobal(READ);
 
-//   Html::header(PluginAutoexportsearchesExportconfig::getTypeName(2), '', "tools", PluginAutoexportsearchesExportconfig::getType());
     Html::header(
         PluginAutoexportsearchesMenu::getTypeName(2),
         '',

@@ -36,7 +36,9 @@ if ($plugin->isActivated("autoexportsearches")) {
    $config = new PluginAutoexportsearchesConfig();
    if (isset($_POST["update"])) {
       if ($config->getFromDB(1)) {
-         $config->update(['id' => 1, 'folder' => $_POST['folder']]);
+          if(isset($_POST['monthBeforePurge']) && is_numeric($_POST['monthBeforePurge'])){
+              $config->update(['id' => 1, 'monthBeforePurge' => $_POST['monthBeforePurge']]);
+          }
       } else {
          $config->add($_POST);
       }

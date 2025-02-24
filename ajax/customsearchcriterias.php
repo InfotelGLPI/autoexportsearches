@@ -36,7 +36,7 @@ $savedSearchId = null;
 if (isset($_POST['savedsearches_id']) && $_POST['savedsearches_id']) {
     $savedSearchId = $_POST['savedsearches_id'];
 }
-if ($savedSearchId) {
+if ($savedSearchId && Session::haveRight("plugin_autoexportsearches_exportconfigs", READ)) {
     $translations = [
         'equals' => __('is'),
         'notequals' => __('is not'),
@@ -136,5 +136,7 @@ if ($savedSearchId) {
         }
     }
     echo "</tbody></table>";
+} else {
+    Html::displayRightError();
 }
 

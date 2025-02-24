@@ -56,20 +56,6 @@ class PluginAutoexportsearchesExportconfig extends CommonDBTM
         return __('Auto export config', 'autoexportsearches');
     }
 
-    //   /**
-    //    * @return bool|int
-    //    */
-    //   static function canView() {
-    //      return Session::haveRight(self::$rightname, READ);
-    //   }
-    //
-    //   /**
-    //    * @return bool
-    //    */
-    //   static function canCreate() {
-    //      return Session::haveRightsOr(self::$rightname, [CREATE, UPDATE, DELETE]);
-    //   }
-
     /**
      * @return array
      */
