@@ -36,12 +36,13 @@ $id = 0;
 if (isset($_POST['id']) && $_POST['id']) {
     $id = $_POST['id'];
 }
-$exportConfig = null;
-if ($id > 0) {
-    $exportConfig = new PluginAutoexportsearchesExportconfig();
-    $exportConfig->getFromDB($id);
-}
-if ($exportConfig->canView() && $exportConfig->canUpdate()) {
+if (Session::haveRight("plugin_autoexportsearches_exportconfigs", READ)
+    && Session::haveRight("plugin_autoexportsearches_exportconfigs", UPDATE)) {
+    $exportConfig = null;
+    if ($id > 0) {
+        $exportConfig = new PluginAutoexportsearchesExportconfig();
+        $exportConfig->getFromDB($id);
+    }
     switch ($_POST['periodicity_type']) {
         case PluginAutoexportsearchesExportconfig::PERIODICITY_DAYS:
             echo "<td>" . __('Periodicity (in days)', 'autoexportsearches') . "</td>";
