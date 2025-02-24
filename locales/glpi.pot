@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - AutoExportSearches plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-24 19:47+0000\n"
+"POT-Creation-Date: 2025-02-24 19:54+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -24,45 +24,45 @@ msgid_plural "Auto exports searches"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ajax/customsearchcriterias.php:77
+#: ajax/customsearchcriterias.php:78
 msgid "Customise the export of"
 msgstr ""
 
-#: ajax/customsearchcriterias.php:85
+#: ajax/customsearchcriterias.php:86
 msgid "Value"
 msgstr ""
 
-#: ajax/customsearchcriterias.php:86
+#: ajax/customsearchcriterias.php:87
 msgid "Customise"
 msgstr ""
 
-#: ajax/periodicityfields.php:47
+#: ajax/periodicityfields.php:48
 msgid "Periodicity (in days)"
 msgstr ""
 
-#: ajax/periodicityfields.php:60 ajax/periodicityfields.php:145
+#: ajax/periodicityfields.php:61 ajax/periodicityfields.php:146
 msgid "Work day only"
 msgstr ""
 
-#: ajax/periodicityfields.php:63
+#: ajax/periodicityfields.php:64
 msgid "If this option is checked, the export will be done only on worked day"
 msgstr ""
 
-#: ajax/periodicityfields.php:111
+#: ajax/periodicityfields.php:112
 msgid "Weekday"
 msgstr ""
 
-#: ajax/periodicityfields.php:127
+#: ajax/periodicityfields.php:128
 msgid "Day of the month"
 msgstr ""
 
-#: ajax/periodicityfields.php:141
+#: ajax/periodicityfields.php:142
 msgid ""
 "For months having less days than the selected day, the export will be done "
 "on the last day of the month."
 msgstr ""
 
-#: ajax/periodicityfields.php:148
+#: ajax/periodicityfields.php:149
 msgid ""
 "If this option is checked, the export will be done the first work day from "
 "the selected day"
