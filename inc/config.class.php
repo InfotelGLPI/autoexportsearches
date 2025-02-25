@@ -53,12 +53,6 @@ class PluginAutoexportsearchesConfig extends CommonDBTM {
       echo "<form name='form' method='post' action='" . Toolbox::getItemTypeFormURL('PluginAutoexportsearchesConfig') . "'>";
       echo "<div align='center'><table class='tab_cadre_fixe'>";
       echo "<tr><th colspan='2'>" . __('Setup') . "</th></tr>";
-      echo "<tr class='tab_bg_1'>";
-      echo "<td>" . __('Folder', 'autoexportsearches') . "</td>";
-      echo "<td>";
-      echo GLPI_PLUGIN_DOC_DIR . $this->getField('folder');
-      echo "</td>";
-      echo "</tr>";
 
       echo "<tr class='tab_bg_1'>";
       echo "<td>" . __('Number of months before purge files', 'autoexportsearches') . "</td>";
