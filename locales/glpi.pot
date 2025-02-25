@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - AutoExportSearches plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-24 19:54+0000\n"
+"POT-Creation-Date: 2025-02-25 07:50+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -80,11 +80,7 @@ msgstr ""
 msgid "No file selected"
 msgstr ""
 
-#: inc/config.class.php:57
-msgid "Folder"
-msgstr ""
-
-#: inc/config.class.php:64
+#: inc/config.class.php:58
 msgid "Number of months before purge files"
 msgstr ""
 
