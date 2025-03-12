@@ -35,9 +35,12 @@ if (!defined('GLPI_ROOT')) {
  */
 class PluginAutoexportsearchesExportconfig extends CommonDBTM
 {
-    const PERIODICITY_DAYS = 0;
-    const PERIODICITY_WEEKLY = 1;
-    const PERIODICITY_MONTHLY = 2;
+
+    const PERIODICITY_MINUTES = 0;
+    const PERIODICITY_HOURS = 1;
+    const PERIODICITY_DAYS = 2;
+    const PERIODICITY_WEEKLY = 3;
+    const PERIODICITY_MONTHLY = 4;
 
     static $rightname = 'plugin_autoexportsearches_exportconfigs';
     //   static $rightname = 'ticket';
@@ -106,7 +109,7 @@ class PluginAutoexportsearchesExportconfig extends CommonDBTM
             'table' => self::getTable(),
             'field' => 'last_export',
             'name' => __('Last export', 'autoexportsearches'),
-            'datatype' => 'date'
+            'datatype' => 'datetime'
         ];
         $tab[] = [
             'id' => '6',
@@ -188,6 +191,8 @@ class PluginAutoexportsearchesExportconfig extends CommonDBTM
         Dropdown::showFromArray(
             'periodicity_type',
             [
+                self::PERIODICITY_MINUTES => __('Every x minutes', 'autoexportsearches'),
+                self::PERIODICITY_HOURS => __('Every x hours', 'autoexportsearches'),
                 self::PERIODICITY_DAYS => __('Every x days', 'autoexportsearches'),
                 self::PERIODICITY_WEEKLY => _x('periodicity', 'Weekly'),
                 self::PERIODICITY_MONTHLY => _x('periodicity', 'Monthly'),
@@ -530,7 +535,7 @@ class PluginAutoexportsearchesExportconfig extends CommonDBTM
 
             $params = Search::manageParams($itemtype, $p, 1, 1);
             $name = Dropdown::getDropdownName('glpi_savedsearches', $export->fields['savedsearches_id']);
-            $name .= "_" . date('Y_m_d') . ".csv";
+            $name .= "_" . date('Y_m_d_H_i_s') . ".csv";
             $titleMail = $name;
             $filename = GLPI_PLUGIN_DOC_DIR . "/autoexportsearches/" . $name;
             self::createCSVFile(Search::getDatas($itemtype, $params), $filename);
@@ -619,7 +624,7 @@ class PluginAutoexportsearchesExportconfig extends CommonDBTM
         $cron_status = 0;
         $old_memory = ini_set("memory_limit", "-1");
         $old_execution = ini_set("max_execution_time", "0");
-        $dateActual = strtotime(date("Y-m-d"));
+        $dateActual = strtotime(date("Y-m-d H:i:s"));
         $day = date('j'); // 1 to 31, today
         $weekday = date('w'); // 0 to 6, today
         $month = date('m'); // 01 to 12, current month
@@ -634,7 +639,30 @@ class PluginAutoexportsearchesExportconfig extends CommonDBTM
         $user = new User();
         foreach ($exportConfigs as $export) {
             // check if export has to be done
-            if ($export['periodicity_type'] == self::PERIODICITY_DAYS) {
+        if ($export['periodicity_type'] == self::PERIODICITY_MINUTES) {
+                // Frequency in minutes
+
+            $delay = 60 * intval($export['periodicity']); // Delay calculation in seconds
+
+            if ($export['last_export'] != null) {
+                $dateEnd = strtotime($export['last_export']) + $delay;
+                if ($dateEnd > $dateActual) {
+                    continue;
+                }
+            }
+        }
+        elseif ($export['periodicity_type'] == self::PERIODICITY_HOURS) {
+                // Periodicity in hours
+
+            $delay = 3600 * intval($export['periodicity']); // Delay calculation in seconds
+            if ($export['last_export'] != null) {
+                $dateEnd = strtotime($export['last_export']) + $delay;
+                if ($dateEnd > $dateActual) {
+                    continue;
+                }
+            }
+        }
+        elseif ($export['periodicity_type'] == self::PERIODICITY_DAYS) {
                 // every worked day
                 if ($export['periodicity'] == 1 && $export['periodicity_open_days'] == 1) {
                     if (!in_array($weekday, $CFG_GLPI['planning_work_days'])) {
@@ -723,7 +751,7 @@ class PluginAutoexportsearchesExportconfig extends CommonDBTM
             $customSearchCriteria = new PluginAutoexportsearchesCustomsearchcriteria();
             $customCriterias = $customSearchCriteria->find(['exportconfigs_id' => $export['id']]);
             $export['custom_criterias'] = $customCriterias;
-            $export['last_export'] = date("Y-m-d");
+            $export['last_export'] = date("Y-m-d H:i:s");
             $exportConfig->update($export);
             $count++;
         }

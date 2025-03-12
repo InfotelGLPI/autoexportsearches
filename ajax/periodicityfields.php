@@ -44,6 +44,49 @@ if (Session::haveRight("plugin_autoexportsearches_exportconfigs", READ)
         $exportConfig->getFromDB($id);
     }
     switch ($_POST['periodicity_type']) {
+        //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+     case PluginAutoexportsearchesExportconfig::PERIODICITY_MINUTES:
+         echo "<td>. __('Periodicity (in minutes)', 'autoexportsearches') . </td>";
+    echo "<td>";
+
+    echo '<div>';
+    $rand = mt_rand();
+
+    Dropdown::showNumber(
+        'periodicity',
+        [
+            'value' => $exportConfig ? $exportConfig->fields['periodicity'] : 1,
+            'rand' => $rand,
+            'min' => 1,
+            'max' => 59
+        ]
+    );
+    echo "</div>";
+
+    echo "</td>";
+    break;
+        //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+        case PluginAutoexportsearchesExportconfig::PERIODICITY_HOURS:
+            echo "<td>. __('Periodicity (in hours)', 'autoexportsearches') . </td>";
+            echo "<td>";
+
+            echo '<div>';
+            $rand = mt_rand();
+            Dropdown::showNumber(
+                'periodicity',
+                [
+                    'value' => $exportConfig ? $exportConfig->fields['periodicity'] : 1,
+                    'rand' => $rand,
+                    'min' => 1,
+                    'max' => 23
+                ]
+            );
+            echo "</div>";
+
+            echo "</td>";
+            break;
+        //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
         case PluginAutoexportsearchesExportconfig::PERIODICITY_DAYS:
             echo "<td>" . __('Periodicity (in days)', 'autoexportsearches') . "</td>";
             echo "<td>";
