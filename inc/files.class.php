@@ -251,7 +251,9 @@ class PluginAutoexportsearchesFiles extends CommonDBTM
                         }else{
                             echo "<td>$file</td>";
                         }
-                        echo "<td>" . Html::convdate($dateFile) . "</td>";
+                        $dateFormated = str_replace("-", ":", substr($dateFile, 11)) ;
+                        $dateFormated = substr($dateFile, 0, 10) . " " . $dateFormated;
+                        echo "<td>" . $dateFormated . "</td>";
                         echo "</tr>";
                         $i++;
                     }
