@@ -54,7 +54,7 @@ if (Session::haveRight("plugin_autoexportsearches_exportconfigs", READ)
         [
             'value' => $exportConfig ? $exportConfig->fields['periodicity'] : 1,
             'rand' => $rand,
-            'min' => 1,
+            'min' => 30,
             'max' => 59
         ]
     );
