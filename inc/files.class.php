@@ -242,7 +242,7 @@ class PluginAutoexportsearchesFiles extends CommonDBTM
                         $key < ($limitNb + $limitBegin)) {
                         //Show datas from file name
                         echo "<tr>";
-                        $dateFile = $this->getDateFile($file, 'Ymd');
+                        $dateFile = $this->getDateFile($file, 'YmdHis');
                         echo "<td width='10' valign='top'>";
                         echo Html::showCheckbox(["name" => "filedelete[$file]"]);
                         echo "</td>";
@@ -310,6 +310,9 @@ class PluginAutoexportsearchesFiles extends CommonDBTM
                 break;
             case "Ymd" :
                 $out = substr($file, strpos($file, "_") + 1, 10);
+                break;
+            case "YmdHis" :
+                $out = substr($file, strpos($file, "_") + 1, 19);
                 break;
         }
         $out = str_replace("_", "-", $out);

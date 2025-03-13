@@ -36,11 +36,11 @@ if (!defined('GLPI_ROOT')) {
 class PluginAutoexportsearchesExportconfig extends CommonDBTM
 {
 
-    const PERIODICITY_MINUTES = 0;
-    const PERIODICITY_HOURS = 1;
-    const PERIODICITY_DAYS = 2;
-    const PERIODICITY_WEEKLY = 3;
-    const PERIODICITY_MONTHLY = 4;
+    const PERIODICITY_MINUTES = 3;
+    const PERIODICITY_HOURS = 4;
+    const PERIODICITY_DAYS = 0;
+    const PERIODICITY_WEEKLY = 1;
+    const PERIODICITY_MONTHLY = 2;
 
     static $rightname = 'plugin_autoexportsearches_exportconfigs';
     //   static $rightname = 'ticket';
@@ -191,22 +191,21 @@ class PluginAutoexportsearchesExportconfig extends CommonDBTM
         Dropdown::showFromArray(
             'periodicity_type',
             [
-                self::PERIODICITY_MINUTES => __('Every x minutes', 'autoexportsearches'),
-                self::PERIODICITY_HOURS => __('Every x hours', 'autoexportsearches'),
+
                 self::PERIODICITY_DAYS => __('Every x days', 'autoexportsearches'),
                 self::PERIODICITY_WEEKLY => _x('periodicity', 'Weekly'),
                 self::PERIODICITY_MONTHLY => _x('periodicity', 'Monthly'),
+                self::PERIODICITY_MINUTES => __('Every x minutes', 'autoexportsearches'),
+                self::PERIODICITY_HOURS => __('Every x hours', 'autoexportsearches'),
             ],
             [
                 'value' => $this->fields['periodicity_type'],
                 'rand' => $rand
             ]
         );
-        echo "</td>";
-        echo "</tr>";
+        echo "</td></tr>";
 
-        echo "<tr class='tab_bg_1' id='periodicity_value'>";
-        echo "</tr>";
+        echo "<tr class='tab_bg_1' id='periodicity_value'></tr>";
         $url = Plugin::getWebDir('autoexportsearches') . "/ajax/periodicityfields.php";
         // let ajax determine the fields shown depending on the choosen periodicity_type
         echo "
@@ -624,7 +623,7 @@ class PluginAutoexportsearchesExportconfig extends CommonDBTM
         $cron_status = 0;
         $old_memory = ini_set("memory_limit", "-1");
         $old_execution = ini_set("max_execution_time", "0");
-        $dateActual = strtotime(date("Y-m-d H:i:s"));
+        $dateActual = strtotime(date("Y-m-d"));
         $day = date('j'); // 1 to 31, today
         $weekday = date('w'); // 0 to 6, today
         $month = date('m'); // 01 to 12, current month
@@ -641,7 +640,7 @@ class PluginAutoexportsearchesExportconfig extends CommonDBTM
             // check if export has to be done
         if ($export['periodicity_type'] == self::PERIODICITY_MINUTES) {
                 // Frequency in minutes
-
+            $dateActual = strtotime(date("Y-m-d H:i:s"));
             $delay = 60 * intval($export['periodicity']); // Delay calculation in seconds
 
             if ($export['last_export'] != null) {
@@ -653,7 +652,7 @@ class PluginAutoexportsearchesExportconfig extends CommonDBTM
         }
         elseif ($export['periodicity_type'] == self::PERIODICITY_HOURS) {
                 // Periodicity in hours
-
+            $dateActual = strtotime(date("Y-m-d H:i:s"));
             $delay = 3600 * intval($export['periodicity']); // Delay calculation in seconds
             if ($export['last_export'] != null) {
                 $dateEnd = strtotime($export['last_export']) + $delay;
@@ -751,7 +750,12 @@ class PluginAutoexportsearchesExportconfig extends CommonDBTM
             $customSearchCriteria = new PluginAutoexportsearchesCustomsearchcriteria();
             $customCriterias = $customSearchCriteria->find(['exportconfigs_id' => $export['id']]);
             $export['custom_criterias'] = $customCriterias;
-            $export['last_export'] = date("Y-m-d H:i:s");
+            if ($export['periodicity_type'] == self::PERIODICITY_MINUTES || $export['periodicity_type'] == self::PERIODICITY_HOURS) {
+                $export['last_export'] = date("Y-m-d H:i:s");
+            }else{
+                $export['last_export'] = date("Y-m-d");
+            }
+
             $exportConfig->update($export);
             $count++;
         }
