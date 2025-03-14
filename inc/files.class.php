@@ -251,10 +251,21 @@ class PluginAutoexportsearchesFiles extends CommonDBTM
                         }else{
                             echo "<td>$file</td>";
                         }
-                        $dateFormated = str_replace("-", ":", substr($dateFile, 11)) ;
-                        $dateFormated = substr($dateFile, 0, 10) . " " . $dateFormated;
-                        echo "<td>" . $dateFormated . "</td>";
-                        echo "</tr>";
+                        $dateFormated = substr($dateFile, 0, 10);
+                        $afterDate = substr($dateFile, 11);
+                        if (strpos($afterDate, "csv") === false) {
+                            if($_SESSION["glpilanguage"] == "fr_FR"){
+                                $dateFormated = preg_replace("/(\d{2})-(\d{2})-(\d{2})/", "$1h$2min$3s", substr($dateFile, 11));
+                                $dateFormated = substr($dateFile, 0, 10) . " " . $dateFormated;
+                            }
+                            else{
+                                $dateFormated = str_replace("-", ":", substr($dateFile, 11)) ;
+                                $dateFormated = substr($dateFile, 0, 10) . " " . $dateFormated;
+                            }
+                        } else {
+                            $dateFormated .= "";
+                        }
+                        echo "<td>" . $dateFormated . "</td></tr>";
                         $i++;
                     }
                 }
