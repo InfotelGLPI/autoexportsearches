@@ -253,16 +253,19 @@ class PluginAutoexportsearchesFiles extends CommonDBTM
                         }
                         $dateFormated = substr($dateFile, 0, 10);
                         $afterDate = substr($dateFile, 11);
-                        if (strpos($afterDate, "csv") === false) {
-                            if($_SESSION["glpilanguage"] == "fr_FR"){
-                                $dateFormated = preg_replace("/(\d{2})-(\d{2})-(\d{2})/", "$1h$2min$3s", substr($dateFile, 11));
-                                $dateFormated = substr($dateFile, 0, 10) . " " . $dateFormated;
-                            }
-                            else{
-                                $dateFormated = str_replace("-", ":", substr($dateFile, 11)) ;
-                                $dateFormated = substr($dateFile, 0, 10) . " " . $dateFormated;
-                            }
-                        } else {
+                        if ((strpos($afterDate, "csv") === false) && ($_SESSION["glpilanguage"] == "fr_FR")) {
+                            $dateFormated1 = preg_replace("/(\d{4})-(\d{2})-(\d{2})/", "$3-$2-$1", substr($dateFile, 0, 10));
+                            $dateFormated2 = preg_replace("/(\d{2})-(\d{2})-(\d{2})/", "$1h$2min$3s", substr($dateFile, 11));
+                            $dateFormated = $dateFormated1 . " " . $dateFormated2;
+                        } elseif ((strpos($afterDate, "csv") === false) && ($_SESSION["glpilanguage"] !== "fr_FR")) {
+                            $dateFormated = str_replace("-", ":", substr($dateFile, 11));
+                            $dateFormated = substr($dateFile, 0, 10) . " " . $dateFormated;
+                        }
+                        elseif ((strpos($afterDate, "csv") === true) && ($_SESSION["glpilanguage"] == "fr_FR")) {
+                            $dateFormated1 = preg_replace("/(\d{4})-(\d{2})-(\d{2})/", "$3-$2-$1", substr($dateFile, 0, 10));
+                            $dateFormated = $dateFormated1;
+                        }
+                        elseif((strpos($afterDate, "csv") === true) && ($_SESSION["glpilanguage"] !== "fr_FR")){
                             $dateFormated .= "";
                         }
                         echo "<td>" . $dateFormated . "</td></tr>";
