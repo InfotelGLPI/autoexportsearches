@@ -242,7 +242,7 @@ class PluginAutoexportsearchesFiles extends CommonDBTM
                         $key < ($limitNb + $limitBegin)) {
                         //Show datas from file name
                         echo "<tr>";
-                        $dateFile = $this->getDateFile($file, 'Ymd');
+                        $dateFile = $this->getDateFile($file, 'YmdHis');
                         echo "<td width='10' valign='top'>";
                         echo Html::showCheckbox(["name" => "filedelete[$file]"]);
                         echo "</td>";
@@ -251,8 +251,24 @@ class PluginAutoexportsearchesFiles extends CommonDBTM
                         }else{
                             echo "<td>$file</td>";
                         }
-                        echo "<td>" . Html::convdate($dateFile) . "</td>";
-                        echo "</tr>";
+                        $dateFormated = substr($dateFile, 0, 10);
+                        $afterDate = substr($dateFile, 11);
+                        if ((strpos($afterDate, "csv") === false) && ($_SESSION["glpilanguage"] == "fr_FR")) {
+                            $dateFormated1 = preg_replace("/(\d{4})-(\d{2})-(\d{2})/", "$3-$2-$1", substr($dateFile, 0, 10));
+                            $dateFormated2 = preg_replace("/(\d{2})-(\d{2})-(\d{2})/", "$1h$2min$3s", substr($dateFile, 11));
+                            $dateFormated = $dateFormated1 . " " . $dateFormated2;
+                        } elseif ((strpos($afterDate, "csv") === false) && ($_SESSION["glpilanguage"] !== "fr_FR")) {
+                            $dateFormated = str_replace("-", ":", substr($dateFile, 11));
+                            $dateFormated = substr($dateFile, 0, 10) . " " . $dateFormated;
+                        }
+                        elseif ((strpos($afterDate, "csv") === true) && ($_SESSION["glpilanguage"] == "fr_FR")) {
+                            $dateFormated1 = preg_replace("/(\d{4})-(\d{2})-(\d{2})/", "$3-$2-$1", substr($dateFile, 0, 10));
+                            $dateFormated = $dateFormated1;
+                        }
+                        elseif((strpos($afterDate, "csv") === true) && ($_SESSION["glpilanguage"] !== "fr_FR")){
+                            $dateFormated .= "";
+                        }
+                        echo "<td>" . $dateFormated . "</td></tr>";
                         $i++;
                     }
                 }
@@ -310,6 +326,9 @@ class PluginAutoexportsearchesFiles extends CommonDBTM
                 break;
             case "Ymd" :
                 $out = substr($file, strpos($file, "_") + 1, 10);
+                break;
+            case "YmdHis" :
+                $out = substr($file, strpos($file, "_") + 1, 19);
                 break;
         }
         $out = str_replace("_", "-", $out);

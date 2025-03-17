@@ -44,11 +44,39 @@ if (Session::haveRight("plugin_autoexportsearches_exportconfigs", READ)
         $exportConfig->getFromDB($id);
     }
     switch ($_POST['periodicity_type']) {
+     case PluginAutoexportsearchesExportconfig::PERIODICITY_MINUTES:
+         echo "<td>" . __('Periodicity (in minutes)', 'autoexportsearches') . "</td><td><div>";
+
+    $rand = mt_rand();
+
+    Dropdown::showNumber(
+        'periodicity',
+        [
+            'value' => $exportConfig ? $exportConfig->fields['periodicity'] : 1,
+            'rand' => $rand,
+            'min' => 30,
+            'max' => 59
+        ]
+    );
+    echo "</div></td>";
+    break;
+        case PluginAutoexportsearchesExportconfig::PERIODICITY_HOURS:
+            echo "<td>" . __('Periodicity (in hours)', 'autoexportsearches') . "</td><td><div>";
+            $rand = mt_rand();
+            Dropdown::showNumber(
+                'periodicity',
+                [
+                    'value' => $exportConfig ? $exportConfig->fields['periodicity'] : 1,
+                    'rand' => $rand,
+                    'min' => 1,
+                    'max' => 23
+                ]
+            );
+            echo "</div></td>";
+            break;
         case PluginAutoexportsearchesExportconfig::PERIODICITY_DAYS:
             echo "<td>" . __('Periodicity (in days)', 'autoexportsearches') . "</td>";
-            echo "<td>";
-
-            echo '<div>';
+            echo "<td><div>";
             $rand = mt_rand();
             Dropdown::showNumber(
                 'periodicity',
@@ -109,8 +137,7 @@ if (Session::haveRight("plugin_autoexportsearches_exportconfigs", READ)
             break;
 
         case PluginAutoexportsearchesExportconfig::PERIODICITY_WEEKLY:
-            echo "<td>" . __('Weekday', 'autoexportsearches') . "</td>";
-            echo "<td>";
+            echo "<td>" . __('Weekday', 'autoexportsearches') . "</td><td>";
 
             $rand = mt_rand();
             Dropdown::showFromArray(
@@ -125,9 +152,7 @@ if (Session::haveRight("plugin_autoexportsearches_exportconfigs", READ)
             break;
 
         case PluginAutoexportsearchesExportconfig::PERIODICITY_MONTHLY:
-            echo "<td>" . __('Day of the month', 'autoexportsearches') . "</td>";
-            echo "<td>";
-            echo '<div>';
+            echo "<td>" . __('Day of the month', 'autoexportsearches') . "</td><td><div>";
             $rand = mt_rand();
             Dropdown::showNumber(
                 'periodicity',
