@@ -5,15 +5,16 @@
 # 
 # Translators:
 # Xavier CAILLAUD <thetsmr@gmail.com>, 2025
+# Edison Jaçe, 2025
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - AutoExportSearches plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-25 07:50+0000\n"
+"POT-Creation-Date: 2025-03-17 15:03+0000\n"
 "PO-Revision-Date: 2025-02-21 16:08+0000\n"
-"Last-Translator: Xavier CAILLAUD <thetsmr@gmail.com>, 2025\n"
+"Last-Translator: Edison Jaçe, 2025\n"
 "Language-Team: French (France) (https://app.transifex.com/infotelGLPI/teams/205440/fr_FR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -41,26 +42,34 @@ msgid "Customise"
 msgstr "Personnaliser"
 
 #: ajax/periodicityfields.php:48
+msgid "Periodicity (in minutes)"
+msgstr "Périodicité (en minutes)"
+
+#: ajax/periodicityfields.php:64
+msgid "Periodicity (in hours)"
+msgstr "Périodicité (en heures)"
+
+#: ajax/periodicityfields.php:78
 msgid "Periodicity (in days)"
 msgstr "Périodicité ( en jours)"
 
-#: ajax/periodicityfields.php:61 ajax/periodicityfields.php:146
+#: ajax/periodicityfields.php:89 ajax/periodicityfields.php:171
 msgid "Work day only"
 msgstr "Seulement les jours ouvrés"
 
-#: ajax/periodicityfields.php:64
+#: ajax/periodicityfields.php:92
 msgid "If this option is checked, the export will be done only on worked day"
 msgstr "Si cette option est coché, l'export ne sera fait que les jours ouvrés"
 
-#: ajax/periodicityfields.php:112
+#: ajax/periodicityfields.php:140
 msgid "Weekday"
 msgstr "Jour de la semaine"
 
-#: ajax/periodicityfields.php:128
+#: ajax/periodicityfields.php:155
 msgid "Day of the month"
 msgstr "Jour du mois"
 
-#: ajax/periodicityfields.php:142
+#: ajax/periodicityfields.php:167
 msgid ""
 "For months having less days than the selected day, the export will be done "
 "on the last day of the month."
@@ -68,7 +77,7 @@ msgstr ""
 "Pour les mois plus court que le jour sélectionné, l'export sera fait le "
 "dernier jour du mois."
 
-#: ajax/periodicityfields.php:149
+#: ajax/periodicityfields.php:174
 msgid ""
 "If this option is checked, the export will be done the first work day from "
 "the selected day"
@@ -92,43 +101,51 @@ msgstr "Pas de fichier sélectionné"
 msgid "Number of months before purge files"
 msgstr "Nombre de mois avant la purge des fichiers"
 
-#: inc/exportconfig.class.php:56 inc/profile.class.php:187
+#: inc/exportconfig.class.php:59 inc/profile.class.php:187
 msgid "Auto export config"
 msgstr "Configuration de l'export automatique"
 
-#: inc/exportconfig.class.php:83 inc/exportconfig.class.php:137
+#: inc/exportconfig.class.php:86 inc/exportconfig.class.php:140
 msgid "User who owns the saved search"
 msgstr "Utilisateur ayant la vue à exporter"
 
-#: inc/exportconfig.class.php:91 inc/exportconfig.class.php:153
+#: inc/exportconfig.class.php:94 inc/exportconfig.class.php:156
 msgid "Saved search to export"
 msgstr "Recherche sauvegardée à exporter"
 
-#: inc/exportconfig.class.php:108
+#: inc/exportconfig.class.php:111
 msgid "Last export"
 msgstr "Dernier export"
 
-#: inc/exportconfig.class.php:132
+#: inc/exportconfig.class.php:135
 msgid "Search to export"
 msgstr "Recherche sauvegardée à exporter"
 
-#: inc/exportconfig.class.php:184
+#: inc/exportconfig.class.php:187
 msgid "Periodicity type"
 msgstr "Type de périodicité"
 
-#: inc/exportconfig.class.php:191
+#: inc/exportconfig.class.php:195
 msgid "Every x days"
 msgstr "Tout les x jours"
 
-#: inc/exportconfig.class.php:224
+#: inc/exportconfig.class.php:198
+msgid "Every x minutes"
+msgstr "Toutes les x minutes"
+
+#: inc/exportconfig.class.php:199
+msgid "Every x hours"
+msgstr "Toutes les x heures"
+
+#: inc/exportconfig.class.php:228
 msgid "Options"
 msgstr "Options"
 
-#: inc/exportconfig.class.php:228
+#: inc/exportconfig.class.php:232
 msgid "Send mail to"
 msgstr "Envoyé par mail à l'adresse"
 
-#: inc/exportconfig.class.php:555
+#: inc/exportconfig.class.php:559
 msgid "Export saved searches"
 msgstr "Recherches sauvegardées exportées"
 
@@ -152,15 +169,15 @@ msgstr "Nom du fichier"
 msgid "Generation date"
 msgstr "Date de génération"
 
-#: inc/files.class.php:270
+#: inc/files.class.php:286
 msgid "No file to download in the directory"
 msgstr "Pas de fichier à télécharger dans le dossier"
 
-#: inc/files.class.php:275
+#: inc/files.class.php:291
 msgid "The folder doesn't exist"
 msgstr "Le dossier n'existe pas"
 
-#: inc/files.class.php:386
+#: inc/files.class.php:405
 msgid "Delete export files"
 msgstr "Supprimer les fichiers exportés"
 
