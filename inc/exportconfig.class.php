@@ -572,7 +572,16 @@ class PluginAutoexportsearchesExportconfig extends CommonDBTM
         $mmail->AddCustomHeader("Auto-Submitted: auto-generated");
         // For exchange
         $mmail->AddCustomHeader("X-Auto-Response-Suppress: OOF, DR, NDR, RN, NRN");
-        $mmail->SetFrom($CFG_GLPI["from_email"], $CFG_GLPI["from_email_name"], false);
+        if (empty($CFG_GLPI["from_email"])) {
+            $config = new Config();
+            $results = $config->find(array('name' => 'from_email'));
+
+            foreach ($results as $result) {
+                $mmail->SetFrom($result['value'], $CFG_GLPI["from_email_name"], false);
+            }
+        } else {
+            $mmail->SetFrom($CFG_GLPI["from_email"], $CFG_GLPI["from_email_name"], false);
+        }
 
         $text = __('Mail autoexportsearches');
 
