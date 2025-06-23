@@ -736,7 +736,7 @@ class PluginAutoexportsearchesExportconfig extends CommonDBTM
             $user = new User();
             $user->getFromDB($export['users_id']);
             $profile = new Profile();
-            $savedProfile = $_SESSION['glpiactiveprofile'];
+            $savedProfile = $_SESSION['glpiactiveprofile'] ?? 0;
             if ($profile->getFromDB($user->fields['profiles_id'])) {
                 $_SESSION['glpiactiveprofile'] = $profile->fields;
             }
