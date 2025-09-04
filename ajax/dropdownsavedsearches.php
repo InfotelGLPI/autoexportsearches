@@ -26,9 +26,13 @@
  --------------------------------------------------------------------------
  */
 
-include('../../../inc/includes.php');
+global $CFG_GLPI;
+
+use Glpi\Exception\Http\AccessDeniedHttpException;
+
 header("Content-Type: text/html; charset=UTF-8");
 Html::header_nocache();
+Session::checkRight('plugin_autoexportsearches_exportconfigs', UPDATE);
 
 Session::checkLoginUser();
 
@@ -47,7 +51,7 @@ if (Session::haveRight("plugin_autoexportsearches_exportconfigs", READ)) {
                     'condition' => ['users_id' => $_POST['users_id']],
                     'rand' => $_POST["rand"]
                 ]);
-                $url = Plugin::getWebDir('autoexportsearches') . "/ajax/customsearchcriterias.php";
+                $url =	$CFG_GLPI['root_doc'] . "/plugins/ajax/customsearchcriterias.php";
                 $exportConfigId = isset($_POST['exportconfigs_id']) ? $_POST['exportconfigs_id'] : 0;
                 echo "
             <script>
@@ -66,6 +70,6 @@ if (Session::haveRight("plugin_autoexportsearches_exportconfigs", READ)) {
             break;
     }
 } else {
-    Html::displayRightError();
+    throw new AccessDeniedHttpException();
 }
 

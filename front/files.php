@@ -27,11 +27,12 @@
  */
 
 
+use Glpi\Exception\Http\AccessDeniedHttpException;
+
 if (!defined('GLPI_ROOT')) {
    define('GLPI_ROOT', realpath('../../..'));
 }
 
-include(GLPI_ROOT . '/inc/includes.php');
 Session::checkLoginUser();
 
 if (Session::haveRight("plugin_autoexportsearches_exportconfigs", READ)) {
@@ -84,5 +85,5 @@ if (Session::haveRight("plugin_autoexportsearches_exportconfigs", READ)) {
         Html::helpFooter();
     }
 }else {
-    Html::displayRightError();
+    throw new AccessDeniedHttpException();
 }

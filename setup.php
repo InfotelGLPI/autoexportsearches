@@ -84,8 +84,8 @@ function plugin_version_autoexportsearches()
         'homepage' => '',
         'requirements' => [
             'glpi' => [
-                'min' => '10.0',
-                'max' => '11.0',
+                'min' => '11.0',
+                'max' => '12.0',
                 'dev' => false
             ]
         ]

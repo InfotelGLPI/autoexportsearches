@@ -26,7 +26,8 @@
  --------------------------------------------------------------------------
  */
 
-include ('../../../inc/includes.php');
+
+use Glpi\Exception\Http\BadRequestHttpException;
 
 $files = new PluginAutoexportsearchesFiles();
 $check_download = $files::canDownload();
@@ -40,8 +41,8 @@ if (isset($_GET["file"]) && $check_download) { // for other file
     if(is_file("$dir$filename")){
         Toolbox::sendFile("$dir$filename", $filename);
     }else{
-        Html::displayErrorAndDie(__('Invalid filename'), true);
+        throw new BadRequestHttpException('Invalid filename');
     }
 }else{
-    Html::displayErrorAndDie(__('Unauthorized access to this file'), true);
+    throw new BadRequestHttpException('Unauthorized access to this file');
 }
