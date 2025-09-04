@@ -154,7 +154,7 @@ class PluginAutoexportsearchesFiles extends CommonDBTM
                 } else {
                     $limitNb = 0;
                 }
-                $target = $CFG_GLPI['root_doc'] . '/plugins/front/files.php?type=' . $type;
+                $target = $CFG_GLPI['root_doc'] . '/plugins/autoexportsearches/front/files.php?type=' . $type;
                 if (isset($_GET['orderType'])) {
                     $parameters = "orderCol=" . $_GET['orderCol'] . "&orderType=" . $_GET['orderType'];
                 } else {
