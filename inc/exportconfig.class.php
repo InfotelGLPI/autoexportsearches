@@ -285,203 +285,87 @@ class PluginAutoexportsearchesExportconfig extends CommonDBTM
     static function createCSVFile(array $data, $filename)
     {
         global $CFG_GLPI;
+
         $file = fopen($filename, "w");
-        fwrite($file, pack("CCC", 0xef, 0xbb, 0xbf));
-        $item = null;
-        if (class_exists($data['itemtype'])) {
-            $item = new $data['itemtype']();
-        }
-        $data['display_type'] = Search::CSV_OUTPUT;
-        if (!isset($data['data']) || !isset($data['data']['totalcount'])) {
+        if (!$file) {
             return false;
         }
-        // Contruct Pager parameters
-        $globallinkto
-            = Toolbox::append_params([
-            'criteria'
-            => Toolbox::stripslashes_deep($data['search']['criteria']),
-            'metacriteria'
-            => Toolbox::stripslashes_deep($data['search']['metacriteria'])
-        ],
-            '&amp;');
-//      $parameters = "sort=" . $data['search']['sort'] . "&amp;order=" . $data['search']['order'] . '&amp;' .
-//                    $globallinkto;
-//
-//      if (isset($_GET['_in_modal'])) {
-//         $parameters .= "&amp;_in_modal=1";
-//      }
 
-//            print_r($data);
+        // UTF-8 BOM pour Excel
+        fwrite($file, pack("CCC", 0xef, 0xbb, 0xbf));
 
-        // If the begin of the view is before the number of items
-        if ($data['data']['count'] > 0) {
-            // Display pager only for HTML
-
-            // Define begin and end var for loop
-            // Search case
-            $begin_display = $data['data']['begin'];
-            $end_display = $data['data']['end'];
+        $headers = [];
+        $metanames = [];
 
 
-            if ($data['search']['as_map'] == 0) {
-                $massformid = 'massform' . $data['itemtype'];
+        foreach ($data['data']['cols'] as $col) {
+            $name = $col['name'];
 
-
-                // Compute number of columns to display
-                // Add toview elements
-                $nbcols = count($data['data']['cols']);
-
-
-                // New Line for Header Items Line
-                $headers_line = '';
-                $headers_line_top = '';
-                $headers_line_bottom = '';
-
-                $header_num = 1;
-
-
-                // Display column Headers for toview items
-                $metanames = [];
-                foreach ($data['data']['cols'] as $val) {
-                    $linkto = '';
-                    if (!$val['meta']
-                        && !$data['search']['no_sort']
-                        && (!isset($val['searchopt']['nosort'])
-                            || !$val['searchopt']['nosort'])) {
-                        $linkto = $data['search']['target'] . (strpos($data['search']['target'], '?') ? '&amp;' : '?') .
-                            "itemtype=" . $data['itemtype'] . "&amp;sort=" .
-                            $val['id'] . "&amp;order=" .
-                            (($data['search']['order'] == "ASC") ? "DESC" : "ASC") .
-                            "&amp;start=" . $data['search']['start'] . "&amp;" . $globallinkto;
-                    }
-
-                    $name = $val["name"];
-
-                    // prefix by group name (corresponding to optgroup in dropdown) if exists
-                    if (isset($val['groupname'])) {
-                        $groupname = $val['groupname'];
-                        if (is_array($groupname)) {
-                            //since 9.2, getSearchOptions has been changed
-                            $groupname = $groupname['name'];
-                        }
-                        $name = "$groupname - $name";
-                    }
-
-                    // Not main itemtype add itemtype to display
-                    if ($data['itemtype'] != $val['itemtype']) {
-                        if (!isset($metanames[$val['itemtype']])) {
-                            if ($metaitem = getItemForItemtype($val['itemtype'])) {
-                                $metanames[$val['itemtype']] = $metaitem->getTypeName();
-                            }
-                        }
-                        $name = sprintf(
-                            __('%1$s - %2$s'),
-                            $metanames[$val['itemtype']],
-                            $val["name"]
-                        );
-                    }
-
-                    $headers_line .= Search::showHeaderItem(
-                        $data['display_type'],
-                        $name,
-                        $header_num,
-                        $linkto,
-                        (!$val['meta']
-                            && ($data['search']['sort'] == $val['id'])),
-                        $data['search']['order']
-                    );
+            // Gestion du groupname
+            if (isset($col['groupname'])) {
+                if (is_array($col['groupname'])) {
+                    $col['groupname'] = $col['groupname']['name'];
                 }
-
-                // Add specific column Header
-                if (isset($CFG_GLPI["union_search_type"][$data['itemtype']])) {
-                    $headers_line .= Search::showHeaderItem(
-                        $data['display_type'],
-                        __('Item type'),
-                        $header_num
-                    );
-                }
-                // End Line for column headers
-                $headers_line .= Search::showEndLine($data['display_type']);
-
-                $headers_line_top .= $headers_line;
-
-                fwrite($file, $headers_line_top);
-
-                // Num of the row (1=header_line)
-                $row_num = 1;
-
-
-                $typenames = [];
-                // Display Loop
-                foreach ($data['data']['rows'] as $rowkey => $row) {
-                    $line = "";
-                    // Column num
-                    $item_num = 1;
-                    $row_num++;
-                    // New line
-                    $line .= Search::showNewLine(
-                        $data['display_type'],
-                        ($row_num % 2),
-                        $data['search']['is_deleted']
-                    );
-
-                    $current_type = (isset($row['TYPE']) ? $row['TYPE'] : $data['itemtype']);
-
-
-                    // Add item in item list
-                    Session::addToNavigateListItems($current_type, $row["id"]);
-
-
-                    // Print other toview items
-                    foreach ($data['data']['cols'] as $col) {
-                        $colkey = "{$col['itemtype']}_{$col['id']}";
-                        if (!$col['meta']) {
-                            //TODO cgange to write CSV
-                            $line .= Search::showItem(
-                                $data['display_type'],
-                                $row[$colkey]['displayname'],
-                                $item_num,
-                                $row_num,
-                                Search::displayConfigItem(
-                                    $data['itemtype'],
-                                    $col['id'],
-                                    $row,
-                                    $colkey
-                                )
-                            );
-                        } else { // META case
-                            $line .= Search::showItem(
-                                $data['display_type'],
-                                $row[$colkey]['displayname'],
-                                $item_num,
-                                $row_num
-                            );
-                        }
-                    }
-
-                    if (isset($CFG_GLPI["union_search_type"][$data['itemtype']])) {
-                        if (!isset($typenames[$row["TYPE"]])) {
-                            if ($itemtmp = getItemForItemtype($row["TYPE"])) {
-                                $typenames[$row["TYPE"]] = $itemtmp->getTypeName();
-                            }
-                        }
-                        $line .= Search::showItem(
-                            $data['display_type'],
-                            $typenames[$row["TYPE"]],
-                            $item_num,
-                            $row_num
-                        );
-                    }
-                    // End Line
-                    $line .= Search::showEndLine($data['display_type']);
-
-                    fwrite($file, $line);
-                }
+                $name = $col['groupname'] . ' - ' . $name;
             }
+
+
+            if ($data['itemtype'] != $col['itemtype']) {
+                if (!isset($metanames[$col['itemtype']])) {
+                    if ($metaitem = getItemForItemtype($col['itemtype'])) {
+                        $metanames[$col['itemtype']] = $metaitem->getTypeName();
+                    } else {
+                        $metanames[$col['itemtype']] = $col['itemtype'];
+                    }
+                }
+                $name = $metanames[$col['itemtype']] . ' - ' . $name;
+            }
+
+            $headers[] = $name;
+        }
+
+
+        if (isset($CFG_GLPI["union_search_type"][$data['itemtype']])) {
+            $headers[] = __('Item type');
+        }
+
+
+        fputcsv($file, $headers, ';');
+
+
+        foreach ($data['data']['rows'] as $row) {
+            $line = [];
+
+            foreach ($data['data']['cols'] as $col) {
+                $colkey = "{$col['itemtype']}_{$col['id']}";
+                $value = $row[$colkey]['displayname'] ?? '';
+
+
+                $value = html_entity_decode(strip_tags($value), ENT_QUOTES | ENT_HTML5, 'UTF-8');
+                $value = preg_replace("/[\r\n]+/", ' ', $value);
+
+                $line[] = trim($value);
+            }
+
+
+            if (isset($CFG_GLPI["union_search_type"][$data['itemtype']])) {
+                $type = $row['TYPE'] ?? $data['itemtype'];
+                $typename = '';
+                if ($item = getItemForItemtype($type)) {
+                    $typename = $item->getTypeName();
+                }
+                $line[] = $typename;
+            }
+
+            fputcsv($file, $line, ';');
         }
 
         fclose($file);
+        return true;
     }
+
+
+
 
     static function executeExport($plugin_exportconfigs_id)
     {
