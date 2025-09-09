@@ -27,7 +27,7 @@
  */
 
 if (!defined('GLPI_ROOT')) {
-    die ("Sorry. You can't access directly to this file");
+    die("Sorry. You can't access directly to this file");
 }
 
 /**
@@ -46,7 +46,6 @@ class PluginAutoexportsearchesFiles extends CommonDBTM
     static function canDownload()
     {
         return ProfileRight::getProfileRights($_SESSION['glpiactiveprofile']['id'], ['plugin_autoexportsearches_accessfiles']);
-
     }
 
     function showMenu()
@@ -58,7 +57,7 @@ class PluginAutoexportsearchesFiles extends CommonDBTM
         echo "<tr>";
         echo "<th colspan='6'>" . self::getTypeName() . "</th>";
         echo "</tr>";
-        $types = Self::getTypes();
+        $types = self::getTypes();
         $max = count($types);
         for ($i = 0; $i < $max; $i += 3) {
             echo "<tr>";
@@ -201,20 +200,20 @@ class PluginAutoexportsearchesFiles extends CommonDBTM
                 }
 
                 echo "<th><a href='files.php?type=$type&orderCol=name&orderType=$ordertype&start=$start'>" . __(
-                        'File name',
-                        'autoexportsearches'
-                    ) . "</a></th>";
+                    'File name',
+                    'autoexportsearches'
+                ) . "</a></th>";
                 echo "<th><a href='files.php?type=$type&orderCol=date&orderType=$ordertype&start=$start'>" . __(
-                        'Generation date',
-                        'autoexportsearches'
-                    ) . "</a></th>";
+                    'Generation date',
+                    'autoexportsearches'
+                ) . "</a></th>";
                 echo "</thead></tr>";
 
                 //Sort table order with headers
                 if (isset($_GET['orderCol'])) {
                     switch ($_GET['orderCol']) {
-                        case 'name' :
-                        case 'date' :
+                        case 'name':
+                        case 'date':
                             if (isset($_GET['orderType'])) {
                                 if ($_GET['orderType'] == 'ASC') {
                                     sort($files);
@@ -223,7 +222,7 @@ class PluginAutoexportsearchesFiles extends CommonDBTM
                                 }
                             }
                             break;
-                        case 'month' :
+                        case 'month':
                             if (isset($_GET['orderType'])) {
                                 if ($_GET['orderType'] == 'ASC') {
                                     usort($files, [$this, 'sortArrayAsc']);
@@ -246,9 +245,9 @@ class PluginAutoexportsearchesFiles extends CommonDBTM
                         echo "<td width='10' valign='top'>";
                         echo Html::showCheckbox(["name" => "filedelete[$file]"]);
                         echo "</td>";
-                        if($this::canDownload()){
+                        if ($this::canDownload()) {
                             echo "<td><a href='$plugin_dir/front/document.send.php?file=$file' target='_blank'> $file </a></td>";
-                        }else{
+                        } else {
                             echo "<td>$file</td>";
                         }
                         $dateFormated = substr($dateFile, 0, 10);
@@ -260,12 +259,10 @@ class PluginAutoexportsearchesFiles extends CommonDBTM
                         } elseif ((strpos($afterDate, "csv") === false) && ($_SESSION["glpilanguage"] !== "fr_FR")) {
                             $dateFormated = str_replace("-", ":", substr($dateFile, 11));
                             $dateFormated = substr($dateFile, 0, 10) . " " . $dateFormated;
-                        }
-                        elseif ((strpos($afterDate, "csv") === true) && ($_SESSION["glpilanguage"] == "fr_FR")) {
+                        } elseif ((strpos($afterDate, "csv") === true) && ($_SESSION["glpilanguage"] == "fr_FR")) {
                             $dateFormated1 = preg_replace("/(\d{4})-(\d{2})-(\d{2})/", "$3-$2-$1", substr($dateFile, 0, 10));
                             $dateFormated = $dateFormated1;
-                        }
-                        elseif((strpos($afterDate, "csv") === true) && ($_SESSION["glpilanguage"] !== "fr_FR")){
+                        } elseif ((strpos($afterDate, "csv") === true) && ($_SESSION["glpilanguage"] !== "fr_FR")) {
                             $dateFormated .= "";
                         }
                         echo "<td>" . $dateFormated . "</td></tr>";
@@ -283,9 +280,9 @@ class PluginAutoexportsearchesFiles extends CommonDBTM
                 echo "</div>";
             } else {
                 echo "<div class='center b'>" . __(
-                        'No file to download in the directory',
-                        'autoexportsearches'
-                    ) . "</div>";
+                    'No file to download in the directory',
+                    'autoexportsearches'
+                ) . "</div>";
             }
         } else {
             echo "<div class='center b'>" . __('The folder doesn\'t exist', 'autoexportsearches') . "</div>";
@@ -315,19 +312,19 @@ class PluginAutoexportsearchesFiles extends CommonDBTM
     function getDateFile($file, $formatOut = "Ymd")
     {
         switch ($formatOut) {
-            case "Y" :
+            case "Y":
                 $out = substr($file, strpos($file, "_") + 1, 4);
                 break;
-            case "m" :
+            case "m":
                 $out = substr($file, strpos($file, "_") + 6, 2);
                 break;
-            case "d" :
+            case "d":
                 $out = substr($file, strpos($file, "_") + 9, 2);
                 break;
-            case "Ymd" :
+            case "Ymd":
                 $out = substr($file, strpos($file, "_") + 1, 10);
                 break;
-            case "YmdHis" :
+            case "YmdHis":
                 $out = substr($file, strpos($file, "_") + 1, 19);
                 break;
         }
@@ -349,7 +346,7 @@ class PluginAutoexportsearchesFiles extends CommonDBTM
         $dir = GLPI_PLUGIN_DOC_DIR . $config->getField('folder');
 
         switch ($action) {
-            case "get" :
+            case "get":
                 $res = [];
                 // Get files in defined dir
                 $files = scandir($dir);
@@ -362,7 +359,7 @@ class PluginAutoexportsearchesFiles extends CommonDBTM
                     }
                 }
                 break;
-            case "delete" :
+            case "delete":
                 // delete file
                 $res = unlink($dir . "/" . $file);
                 break;
@@ -436,5 +433,4 @@ class PluginAutoexportsearchesFiles extends CommonDBTM
         $autoexportsearchesFiles->deleteByMonths($nbMonths);
         return 1;
     }
-
 }
