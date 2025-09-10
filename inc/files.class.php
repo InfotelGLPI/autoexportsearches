@@ -45,7 +45,10 @@ class PluginAutoexportsearchesFiles extends CommonDBTM
 
     static function canDownload()
     {
-        return ProfileRight::getProfileRights($_SESSION['glpiactiveprofile']['id'], ['plugin_autoexportsearches_accessfiles']);
+        return ProfileRight::getProfileRights(
+            $_SESSION['glpiactiveprofile']['id'],
+            ['plugin_autoexportsearches_accessfiles']
+        );
     }
 
     function showMenu()

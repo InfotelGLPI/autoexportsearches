@@ -50,7 +50,7 @@ class PluginAutoexportsearchesCustomsearchcriteria extends CommonDBTM
         if (isset($exportConfig->input['custom_criterias'])) {
             $customCriterias = $exportConfig->input['custom_criterias'];
             if (is_array($customCriterias)) {
-                foreach($customCriterias as $criteria) {
+                foreach ($customCriterias as $criteria) {
                     $criteria['exportconfigs_id'] = $exportConfig->fields['id'];
                     $self = new self();
                     $self->add($criteria);

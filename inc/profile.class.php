@@ -27,15 +27,16 @@
  */
 
 if (!defined('GLPI_ROOT')) {
-   die("Sorry. You can't access directly to this file");
+    die("Sorry. You can't access directly to this file");
 }
 
 /**
  * Class PluginAutoexportsearchesProfile
  */
-class PluginAutoexportsearchesProfile extends CommonDBTM {
+class PluginAutoexportsearchesProfile extends CommonDBTM
+{
 
-   static $rightname = "profile";
+    static $rightname = "profile";
 
    /**
     * @param CommonGLPI $item
@@ -43,17 +44,19 @@ class PluginAutoexportsearchesProfile extends CommonDBTM {
     *
     * @return string|translated
     */
-   public function getTabNameForItem(CommonGLPI $item, $withtemplate = 0) {
+    public function getTabNameForItem(CommonGLPI $item, $withtemplate = 0)
+    {
 
-      if ($item->getType() == 'Profile') {
-         if ($item->getField('interface') == 'central') {
-            return self::createTabEntry(PluginAutoexportsearchesMenu::getMenuName(2));
-         }
-      }
-      return '';
-   }
+        if ($item->getType() == 'Profile') {
+            if ($item->getField('interface') == 'central') {
+                return self::createTabEntry(PluginAutoexportsearchesMenu::getMenuName(2));
+            }
+        }
+        return '';
+    }
 
-    static function getIcon() {
+    static function getIcon()
+    {
         return PluginAutoexportsearchesMenu::getIcon();
     }
    /**
@@ -63,31 +66,38 @@ class PluginAutoexportsearchesProfile extends CommonDBTM {
     *
     * @return bool
     */
-   public static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0) {
+    public static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0)
+    {
 
-      if ($item->getType() == 'Profile') {
-         $ID   = $item->getID();
-         $prof = new self();
+        if ($item->getType() == 'Profile') {
+            $ID   = $item->getID();
+            $prof = new self();
 
-         self::addDefaultProfileInfos($ID,
-                                      ['plugin_autoexportsearches_exportconfigs' => 0,
+            self::addDefaultProfileInfos(
+                $ID,
+                ['plugin_autoexportsearches_exportconfigs' => 0,
                                        'plugin_autoexportsearches_accessfiles'   => 0,
-                                       'plugin_autoexportsearches_configs'       => 0]);
-         $prof->showForm($ID);
-      }
-      return true;
-   }
+                'plugin_autoexportsearches_configs'       => 0]
+            );
+            $prof->showForm($ID);
+        }
+        return true;
+    }
 
    /**
     * @param $ID
     */
-   static function createFirstAccess($ID) {
-      //85
-      self::addDefaultProfileInfos($ID,
-                                   ['plugin_autoexportsearches_exportconfigs' => ALLSTANDARDRIGHT,
+    static function createFirstAccess($ID)
+    {
+       //85
+        self::addDefaultProfileInfos(
+            $ID,
+            ['plugin_autoexportsearches_exportconfigs' => ALLSTANDARDRIGHT,
                                     'plugin_autoexportsearches_accessfiles'   => 1,
-                                    'plugin_autoexportsearches_configs'       => 1], true);
-   }
+            'plugin_autoexportsearches_configs'       => 1],
+            true
+        );
+    }
 
    /**
     * @param      $profiles_id
@@ -96,27 +106,32 @@ class PluginAutoexportsearchesProfile extends CommonDBTM {
     *
     * @internal param $profile
     */
-   static function addDefaultProfileInfos($profiles_id, $rights, $drop_existing = false) {
+    static function addDefaultProfileInfos($profiles_id, $rights, $drop_existing = false)
+    {
 
-      $profileRight = new ProfileRight();
-      $dbu          = new DbUtils();
-      foreach ($rights as $right => $value) {
-         if ($dbu->countElementsInTable('glpi_profilerights',
-                                        ["profiles_id" => $profiles_id, "name" => $right]) && $drop_existing) {
-            $profileRight->deleteByCriteria(['profiles_id' => $profiles_id, 'name' => $right]);
-         }
-         if (!$dbu->countElementsInTable('glpi_profilerights',
-                                         ["profiles_id" => $profiles_id, "name" => $right])) {
-            $myright['profiles_id'] = $profiles_id;
-            $myright['name']        = $right;
-            $myright['rights']      = $value;
-            $profileRight->add($myright);
+        $profileRight = new ProfileRight();
+        $dbu          = new DbUtils();
+        foreach ($rights as $right => $value) {
+            if ($dbu->countElementsInTable(
+                'glpi_profilerights',
+                ["profiles_id" => $profiles_id, "name" => $right]
+            ) && $drop_existing) {
+                $profileRight->deleteByCriteria(['profiles_id' => $profiles_id, 'name' => $right]);
+            }
+            if (!$dbu->countElementsInTable(
+                'glpi_profilerights',
+                ["profiles_id" => $profiles_id, "name" => $right]
+            )) {
+                $myright['profiles_id'] = $profiles_id;
+                $myright['name']        = $right;
+                $myright['rights']      = $value;
+                $profileRight->add($myright);
 
-            //Add right to the current session
-            $_SESSION['glpiactiveprofile'][$right] = $value;
-         }
-      }
-   }
+               //Add right to the current session
+                $_SESSION['glpiactiveprofile'][$right] = $value;
+            }
+        }
+    }
 
    /**
     * Show profile form
@@ -130,82 +145,84 @@ class PluginAutoexportsearchesProfile extends CommonDBTM {
     * @internal param value $target url of target
     *
     */
-   function showForm($profiles_id = 0, $openform = true, $closeform = true) {
+    function showForm($profiles_id = 0, $openform = true, $closeform = true)
+    {
 
-      echo "<div class='firstbloc'>";
-      if (($canedit = Session::haveRightsOr(self::$rightname, [CREATE, UPDATE, PURGE]))
+        echo "<div class='firstbloc'>";
+        if (($canedit = Session::haveRightsOr(self::$rightname, [CREATE, UPDATE, PURGE]))
           && $openform) {
-         $profile = new Profile();
-         echo "<form method='post' action='" . $profile->getFormURL() . "'>";
-      }
+            $profile = new Profile();
+            echo "<form method='post' action='" . $profile->getFormURL() . "'>";
+        }
 
-      $profile = new Profile();
-      $profile->getFromDB($profiles_id);
-      //      if ($profile->getField('interface') == 'central') {
-      $rights = $this->getAllRights();
-      $profile->displayRightsChoiceMatrix($rights, ['canedit'       => $canedit,
+        $profile = new Profile();
+        $profile->getFromDB($profiles_id);
+       //      if ($profile->getField('interface') == 'central') {
+        $rights = $this->getAllRights();
+        $profile->displayRightsChoiceMatrix($rights, ['canedit'       => $canedit,
                                                     'default_class' => 'tab_bg_2',
                                                     'title'         => __('General')]);
 
-      echo "<table class='tab_cadre_fixehov'>";
-      //      echo "<tr class='tab_bg_1'><th colspan='4'>" . __('Helpdesk') . "</th></tr>\n";
+        echo "<table class='tab_cadre_fixehov'>";
+       //      echo "<tr class='tab_bg_1'><th colspan='4'>" . __('Helpdesk') . "</th></tr>\n";
 
-      $effective_rights = ProfileRight::getProfileRights($profiles_id, ['plugin_autoexportsearches_accessfiles', 'plugin_autoexportsearches_configs']);
-      echo "<tr class='tab_bg_2'>";
-      echo "<td width='20%'>" . __('Access to download files', 'autoexportsearches') . "</td>";
-      echo "<td colspan='5'>";
-      Html::showCheckbox(['name'    => '_plugin_autoexportsearches_accessfiles',
+        $effective_rights = ProfileRight::getProfileRights($profiles_id, ['plugin_autoexportsearches_accessfiles', 'plugin_autoexportsearches_configs']);
+        echo "<tr class='tab_bg_2'>";
+        echo "<td width='20%'>" . __('Access to download files', 'autoexportsearches') . "</td>";
+        echo "<td colspan='5'>";
+        Html::showCheckbox(['name'    => '_plugin_autoexportsearches_accessfiles',
                           'checked' => $effective_rights['plugin_autoexportsearches_accessfiles']]);
-      echo "</td></tr>\n";
+        echo "</td></tr>\n";
 
-      echo "<tr class='tab_bg_2'>";
-      echo "<td width='20%'>" . __('Configuration') . "</td>";
-      echo "<td colspan='5'>";
-      Html::showCheckbox(['name'    => '_plugin_autoexportsearches_configs',
+        echo "<tr class='tab_bg_2'>";
+        echo "<td width='20%'>" . __('Configuration') . "</td>";
+        echo "<td colspan='5'>";
+        Html::showCheckbox(['name'    => '_plugin_autoexportsearches_configs',
                           'checked' => $effective_rights['plugin_autoexportsearches_configs']]);
-      echo "</td></tr>\n";
-      echo "</table>";
+        echo "</td></tr>\n";
+        echo "</table>";
 
-      if ($canedit
+        if ($canedit
           && $closeform
-      ) {
-         echo "<div class='center'>";
-         echo Html::hidden('id', ['value' => $profiles_id]);
-         echo Html::submit(_sx('button', 'Save'), ['name' => 'update', 'class' => 'btn btn-primary']);
-         echo "</div>\n";
-         Html::closeForm();
-      }
-      echo "</div>";
-      return;
-   }
+        ) {
+            echo "<div class='center'>";
+            echo Html::hidden('id', ['value' => $profiles_id]);
+            echo Html::submit(_sx('button', 'Save'), ['name' => 'update', 'class' => 'btn btn-primary']);
+            echo "</div>\n";
+            Html::closeForm();
+        }
+        echo "</div>";
+        return;
+    }
 
    /**
     * @param bool $all
     *
     * @return array
     */
-   static function getAllRights($all = false) {
-      $rights = [
+    static function getAllRights($all = false)
+    {
+        $rights = [
          ['itemtype' => 'PluginAutoexportsearchesExportconfig',
           'label'    => __('Auto export config', 'autoexportsearches'),
           'field'    => 'plugin_autoexportsearches_exportconfigs'
          ],
-      ];
+        ];
 
-      if ($all) {
-         $rights[] = ['itemtype' => 'PluginAutoexportsearchesExportconfig',
+        if ($all) {
+            $rights[] = ['itemtype' => 'PluginAutoexportsearchesExportconfig',
                       'label'    => __('Access export files', 'autoexportsearches'),
                       'field'    => 'plugin_autoexportsearches_accessfiles'
-         ];
+            ];
 
-         $rights[] = ['itemtype' => 'PluginAutoexportsearchesExportconfig',
+            $rights[] = ['itemtype' => 'PluginAutoexportsearchesExportconfig',
                       'label'    => __('Configuration', 'autoexportsearches'),
                       'field'    => 'plugin_autoexportsearches_configs'
-         ];
-      }
+            ];
+        }
 
-      return $rights;
-   }
+        return $rights;
+    }
 
    /**
     * Init profiles
@@ -215,57 +232,62 @@ class PluginAutoexportsearchesProfile extends CommonDBTM {
     * @return int
     */
 
-   static function translateARight($old_right) {
-      switch ($old_right) {
-         case '':
-            return 0;
-         case 'r' :
-            return READ;
-         case 'w':
-            return ALLSTANDARDRIGHT + READNOTE + UPDATENOTE;
-         case '0':
-         case '1':
-            return $old_right;
+    static function translateARight($old_right)
+    {
+        switch ($old_right) {
+            case '':
+                return 0;
+            case 'r':
+                return READ;
+            case 'w':
+                return ALLSTANDARDRIGHT + READNOTE + UPDATENOTE;
+            case '0':
+            case '1':
+                return $old_right;
 
-         default :
-            return 0;
-      }
-   }
+            default:
+                return 0;
+        }
+    }
 
 
    /**
     * Initialize profiles, and migrate it necessary
     */
-   static function initProfile() {
-      global $DB;
-      $profile = new self();
-      $dbu     = new DbUtils();
-      //Add new rights in glpi_profilerights table
-      foreach ($profile->getAllRights(true) as $data) {
-         if ($dbu->countElementsInTable("glpi_profilerights",
-                                        ["name" => $data['field']]) == 0) {
-            ProfileRight::addProfileRights([$data['field']]);
-         }
-      }
-       $profileId = $_SESSION['glpiactiveprofile']['id'];
+    static function initProfile()
+    {
+        global $DB;
+        $profile = new self();
+        $dbu     = new DbUtils();
+       //Add new rights in glpi_profilerights table
+        foreach ($profile->getAllRights(true) as $data) {
+            if ($dbu->countElementsInTable(
+                "glpi_profilerights",
+                ["name" => $data['field']]
+            ) == 0) {
+                ProfileRight::addProfileRights([$data['field']]);
+            }
+        }
+        $profileId = $_SESSION['glpiactiveprofile']['id'];
 
-      foreach ($DB->request([
+        foreach ($DB->request([
           'FROM'  => 'glpi_profilerights',
           'WHERE' => [
               'profiles_id' => $profileId,
               'name'        => ['LIKE', '%plugin_autoexportsearches%']
           ]
-      ]) as $prof) {
-         $_SESSION['glpiactiveprofile'][$prof['name']] = $prof['rights'];
-      }
-   }
+        ]) as $prof) {
+            $_SESSION['glpiactiveprofile'][$prof['name']] = $prof['rights'];
+        }
+    }
 
 
-   static function removeRightsFromSession() {
-      foreach (self::getAllRights(true) as $right) {
-         if (isset($_SESSION['glpiactiveprofile'][$right['field']])) {
-            unset($_SESSION['glpiactiveprofile'][$right['field']]);
-         }
-      }
-   }
+    static function removeRightsFromSession()
+    {
+        foreach (self::getAllRights(true) as $right) {
+            if (isset($_SESSION['glpiactiveprofile'][$right['field']])) {
+                unset($_SESSION['glpiactiveprofile'][$right['field']]);
+            }
+        }
+    }
 }
