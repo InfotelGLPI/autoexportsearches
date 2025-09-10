@@ -47,12 +47,15 @@ class PluginAutoexportsearchesProfile extends CommonDBTM {
 
       if ($item->getType() == 'Profile') {
          if ($item->getField('interface') == 'central') {
-            return PluginAutoexportsearchesMenu::getMenuName(2);
+            return self::createTabEntry(PluginAutoexportsearchesMenu::getMenuName(2));
          }
       }
       return '';
    }
 
+    static function getIcon() {
+        return PluginAutoexportsearchesMenu::getIcon();
+    }
    /**
     * @param CommonGLPI $item
     * @param int        $tabnum
