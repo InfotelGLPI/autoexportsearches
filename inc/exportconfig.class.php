@@ -1,4 +1,5 @@
 <?php
+
 /*
  -------------------------------------------------------------------------
  autoexportsearches plugin for GLPI
@@ -35,14 +36,13 @@ if (!defined('GLPI_ROOT')) {
  */
 class PluginAutoexportsearchesExportconfig extends CommonDBTM
 {
+    public const PERIODICITY_MINUTES = 3;
+    public const PERIODICITY_HOURS = 4;
+    public const PERIODICITY_DAYS = 0;
+    public const PERIODICITY_WEEKLY = 1;
+    public const PERIODICITY_MONTHLY = 2;
 
-    const PERIODICITY_MINUTES = 3;
-    const PERIODICITY_HOURS = 4;
-    const PERIODICITY_DAYS = 0;
-    const PERIODICITY_WEEKLY = 1;
-    const PERIODICITY_MONTHLY = 2;
-
-    static $rightname = 'plugin_autoexportsearches_exportconfigs';
+    public static $rightname = 'plugin_autoexportsearches_exportconfigs';
     //   static $rightname = 'ticket';
 
 
@@ -54,7 +54,7 @@ class PluginAutoexportsearchesExportconfig extends CommonDBTM
      *
      * @return string
      */
-    static function getTypeName($nb = 0)
+    public static function getTypeName($nb = 0)
     {
         return __('Auto export config', 'autoexportsearches');
     }
@@ -62,13 +62,13 @@ class PluginAutoexportsearchesExportconfig extends CommonDBTM
     /**
      * @return array
      */
-    function rawSearchOptions()
+    public function rawSearchOptions()
     {
         $tab = [];
 
         $tab[] = [
             'id' => 'common',
-            'name' => self::getTypeName(2)
+            'name' => self::getTypeName(2),
         ];
         $tab[] = [
             'id' => '1',
@@ -76,7 +76,7 @@ class PluginAutoexportsearchesExportconfig extends CommonDBTM
             'field' => 'id',
             'name' => __('ID'),
             'massiveaction' => false,
-            'datatype' => 'itemlink'
+            'datatype' => 'itemlink',
         ];
 
         $tab[] = [
@@ -84,7 +84,7 @@ class PluginAutoexportsearchesExportconfig extends CommonDBTM
             'table' => User::getTable(),
             'field' => 'name',
             'name' => __('User who owns the saved search', 'autoexportsearches'),
-            'datatype' => 'dropdown'
+            'datatype' => 'dropdown',
         ];
 
         $tab[] = [
@@ -96,34 +96,34 @@ class PluginAutoexportsearchesExportconfig extends CommonDBTM
             'linkfield' => 'savedsearches_id',
         ];
 
-//        $tab[] = [
-//            'id' => '4',
-//            'table' => self::getTable(),
-//            'field' => 'periodicity_type',
-//            'name' => __('Periodicity type', 'autoexportsearches'),
-//            'datatype' => 'text'
-//        ];
+        //        $tab[] = [
+        //            'id' => '4',
+        //            'table' => self::getTable(),
+        //            'field' => 'periodicity_type',
+        //            'name' => __('Periodicity type', 'autoexportsearches'),
+        //            'datatype' => 'text'
+        //        ];
 
         $tab[] = [
             'id' => '5',
             'table' => self::getTable(),
             'field' => 'last_export',
             'name' => __('Last export', 'autoexportsearches'),
-            'datatype' => 'datetime'
+            'datatype' => 'datetime',
         ];
         $tab[] = [
             'id' => '6',
             'table' => self::getTable(),
             'field' => 'is_active',
             'name' => __('Active'),
-            'datatype' => 'bool'
+            'datatype' => 'bool',
         ];
 
 
         return $tab;
     }
 
-    function showForm($ID, $options = [])
+    public function showForm($ID, $options = [])
     {
         global $CFG_GLPI;
 
@@ -132,11 +132,17 @@ class PluginAutoexportsearchesExportconfig extends CommonDBTM
         $this->showFormHeader($options);
 
         echo "<tr class='tab_bg_1'>";
+        echo "<td>" . __('Active') . "</td>";
+        echo "<td>";
+        Dropdown::showYesNo("is_active", $this->fields['is_active']);
+        echo "</td>";
+        echo "</tr>";
+
+        echo "<tr class='tab_bg_1'>";
         echo "<td colspan='2'><h3>" . __('Search to export', 'autoexportsearches') . "</h3></td>";
         echo "</tr>";
 
         echo "<tr class='tab_bg_1'>";
-
         echo "<td>" . __('User who owns the saved search', 'autoexportsearches') . "</td>";
         echo "<td>";
 
@@ -146,7 +152,7 @@ class PluginAutoexportsearchesExportconfig extends CommonDBTM
             'value' => $this->fields["users_id"],
             //                        'entity' => $this->fields["entities_id"],
             'right' => 'own_ticket',
-            'rand' => $rand
+            'rand' => $rand,
         ]);
         echo "</td>";
         echo "</tr>";
@@ -163,7 +169,7 @@ class PluginAutoexportsearchesExportconfig extends CommonDBTM
             'savedsearches_id' => $this->fields["savedsearches_id"],
             'exportconfigs_id' => $ID,
             "rand" => $rand,
-            "action" => "loadSearches"
+            "action" => "loadSearches",
         ];
         $url = $CFG_GLPI['root_doc'] . "/plugins/autoexportsearches/ajax/dropdownsavedsearches.php";
         Ajax::updateItemOnSelectEvent("dropdown_users_id$rand", "savedSearches", $url, $params);
@@ -200,7 +206,7 @@ class PluginAutoexportsearchesExportconfig extends CommonDBTM
             ],
             [
                 'value' => $this->fields['periodicity_type'],
-                'rand' => $rand
+                'rand' => $rand,
             ]
         );
         echo "</td></tr>";
@@ -236,14 +242,6 @@ class PluginAutoexportsearchesExportconfig extends CommonDBTM
 
         echo "</tr>";
 
-        echo "<tr class='tab_bg_1'>";
-        echo "<td>" . __('Active') . "</td>";
-        echo "<td>";
-        Dropdown::showYesNo("is_active", $this->fields['is_active']);
-        echo "</td>";
-
-        echo "</tr>";
-
 
         $this->showFormButtons($options);
 
@@ -253,7 +251,7 @@ class PluginAutoexportsearchesExportconfig extends CommonDBTM
     /**
      * @return array
      */
-    static function getMenuContent()
+    public static function getMenuContent()
     {
         $menu['title'] = self::getMenuName(2);
         $menu['page'] = self::getSearchURL(false);
@@ -261,7 +259,7 @@ class PluginAutoexportsearchesExportconfig extends CommonDBTM
 
         $menu['icon'] = static::getIcon();
         if (self::canCreate()) {
-            $menu['links']['add'] = PLUGIN_AUTOEXPORTSEARCH_DIR_NOFULL . "/front/exportconfig.form.php";
+            $menu['links']['add'] = PLUGINAUTOEXPORTSEARCH_WEBDIR . "/front/exportconfig.form.php";
         }
 
 
@@ -269,7 +267,7 @@ class PluginAutoexportsearchesExportconfig extends CommonDBTM
     }
 
 
-    static function getIcon()
+    public static function getIcon()
     {
         return "ti ti-tags";
     }
@@ -282,7 +280,7 @@ class PluginAutoexportsearchesExportconfig extends CommonDBTM
      *
      * @return void
      **/
-    static function createCSVFile(array $data, $filename)
+    public static function createCSVFile(array $data, $filename)
     {
         global $CFG_GLPI;
 
@@ -367,7 +365,7 @@ class PluginAutoexportsearchesExportconfig extends CommonDBTM
 
 
 
-    static function executeExport($plugin_exportconfigs_id)
+    public static function executeExport($plugin_exportconfigs_id)
     {
         global $CFG_GLPI;
 
@@ -400,7 +398,7 @@ class PluginAutoexportsearchesExportconfig extends CommonDBTM
                         PluginAutoexportsearchesCustomsearchcriteria::CRITERIA_FIRST_DAY_OF_MONTH,
                         strtotime($monthYearString)
                     );
-                    $criteria['value'] = date('Y-m-d', $newValue). '00:00:00';
+                    $criteria['value'] = date('Y-m-d', $newValue) . '00:00:00';
                 }
                 if (preg_match('/^-\d+WEEK$/', $criteria['value'])
                     && $customCriteria['criteria_value'] == PluginAutoexportsearchesCustomsearchcriteria::CRITERIA_FIRST_DAY_OF_WEEK) {
@@ -411,7 +409,7 @@ class PluginAutoexportsearchesExportconfig extends CommonDBTM
                             PluginAutoexportsearchesCustomsearchcriteria::CRITERIA_FIRST_DAY_OF_WEEK,
                             $normalValue
                         );
-                        $criteria['value'] = date('Y-m-d', $newValue). '00:00:00';
+                        $criteria['value'] = date('Y-m-d', $newValue) . '00:00:00';
                     }
                 }
             }
@@ -435,19 +433,19 @@ class PluginAutoexportsearchesExportconfig extends CommonDBTM
      *
      * @return array
      */
-    static function cronInfo($name)
+    public static function cronInfo($name)
     {
         switch ($name) {
             case 'AutoexportsearchesExportconfigExport':
                 return [
-                    'description' => __('Export saved searches', 'autoexportsearches')
+                    'description' => __('Export saved searches', 'autoexportsearches'),
                 ];   // Optional
                 break;
         }
         return [];
     }
 
-    static function sendMail($title, $recipient, $filename, $filepath)
+    public static function sendMail($title, $recipient, $filename, $filepath)
     {
         global $CFG_GLPI;
 
@@ -458,7 +456,7 @@ class PluginAutoexportsearchesExportconfig extends CommonDBTM
         $mmail->AddCustomHeader("X-Auto-Response-Suppress: OOF, DR, NDR, RN, NRN");
         if (empty($CFG_GLPI["from_email"])) {
             $config = new Config();
-            $results = $config->find(array('name' => 'from_email'));
+            $results = $config->find(['name' => 'from_email']);
 
             foreach ($results as $result) {
                 $mmail->SetFrom($result['value'], $CFG_GLPI["from_email_name"], false);
@@ -473,11 +471,11 @@ class PluginAutoexportsearchesExportconfig extends CommonDBTM
         $mmail->Subject = "[GLPI] " . $title;
         $mmail->Body = $text;
 
-//      $mmail->AddEmbeddedImage($filepath,
-//                               0,
-//                               $filename,
-//                               'base64',
-//                               'text/csv');
+        //      $mmail->AddEmbeddedImage($filepath,
+        //                               0,
+        //                               $filename,
+        //                               'base64',
+        //                               'text/csv');
         $mmail->addAttachment(
             $filepath,
             $filename
@@ -506,7 +504,7 @@ class PluginAutoexportsearchesExportconfig extends CommonDBTM
      *
      * @return int
      */
-    static function cronAutoexportsearchesExportconfigExport($task = null)
+    public static function cronAutoexportsearchesExportconfigExport($task = null)
     {
         global $DB, $CFG_GLPI;
         if (!isset($CFG_GLPI['planning_work_days'])) {
@@ -531,30 +529,28 @@ class PluginAutoexportsearchesExportconfig extends CommonDBTM
         $user = new User();
         foreach ($exportConfigs as $export) {
             // check if export has to be done
-        if ($export['periodicity_type'] == self::PERIODICITY_MINUTES) {
+            if ($export['periodicity_type'] == self::PERIODICITY_MINUTES) {
                 // Frequency in minutes
-            $dateActual = strtotime(date("Y-m-d H:i:s"));
-            $delay = 60 * intval($export['periodicity']); // Delay calculation in seconds
+                $dateActual = strtotime(date("Y-m-d H:i:s"));
+                $delay = 60 * intval($export['periodicity']); // Delay calculation in seconds
 
-            if ($export['last_export'] != null) {
-                $dateEnd = strtotime($export['last_export']) + $delay;
-                if ($dateEnd > $dateActual) {
-                    continue;
+                if ($export['last_export'] != null) {
+                    $dateEnd = strtotime($export['last_export']) + $delay;
+                    if ($dateEnd > $dateActual) {
+                        continue;
+                    }
                 }
-            }
-        }
-        elseif ($export['periodicity_type'] == self::PERIODICITY_HOURS) {
+            } elseif ($export['periodicity_type'] == self::PERIODICITY_HOURS) {
                 // Periodicity in hours
-            $dateActual = strtotime(date("Y-m-d H:i:s"));
-            $delay = 3600 * intval($export['periodicity']); // Delay calculation in seconds
-            if ($export['last_export'] != null) {
-                $dateEnd = strtotime($export['last_export']) + $delay;
-                if ($dateEnd > $dateActual) {
-                    continue;
+                $dateActual = strtotime(date("Y-m-d H:i:s"));
+                $delay = 3600 * intval($export['periodicity']); // Delay calculation in seconds
+                if ($export['last_export'] != null) {
+                    $dateEnd = strtotime($export['last_export']) + $delay;
+                    if ($dateEnd > $dateActual) {
+                        continue;
+                    }
                 }
-            }
-        }
-        elseif ($export['periodicity_type'] == self::PERIODICITY_DAYS) {
+            } elseif ($export['periodicity_type'] == self::PERIODICITY_DAYS) {
                 // every worked day
                 if ($export['periodicity'] == 1 && $export['periodicity_open_days'] == 1) {
                     if (!in_array($weekday, $CFG_GLPI['planning_work_days'])) {
@@ -632,7 +628,7 @@ class PluginAutoexportsearchesExportconfig extends CommonDBTM
             $auth->user = $user;
             Session::init($auth);
             Session::loadGroups();
-            $user = new  User();
+            $user = new User();
             $user->getFromDB($export['users_id']);
             $_SESSION["glpiID"] = $export['users_id'];
             $_SESSION["glpicronuserrunning"] = $export['users_id'];
@@ -645,7 +641,7 @@ class PluginAutoexportsearchesExportconfig extends CommonDBTM
             $export['custom_criterias'] = $customCriterias;
             if ($export['periodicity_type'] == self::PERIODICITY_MINUTES || $export['periodicity_type'] == self::PERIODICITY_HOURS) {
                 $export['last_export'] = date("Y-m-d H:i:s");
-            }else{
+            } else {
                 $export['last_export'] = date("Y-m-d");
             }
 

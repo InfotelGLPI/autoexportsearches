@@ -28,10 +28,12 @@
 
 define('PLUGIN_AUTOEXPORTSEARCH_VERSION', '2.1.5');
 
+global $CFG_GLPI;
+
 if (!defined("PLUGIN_AUTOEXPORTSEARCH_DIR")) {
     define("PLUGIN_AUTOEXPORTSEARCH_DIR", Plugin::getPhpDir("autoexportsearches"));
-    define("PLUGIN_AUTOEXPORTSEARCH_DIR_NOFULL", Plugin::getPhpDir("autoexportsearches", false));
-    define("PLUGINAUTOEXPORTSEARCH_WEBDIR", Plugin::getWebDir("autoexportsearches"));
+    $root = $CFG_GLPI['root_doc'] . '/plugins/autoexportsearches';
+    define("PLUGINAUTOEXPORTSEARCH_WEBDIR", $root);
 }
 
 // Init the hooks of the plugins -Needed

@@ -53,7 +53,7 @@ class PluginAutoexportsearchesConfig extends CommonDBTM
         }
 
         echo "<form name='form' method='post' action='" . Toolbox::getItemTypeFormURL('PluginAutoexportsearchesConfig') . "'>";
-        echo "<div align='center'><table class='tab_cadre_fixe'>";
+        echo "<div class='center'><table class='tab_cadre_fixe'>";
         echo "<tr><th colspan='2'>" . __('Setup') . "</th></tr>";
 
         echo "<tr class='tab_bg_1'>";

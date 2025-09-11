@@ -165,22 +165,22 @@ class PluginAutoexportsearchesFiles extends CommonDBTM
                 Html::printPager($limitBegin, $nbRows, $target, $parameters);
                 echo "<form name='deleteCSV' method='post'>";
 
-                echo "<table id='tableCsv' class='tab_cadrehov'><thead>";
+                echo "<table id='tableCsv' class='tab_cadre_fixe'><thead>";
                 echo "<tr>";
                 // Checkbox colomn for select delete datas
                 echo "<th>
                    <div class='form-group-checkbox'>
-                      <input title='" . __("Delete") . "' type='checkbox' class='new_checkbox' name='checkall_delete' id='checkall_delete' 
+                      <input title='" . __("Delete") . "' type='checkbox' class='new_checkbox' name='checkall_delete' id='checkall_delete'
                       onclick='checkAll(this.checked);' >";
                 echo "<script>
                function checkAll(state) {
                   var cases = document.getElementsByTagName('input');
                   for(var i=0; i<cases.length; i++){
                     if(cases[i].type == 'checkbox'){
-                         cases[i].checked = state;   
-                     } 
+                         cases[i].checked = state;
+                     }
                   }
-              }       
+              }
             </script>";
                 echo "<label class='label-checkbox' for='checkall_delete' title='" . __("Check all") . "'>
                          <span class='check'></span>
