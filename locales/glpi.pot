@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - AutoExportSearches plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-06-26 13:08+0000\n"
+"POT-Creation-Date: 2025-09-11 09:48+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -24,75 +24,75 @@ msgid_plural "Auto exports searches"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ajax/customsearchcriterias.php:78
+#: ajax/customsearchcriterias.php:80
 msgid "Customise the export of"
 msgstr ""
 
-#: ajax/customsearchcriterias.php:86
+#: ajax/customsearchcriterias.php:88
 msgid "Value"
 msgstr ""
 
-#: ajax/customsearchcriterias.php:87
+#: ajax/customsearchcriterias.php:89
 msgid "Customise"
 msgstr ""
 
-#: ajax/periodicityfields.php:48
+#: ajax/periodicityfields.php:50
 msgid "Periodicity (in minutes)"
 msgstr ""
 
-#: ajax/periodicityfields.php:64
+#: ajax/periodicityfields.php:66
 msgid "Periodicity (in hours)"
 msgstr ""
 
-#: ajax/periodicityfields.php:78
+#: ajax/periodicityfields.php:80
 msgid "Periodicity (in days)"
 msgstr ""
 
-#: ajax/periodicityfields.php:89 ajax/periodicityfields.php:171
+#: ajax/periodicityfields.php:91 ajax/periodicityfields.php:173
 msgid "Work day only"
 msgstr ""
 
-#: ajax/periodicityfields.php:92
+#: ajax/periodicityfields.php:94
 msgid "If this option is checked, the export will be done only on worked day"
 msgstr ""
 
-#: ajax/periodicityfields.php:140
+#: ajax/periodicityfields.php:142
 msgid "Weekday"
 msgstr ""
 
-#: ajax/periodicityfields.php:155
+#: ajax/periodicityfields.php:157
 msgid "Day of the month"
 msgstr ""
 
-#: ajax/periodicityfields.php:167
+#: ajax/periodicityfields.php:169
 msgid ""
 "For months having less days than the selected day, the export will be done "
 "on the last day of the month."
 msgstr ""
 
-#: ajax/periodicityfields.php:174
+#: ajax/periodicityfields.php:176
 msgid ""
 "If this option is checked, the export will be done the first work day from "
 "the selected day"
 msgstr ""
 
-#: front/config.form.php:56
+#: front/config.form.php:55
 msgid "Please activate the plugin"
 msgstr ""
 
-#: front/files.php:66
+#: front/files.php:67
 msgid "File successfully deleted"
 msgstr ""
 
-#: front/files.php:68
+#: front/files.php:69
 msgid "No file selected"
 msgstr ""
 
-#: inc/config.class.php:58
+#: inc/config.class.php:60
 msgid "Number of months before purge files"
 msgstr ""
 
-#: inc/exportconfig.class.php:59 inc/profile.class.php:187
+#: inc/exportconfig.class.php:59 inc/profile.class.php:207
 msgid "Auto export config"
 msgstr ""
 
@@ -136,7 +136,7 @@ msgstr ""
 msgid "Send mail to"
 msgstr ""
 
-#: inc/exportconfig.class.php:559
+#: inc/exportconfig.class.php:443
 msgid "Export saved searches"
 msgstr ""
 
@@ -144,19 +144,19 @@ msgstr ""
 msgid "Download files"
 msgstr ""
 
-#: inc/files.class.php:104
+#: inc/files.class.php:106
 msgid "No export files available"
 msgstr ""
 
-#: inc/files.class.php:138
+#: inc/files.class.php:140
 msgid "Files"
 msgstr ""
 
-#: inc/files.class.php:204
+#: inc/files.class.php:206
 msgid "File name"
 msgstr ""
 
-#: inc/files.class.php:208
+#: inc/files.class.php:210
 msgid "Generation date"
 msgstr ""
 
@@ -172,32 +172,32 @@ msgstr ""
 msgid "Delete export files"
 msgstr ""
 
-#: inc/menu.class.php:41
+#: inc/menu.class.php:43
 msgid "Auto export"
 msgid_plural "Auto exports"
 msgstr[0] ""
 msgstr[1] ""
 
-#: inc/menu.class.php:94
+#: inc/menu.class.php:99
 msgid "Menu"
 msgstr ""
 
-#: inc/menu.class.php:101
+#: inc/menu.class.php:106
 msgid "Export config list to export"
 msgstr ""
 
-#: inc/menu.class.php:108
+#: inc/menu.class.php:113
 msgid "List of export files"
 msgstr ""
 
-#: inc/profile.class.php:152
+#: inc/profile.class.php:171
 msgid "Access to download files"
 msgstr ""
 
-#: inc/profile.class.php:194
+#: inc/profile.class.php:214
 msgid "Access export files"
 msgstr ""
 
-#: inc/profile.class.php:199
+#: inc/profile.class.php:219
 msgid "Configuration"
 msgstr ""
