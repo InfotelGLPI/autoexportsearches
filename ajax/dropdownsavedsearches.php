@@ -51,7 +51,7 @@ if (Session::haveRight("plugin_autoexportsearches_exportconfigs", READ)) {
                     'condition' => ['users_id' => $_POST['users_id']],
                     'rand' => $_POST["rand"]
                 ]);
-                $url =	$CFG_GLPI['root_doc'] . "/plugins/autoexportsearches/ajax/customsearchcriterias.php";
+                $url =	PLUGINAUTOEXPORTSEARCH_WEBDIR . "/autoexportsearches/ajax/customsearchcriterias.php";
                 $exportConfigId = isset($_POST['exportconfigs_id']) ? $_POST['exportconfigs_id'] : 0;
                 echo "
             <script>

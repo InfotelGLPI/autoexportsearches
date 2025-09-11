@@ -171,7 +171,7 @@ class PluginAutoexportsearchesExportconfig extends CommonDBTM
             "rand" => $rand,
             "action" => "loadSearches",
         ];
-        $url = $CFG_GLPI['root_doc'] . "/plugins/autoexportsearches/ajax/dropdownsavedsearches.php";
+        $url = PLUGINAUTOEXPORTSEARCH_WEBDIR . "/autoexportsearches/ajax/dropdownsavedsearches.php";
         Ajax::updateItemOnSelectEvent("dropdown_users_id$rand", "savedSearches", $url, $params);
 
         echo "
@@ -212,7 +212,7 @@ class PluginAutoexportsearchesExportconfig extends CommonDBTM
         echo "</td></tr>";
 
         echo "<tr class='tab_bg_1' id='periodicity_value'></tr>";
-        $url = $CFG_GLPI['root_doc'] . "/plugins/autoexportsearches/ajax/periodicityfields.php";
+        $url = PLUGINAUTOEXPORTSEARCH_WEBDIR . "/autoexportsearches/ajax/periodicityfields.php";
         // let ajax determine the fields shown depending on the choosen periodicity_type
         echo "
             <script>
