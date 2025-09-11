@@ -26,8 +26,7 @@
  --------------------------------------------------------------------------
  */
 
-include('../../../inc/includes.php');
-
+global $CFG_GLPI;
 $plugin = new Plugin();
 
 if ($plugin->isActivated("autoexportsearches")) {
@@ -50,7 +49,7 @@ if ($plugin->isActivated("autoexportsearches")) {
    }
 
 } else {
-   Html::header(__('Setup'), '', "config", "plugins");
+   Html::header(__('Setup'), '', "config", "plugin");
    echo "<div align='center'><br><br>";
    echo "<img src=\"" . $CFG_GLPI["root_doc"] . "/pics/warning.png\" alt=\"warning\"><br><br>";
    echo "<b>" . __('Please activate the plugin', 'autoexportsearches') . "</b></div>";

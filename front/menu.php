@@ -26,7 +26,8 @@
  --------------------------------------------------------------------------
  */
 
-include('../../../inc/includes.php');
+use Glpi\Exception\Http\AccessDeniedHttpException;
+
 Session::checkLoginUser();
 //central or helpdesk access
 if (Session::getCurrentInterface() == 'central') {
@@ -38,7 +39,7 @@ if (Session::getCurrentInterface() == 'central') {
 if (Session::haveRight("plugin_autoexportsearches_exportconfigs", READ)) {
    PluginAutoexportsearchesMenu::showMenu();
 } else {
-   Html::displayRightError();
+    throw new AccessDeniedHttpException();
 }
 
 if (Session::getCurrentInterface() == 'central') {

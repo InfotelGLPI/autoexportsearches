@@ -26,11 +26,13 @@
  --------------------------------------------------------------------------
  */
 
-include('../../../inc/includes.php');
+use Glpi\Exception\Http\AccessDeniedHttpException;
+
 header("Content-Type: text/html; charset=UTF-8");
 Html::header_nocache();
 
 Session::checkLoginUser();
+Session::checkRight('plugin_autoexportsearches_exportconfigs', UPDATE);
 
 $id = 0;
 if (isset($_POST['id']) && $_POST['id']) {
@@ -204,7 +206,7 @@ if (Session::haveRight("plugin_autoexportsearches_exportconfigs", READ)
             break;
     }
 } else {
-    Html::displayRightError();
+    throw new AccessDeniedHttpException();
 }
 
 

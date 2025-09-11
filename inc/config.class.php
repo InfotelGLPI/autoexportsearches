@@ -27,12 +27,13 @@
  */
 
 if (!defined('GLPI_ROOT')) {
-   die("Sorry. You can't access directly to this file");
+    die("Sorry. You can't access directly to this file");
 }
 
-class PluginAutoexportsearchesConfig extends CommonDBTM {
+class PluginAutoexportsearchesConfig extends CommonDBTM
+{
 
-   static $rightname = 'plugin_autoexportsearches_configs';
+    static $rightname = 'plugin_autoexportsearches_configs';
 
    /**
     * Show form
@@ -40,32 +41,33 @@ class PluginAutoexportsearchesConfig extends CommonDBTM {
     * @global type $CFG_GLPI
     * @return boolean
     */
-   function showConfigForm() {
+    function showConfigForm()
+    {
 
-      if (!$this->canView() && !$this->canUpdate()) {
-         return false;
-      }
+        if (!$this->canView() && !$this->canUpdate()) {
+            return false;
+        }
 
-      if (! $this->getFromDB(1)) {
-         $this->getEmpty();
-      }
+        if (! $this->getFromDB(1)) {
+            $this->getEmpty();
+        }
 
-      echo "<form name='form' method='post' action='" . Toolbox::getItemTypeFormURL('PluginAutoexportsearchesConfig') . "'>";
-      echo "<div align='center'><table class='tab_cadre_fixe'>";
-      echo "<tr><th colspan='2'>" . __('Setup') . "</th></tr>";
+        echo "<form name='form' method='post' action='" . Toolbox::getItemTypeFormURL('PluginAutoexportsearchesConfig') . "'>";
+        echo "<div align='center'><table class='tab_cadre_fixe'>";
+        echo "<tr><th colspan='2'>" . __('Setup') . "</th></tr>";
 
-      echo "<tr class='tab_bg_1'>";
-      echo "<td>" . __('Number of months before purge files', 'autoexportsearches') . "</td>";
-      echo "<td>";
-      echo Html::input('monthBeforePurge', ['value' => $this->fields['monthBeforePurge'], 'size' => 6]);
-      echo "</td>";
-      echo "</tr>";
+        echo "<tr class='tab_bg_1'>";
+        echo "<td>" . __('Number of months before purge files', 'autoexportsearches') . "</td>";
+        echo "<td>";
+        echo Html::input('monthBeforePurge', ['value' => $this->fields['monthBeforePurge'], 'size' => 6]);
+        echo "</td>";
+        echo "</tr>";
 
-      echo "<tr><td class='tab_bg_2 center' colspan='2'>";
-      echo Html::submit(_sx('button', 'Save'), ['name' => 'update', 'class' => 'btn btn-primary']);
-      echo "</td></tr>";
+        echo "<tr><td class='tab_bg_2 center' colspan='2'>";
+        echo Html::submit(_sx('button', 'Save'), ['name' => 'update', 'class' => 'btn btn-primary']);
+        echo "</td></tr>";
 
-      echo "</table></div>";
-      Html::closeForm();
-   }
+        echo "</table></div>";
+        Html::closeForm();
+    }
 }

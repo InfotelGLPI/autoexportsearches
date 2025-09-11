@@ -26,8 +26,9 @@
  --------------------------------------------------------------------------
  */
 
-include ('../../../inc/includes.php');
-
+use Glpi\Exception\Http\BadRequestHttpException;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 $files = new PluginAutoexportsearchesFiles();
 $check_download = $files::canDownload();
 
@@ -35,13 +36,19 @@ if (isset($_GET["file"]) && $check_download) { // for other file
 
     $config = new PluginAutoexportsearchesConfig();
     $config->getFromDB(1);
-    $dir = GLPI_PLUGIN_DOC_DIR . $config->getField('folder');
-    $filename = $_GET["file"];
+    $dir = GLPI_PLUGIN_DOC_DIR . $config->getField('folder') . '/';
+    $filename = basename($_GET["file"]);
     if(is_file("$dir$filename")){
-        Toolbox::sendFile("$dir$filename", $filename);
+        $response = new BinaryFileResponse($dir . $filename);
+        $response->setContentDisposition(
+            ResponseHeaderBag::DISPOSITION_ATTACHMENT,
+            $filename
+        );
+        $response->send();
+        exit;
     }else{
-        Html::displayErrorAndDie(__('Invalid filename'), true);
+        throw new BadRequestHttpException('Invalid filename');
     }
 }else{
-    Html::displayErrorAndDie(__('Unauthorized access to this file'), true);
+    throw new BadRequestHttpException('Unauthorized access to this file');
 }
