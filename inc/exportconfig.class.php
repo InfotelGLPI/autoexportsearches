@@ -1,9 +1,8 @@
 <?php
 /*
- * @version $Id: HEADER 15930 2011-10-30 15:47:55Z tsmr $
  -------------------------------------------------------------------------
  autoexportsearches plugin for GLPI
- Copyright (C) 2018-2019 by the autoexportsearches Development Team.
+ Copyright (C) 2020-2025 by the autoexportsearches Development Team.
 
  https://github.com/InfotelGLPI/autoexportsearches
  -------------------------------------------------------------------------
@@ -36,6 +35,9 @@ if (!defined('GLPI_ROOT')) {
  */
 class PluginAutoexportsearchesExportconfig extends CommonDBTM
 {
+
+    const PERIODICITY_MINUTES = 3;
+    const PERIODICITY_HOURS = 4;
     const PERIODICITY_DAYS = 0;
     const PERIODICITY_WEEKLY = 1;
     const PERIODICITY_MONTHLY = 2;
@@ -56,20 +58,6 @@ class PluginAutoexportsearchesExportconfig extends CommonDBTM
     {
         return __('Auto export config', 'autoexportsearches');
     }
-
-    //   /**
-    //    * @return bool|int
-    //    */
-    //   static function canView() {
-    //      return Session::haveRight(self::$rightname, READ);
-    //   }
-    //
-    //   /**
-    //    * @return bool
-    //    */
-    //   static function canCreate() {
-    //      return Session::haveRightsOr(self::$rightname, [CREATE, UPDATE, DELETE]);
-    //   }
 
     /**
      * @return array
@@ -121,7 +109,7 @@ class PluginAutoexportsearchesExportconfig extends CommonDBTM
             'table' => self::getTable(),
             'field' => 'last_export',
             'name' => __('Last export', 'autoexportsearches'),
-            'datatype' => 'date'
+            'datatype' => 'datetime'
         ];
         $tab[] = [
             'id' => '6',
@@ -203,20 +191,21 @@ class PluginAutoexportsearchesExportconfig extends CommonDBTM
         Dropdown::showFromArray(
             'periodicity_type',
             [
+
                 self::PERIODICITY_DAYS => __('Every x days', 'autoexportsearches'),
                 self::PERIODICITY_WEEKLY => _x('periodicity', 'Weekly'),
                 self::PERIODICITY_MONTHLY => _x('periodicity', 'Monthly'),
+                self::PERIODICITY_MINUTES => __('Every x minutes', 'autoexportsearches'),
+                self::PERIODICITY_HOURS => __('Every x hours', 'autoexportsearches'),
             ],
             [
                 'value' => $this->fields['periodicity_type'],
                 'rand' => $rand
             ]
         );
-        echo "</td>";
-        echo "</tr>";
+        echo "</td></tr>";
 
-        echo "<tr class='tab_bg_1' id='periodicity_value'>";
-        echo "</tr>";
+        echo "<tr class='tab_bg_1' id='periodicity_value'></tr>";
         $url = Plugin::getWebDir('autoexportsearches') . "/ajax/periodicityfields.php";
         // let ajax determine the fields shown depending on the choosen periodicity_type
         echo "
@@ -236,7 +225,7 @@ class PluginAutoexportsearchesExportconfig extends CommonDBTM
         ";
 
         echo "<tr class='tab_bg_1'>";
-        echo "<td colspan='2'><h3>" . __('Options') . "</h3></td>";
+        echo "<td colspan='2'><h3>" . __('Options', 'autoexportsearches') . "</h3></td>";
         echo "</tr>";
 
         echo "<tr class='tab_bg_1'>";
@@ -293,14 +282,19 @@ class PluginAutoexportsearchesExportconfig extends CommonDBTM
      *
      * @return void
      **/
-    static function createCSVFile(array $data, $filepath)
+    static function createCSVFile(array $data, $filename)
     {
         global $CFG_GLPI;
-
-        if (!isset($data['data']) || !isset($data['data']['totalcount'])) {
-            return;
+        $file = fopen($filename, "w");
+        fwrite($file, pack("CCC", 0xef, 0xbb, 0xbf));
+        $item = null;
+        if (class_exists($data['itemtype'])) {
+            $item = new $data['itemtype']();
         }
-
+        $data['display_type'] = Search::CSV_OUTPUT;
+        if (!isset($data['data']) || !isset($data['data']['totalcount'])) {
+            return false;
+        }
         // Contruct Pager parameters
         $globallinkto
             = Toolbox::append_params([
@@ -310,20 +304,38 @@ class PluginAutoexportsearchesExportconfig extends CommonDBTM
             => Toolbox::stripslashes_deep($data['search']['metacriteria'])
         ],
             '&amp;');
+//      $parameters = "sort=" . $data['search']['sort'] . "&amp;order=" . $data['search']['order'] . '&amp;' .
+//                    $globallinkto;
+//
+//      if (isset($_GET['_in_modal'])) {
+//         $parameters .= "&amp;_in_modal=1";
+//      }
 
+//            print_r($data);
 
-        $data['display_type'] = Search::CSV_OUTPUT;
-
+        // If the begin of the view is before the number of items
         if ($data['data']['count'] > 0) {
+            // Display pager only for HTML
 
-            $file = fopen($filepath, "w");
-            fwrite($file, pack("CCC", 0xef, 0xbb, 0xbf));
+            // Define begin and end var for loop
+            // Search case
+            $begin_display = $data['data']['begin'];
+            $end_display = $data['data']['end'];
+
 
             if ($data['search']['as_map'] == 0) {
+                $massformid = 'massform' . $data['itemtype'];
+
+
+                // Compute number of columns to display
+                // Add toview elements
+                $nbcols = count($data['data']['cols']);
+
 
                 // New Line for Header Items Line
                 $headers_line = '';
                 $headers_line_top = '';
+                $headers_line_bottom = '';
 
                 $header_num = 1;
 
@@ -466,10 +478,9 @@ class PluginAutoexportsearchesExportconfig extends CommonDBTM
                     fwrite($file, $line);
                 }
             }
-
-            fclose($file);
-
         }
+
+        fclose($file);
     }
 
     static function executeExport($plugin_exportconfigs_id)
@@ -505,7 +516,7 @@ class PluginAutoexportsearchesExportconfig extends CommonDBTM
                         PluginAutoexportsearchesCustomsearchcriteria::CRITERIA_FIRST_DAY_OF_MONTH,
                         strtotime($monthYearString)
                     );
-                    $criteria['value'] = date('Y-m-d', $newValue) . '00:00:00';
+                    $criteria['value'] = date('Y-m-d', $newValue). '00:00:00';
                 }
                 if (preg_match('/^-\d+WEEK$/', $criteria['value'])
                     && $customCriteria['criteria_value'] == PluginAutoexportsearchesCustomsearchcriteria::CRITERIA_FIRST_DAY_OF_WEEK) {
@@ -516,20 +527,19 @@ class PluginAutoexportsearchesExportconfig extends CommonDBTM
                             PluginAutoexportsearchesCustomsearchcriteria::CRITERIA_FIRST_DAY_OF_WEEK,
                             $normalValue
                         );
-                        $criteria['value'] = date('Y-m-d', $newValue) . '00:00:00';
+                        $criteria['value'] = date('Y-m-d', $newValue). '00:00:00';
                     }
                 }
             }
+
             $params = Search::manageParams($itemtype, $p, 1, 1);
             $name = Dropdown::getDropdownName('glpi_savedsearches', $export->fields['savedsearches_id']);
-            $name .= "_" . date('Y_m_d') . ".csv";
+            $name .= "_" . date('Y_m_d_H_i_s') . ".csv";
             $titleMail = $name;
-            $filepath = GLPI_PLUGIN_DOC_DIR . "/autoexportsearches/" . $name;
-            self::createCSVFile(Search::getDatas($itemtype, $params), $filepath);
-            if (!empty($export->fields['sendto']) && is_file($filepath)) {
-                self::sendMail($titleMail, $export->fields['sendto'], $name, $filepath);
-            }elseif(!empty($export->fields['sendto'])){
-                self::sendMail($titleMail, $export->fields['sendto'], '', '');
+            $filename = GLPI_PLUGIN_DOC_DIR . "/autoexportsearches/" . $name;
+            self::createCSVFile(Search::getDatas($itemtype, $params), $filename);
+            if (!empty($export->fields['sendto'])) {
+                self::sendMail($titleMail, $export->fields['sendto'], $name, $filename);
             }
         }
     }
@@ -562,18 +572,28 @@ class PluginAutoexportsearchesExportconfig extends CommonDBTM
         $mmail->AddCustomHeader("Auto-Submitted: auto-generated");
         // For exchange
         $mmail->AddCustomHeader("X-Auto-Response-Suppress: OOF, DR, NDR, RN, NRN");
-        $mmail->SetFrom($CFG_GLPI["from_email"], $CFG_GLPI["from_email_name"], false);
+        if (empty($CFG_GLPI["from_email"])) {
+            $config = new Config();
+            $results = $config->find(array('name' => 'from_email'));
 
-        if($filepath !=""){
-            $text = __("Some datas have been found for this search : ".$title, 'autoexportsearches');
-        }else{
-            $text = __("There are no datas for the search : ".$title, 'autoexportsearches');
+            foreach ($results as $result) {
+                $mmail->SetFrom($result['value'], $CFG_GLPI["from_email_name"], false);
+            }
+        } else {
+            $mmail->SetFrom($CFG_GLPI["from_email"], $CFG_GLPI["from_email_name"], false);
         }
+
+        $text = __('Mail autoexportsearches');
 
         $mmail->AddAddress($recipient, $recipient);
         $mmail->Subject = "[GLPI] " . $title;
         $mmail->Body = $text;
 
+//      $mmail->AddEmbeddedImage($filepath,
+//                               0,
+//                               $filename,
+//                               'base64',
+//                               'text/csv');
         $mmail->addAttachment(
             $filepath,
             $filename
@@ -627,7 +647,30 @@ class PluginAutoexportsearchesExportconfig extends CommonDBTM
         $user = new User();
         foreach ($exportConfigs as $export) {
             // check if export has to be done
-            if ($export['periodicity_type'] == self::PERIODICITY_DAYS) {
+        if ($export['periodicity_type'] == self::PERIODICITY_MINUTES) {
+                // Frequency in minutes
+            $dateActual = strtotime(date("Y-m-d H:i:s"));
+            $delay = 60 * intval($export['periodicity']); // Delay calculation in seconds
+
+            if ($export['last_export'] != null) {
+                $dateEnd = strtotime($export['last_export']) + $delay;
+                if ($dateEnd > $dateActual) {
+                    continue;
+                }
+            }
+        }
+        elseif ($export['periodicity_type'] == self::PERIODICITY_HOURS) {
+                // Periodicity in hours
+            $dateActual = strtotime(date("Y-m-d H:i:s"));
+            $delay = 3600 * intval($export['periodicity']); // Delay calculation in seconds
+            if ($export['last_export'] != null) {
+                $dateEnd = strtotime($export['last_export']) + $delay;
+                if ($dateEnd > $dateActual) {
+                    continue;
+                }
+            }
+        }
+        elseif ($export['periodicity_type'] == self::PERIODICITY_DAYS) {
                 // every worked day
                 if ($export['periodicity'] == 1 && $export['periodicity_open_days'] == 1) {
                     if (!in_array($weekday, $CFG_GLPI['planning_work_days'])) {
@@ -693,7 +736,7 @@ class PluginAutoexportsearchesExportconfig extends CommonDBTM
             $user = new User();
             $user->getFromDB($export['users_id']);
             $profile = new Profile();
-            $savedProfile = $_SESSION['glpiactiveprofile'];
+            $savedProfile = $_SESSION['glpiactiveprofile'] ?? 0;
             if ($profile->getFromDB($user->fields['profiles_id'])) {
                 $_SESSION['glpiactiveprofile'] = $profile->fields;
             }
@@ -716,7 +759,12 @@ class PluginAutoexportsearchesExportconfig extends CommonDBTM
             $customSearchCriteria = new PluginAutoexportsearchesCustomsearchcriteria();
             $customCriterias = $customSearchCriteria->find(['exportconfigs_id' => $export['id']]);
             $export['custom_criterias'] = $customCriterias;
-            $export['last_export'] = date("Y-m-d");
+            if ($export['periodicity_type'] == self::PERIODICITY_MINUTES || $export['periodicity_type'] == self::PERIODICITY_HOURS) {
+                $export['last_export'] = date("Y-m-d H:i:s");
+            }else{
+                $export['last_export'] = date("Y-m-d");
+            }
+
             $exportConfig->update($export);
             $count++;
         }

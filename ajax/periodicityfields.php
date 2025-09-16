@@ -2,8 +2,9 @@
 /*
  -------------------------------------------------------------------------
  autoexportsearches plugin for GLPI
- Copyright (C) 2016-2024 by the autoexportsearches Development Team.
+ Copyright (C) 2020-2025 by the autoexportsearches Development Team.
 
+ https://github.com/InfotelGLPI/autoexportsearches
  -------------------------------------------------------------------------
 
  LICENSE
@@ -35,30 +36,63 @@ $id = 0;
 if (isset($_POST['id']) && $_POST['id']) {
     $id = $_POST['id'];
 }
-$exportConfig = null;
-if ($id > 0) {
-    $exportConfig = new PluginAutoexportsearchesExportconfig();
-    $exportConfig->getFromDB($id);
-}
-switch ($_POST['periodicity_type']) {
-    case PluginAutoexportsearchesExportconfig::PERIODICITY_DAYS:
-        echo "<td>" . __('Periodicity (in days)', 'autoexportsearches') . "</td>";
-        echo "<td>";
+if (Session::haveRight("plugin_autoexportsearches_exportconfigs", READ)
+    && Session::haveRight("plugin_autoexportsearches_exportconfigs", UPDATE)) {
+    $exportConfig = null;
+    if ($id > 0) {
+        $exportConfig = new PluginAutoexportsearchesExportconfig();
+        $exportConfig->getFromDB($id);
+    }
+    switch ($_POST['periodicity_type']) {
+     case PluginAutoexportsearchesExportconfig::PERIODICITY_MINUTES:
+         echo "<td>" . __('Periodicity (in minutes)', 'autoexportsearches') . "</td><td><div>";
 
-        echo '<div>';
-        $rand = mt_rand();
-        Dropdown::showNumber(
-            'periodicity',
-            [
-                'value' => $exportConfig ? $exportConfig->fields['periodicity'] : 1,
-                'rand' => $rand,
-                'min' => 1
-            ]
-        );
-        $openDaysLabel = __('Work day only', 'autoexportsearches');
-        $checked = $exportConfig ? $exportConfig->fields['periodicity_open_days'] == 1 ? 'checked' : '' : '';
-        $openDaysExplanation = __('If this option is checked, the export will be done only on worked day', 'autoexportsearches');
-        echo "
+    $rand = mt_rand();
+
+    Dropdown::showNumber(
+        'periodicity',
+        [
+            'value' => $exportConfig ? $exportConfig->fields['periodicity'] : 1,
+            'rand' => $rand,
+            'min' => 30,
+            'max' => 59
+        ]
+    );
+    echo "</div></td>";
+    break;
+        case PluginAutoexportsearchesExportconfig::PERIODICITY_HOURS:
+            echo "<td>" . __('Periodicity (in hours)', 'autoexportsearches') . "</td><td><div>";
+            $rand = mt_rand();
+            Dropdown::showNumber(
+                'periodicity',
+                [
+                    'value' => $exportConfig ? $exportConfig->fields['periodicity'] : 1,
+                    'rand' => $rand,
+                    'min' => 1,
+                    'max' => 23
+                ]
+            );
+            echo "</div></td>";
+            break;
+        case PluginAutoexportsearchesExportconfig::PERIODICITY_DAYS:
+            echo "<td>" . __('Periodicity (in days)', 'autoexportsearches') . "</td>";
+            echo "<td><div>";
+            $rand = mt_rand();
+            Dropdown::showNumber(
+                'periodicity',
+                [
+                    'value' => $exportConfig ? $exportConfig->fields['periodicity'] : 1,
+                    'rand' => $rand,
+                    'min' => 1
+                ]
+            );
+            $openDaysLabel = __('Work day only', 'autoexportsearches');
+            $checked = $exportConfig ? $exportConfig->fields['periodicity_open_days'] == 1 ? 'checked' : '' : '';
+            $openDaysExplanation = __(
+                'If this option is checked, the export will be done only on worked day',
+                'autoexportsearches'
+            );
+            echo "
             </div>
             <div id='periodicity_open_days'>
                 <div style='position:relative'>
@@ -84,7 +118,7 @@ switch ($_POST['periodicity_type']) {
                 }
             </style>
         ";
-        echo "
+            echo "
             <script>
                 if (!window.autoexportsearches) window.autoexportsearches = {};
                 autoexportsearches.periodicitySelect = $('#dropdown_periodicity$rand');
@@ -99,45 +133,48 @@ switch ($_POST['periodicity_type']) {
                 autoexportsearches.periodicitySelect.trigger('change');
             </script>
          ";
-        echo "</td>";
-        break;
+            echo "</td>";
+            break;
 
-    case PluginAutoexportsearchesExportconfig::PERIODICITY_WEEKLY:
-        echo "<td>" . __('Weekday', 'autoexportsearches') . "</td>";
-        echo "<td>";
+        case PluginAutoexportsearchesExportconfig::PERIODICITY_WEEKLY:
+            echo "<td>" . __('Weekday', 'autoexportsearches') . "</td><td>";
 
-        $rand = mt_rand();
-        Dropdown::showFromArray(
-            'periodicity',
-            Toolbox::getDaysOfWeekArray(),
-            [
-                'value' => $exportConfig ? $exportConfig->fields['periodicity'] : 1,
-                'rand' => $rand
-            ]
-        );
-        echo "</td>";
-        break;
+            $rand = mt_rand();
+            Dropdown::showFromArray(
+                'periodicity',
+                Toolbox::getDaysOfWeekArray(),
+                [
+                    'value' => $exportConfig ? $exportConfig->fields['periodicity'] : 1,
+                    'rand' => $rand
+                ]
+            );
+            echo "</td>";
+            break;
 
-    case PluginAutoexportsearchesExportconfig::PERIODICITY_MONTHLY:
-        echo "<td>" . __('Day of the month', 'autoexportsearches') . "</td>";
-        echo "<td>";
-        echo '<div>';
-        $rand = mt_rand();
-        Dropdown::showNumber(
-            'periodicity',
-            [
-                'value' => $exportConfig ? $exportConfig->fields['periodicity'] : 1,
-                'rand' => $rand,
-                'min' => 1,
-                'max' => 31
-            ]
-        );
-        echo '<small class="ms-2">'.__('For months having less days than the selected day, the export will be done on the last day of the month.', 'autoexportsearches').'</small>';
-        echo '</div>';
-        $openDaysLabel = __('Work day only', 'autoexportsearches');
-        $checked = $exportConfig ? $exportConfig->fields['periodicity_open_days'] == 1 ? 'checked' : '' : '';
-        $openDaysExplanation = __('If this option is checked, the export will be done the first work day from the selected day', 'autoexportsearches');
-        echo "
+        case PluginAutoexportsearchesExportconfig::PERIODICITY_MONTHLY:
+            echo "<td>" . __('Day of the month', 'autoexportsearches') . "</td><td><div>";
+            $rand = mt_rand();
+            Dropdown::showNumber(
+                'periodicity',
+                [
+                    'value' => $exportConfig ? $exportConfig->fields['periodicity'] : 1,
+                    'rand' => $rand,
+                    'min' => 1,
+                    'max' => 31
+                ]
+            );
+            echo '<small class="ms-2">' . __(
+                    'For months having less days than the selected day, the export will be done on the last day of the month.',
+                    'autoexportsearches'
+                ) . '</small>';
+            echo '</div>';
+            $openDaysLabel = __('Work day only', 'autoexportsearches');
+            $checked = $exportConfig ? $exportConfig->fields['periodicity_open_days'] == 1 ? 'checked' : '' : '';
+            $openDaysExplanation = __(
+                'If this option is checked, the export will be done the first work day from the selected day',
+                'autoexportsearches'
+            );
+            echo "
             </div>
             <div id='periodicity_open_days'>
                 <div style='position:relative'>
@@ -163,8 +200,11 @@ switch ($_POST['periodicity_type']) {
                 }
             </style>
         ";
-        echo "</td>";
-        break;
+            echo "</td>";
+            break;
+    }
+} else {
+    Html::displayRightError();
 }
 
 

@@ -1,27 +1,28 @@
 <?php
 /*
  -------------------------------------------------------------------------
- Autoexportsearches plugin for GLPI
- Copyright (C) 2003-2016 by the Autoexportsearches Development Team.
+ autoexportsearches plugin for GLPI
+ Copyright (C) 2020-2025 by the autoexportsearches Development Team.
 
+ https://github.com/InfotelGLPI/autoexportsearches
  -------------------------------------------------------------------------
 
  LICENSE
 
- This file is part of Autoexportsearches.
+ This file is part of autoexportsearches.
 
- Autoexportsearches is free software; you can redistribute it and/or modify
+ autoexportsearches is free software; you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
  the Free Software Foundation; either version 2 of the License, or
  (at your option) any later version.
 
- Autoexportsearches is distributed in the hope that it will be useful,
+ autoexportsearches is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  GNU General Public License for more details.
 
  You should have received a copy of the GNU General Public License
- along with Autoexportsearches. If not, see <http://www.gnu.org/licenses/>.
+ along with autoexportsearches. If not, see <http://www.gnu.org/licenses/>.
  --------------------------------------------------------------------------
  */
 
@@ -40,6 +41,12 @@ class PluginAutoexportsearchesFiles extends CommonDBTM
     static function getTypeName($nb = 0)
     {
         return __('Download files', 'autoexportsearches');
+    }
+
+    static function canDownload()
+    {
+        return ProfileRight::getProfileRights($_SESSION['glpiactiveprofile']['id'], ['plugin_autoexportsearches_accessfiles']);
+
     }
 
     function showMenu()
@@ -179,12 +186,12 @@ class PluginAutoexportsearchesFiles extends CommonDBTM
                       </label>
                    </div>
                  </th>";
-                $orderType = "ASC";
+                $ordertype = "ASC";
                 if (isset($_GET['orderType'])) {
                     if ($_GET['orderType'] == "ASC") {
-                        $orderType = "DESC";
+                        $ordertype = "DESC";
                     } else {
-                        $orderType = "ASC";
+                        $ordertype = "ASC";
                     }
                 }
 
@@ -193,15 +200,14 @@ class PluginAutoexportsearchesFiles extends CommonDBTM
                     $start = $_GET['start'];
                 }
 
-                echo "<th><a href='files.php?orderCol=name&orderType=$orderType&start=$start&type=$type'>" . __(
+                echo "<th><a href='files.php?type=$type&orderCol=name&orderType=$ordertype&start=$start'>" . __(
                         'File name',
                         'autoexportsearches'
                     ) . "</a></th>";
-                echo "<th><a href='files.php?orderCol=date&orderType=$orderType&start=$start&type=$type'>" . __(
+                echo "<th><a href='files.php?type=$type&orderCol=date&orderType=$ordertype&start=$start'>" . __(
                         'Generation date',
                         'autoexportsearches'
                     ) . "</a></th>";
-
                 echo "</thead></tr>";
 
                 //Sort table order with headers
@@ -229,29 +235,45 @@ class PluginAutoexportsearchesFiles extends CommonDBTM
                     }
                 }
 
+                $plugin_dir = PLUGINAUTOEXPORTSEARCH_WEBDIR;
+                $i = 0;
                 foreach ($files as $key => $file) {
                     if ($key >= $limitBegin &&
                         $key < ($limitNb + $limitBegin)) {
                         //Show datas from file name
                         echo "<tr>";
-
-                        $config = new PluginAutoexportsearchesConfig();
-                        $config->getFromDB(1);
-                        $folder = $config->getField("folder");
-
-                        $date = $this->getDateFile($file,'view');
-
-
+                        $dateFile = $this->getDateFile($file, 'YmdHis');
                         echo "<td width='10' valign='top'>";
                         echo Html::showCheckbox(["name" => "filedelete[$file]"]);
                         echo "</td>";
-
-                        echo "<td><a href='" . PLUGINAUTOEXPORTSEARCH_WEBDIR . "/front/document.send.php?file=_plugins" . $folder . "" . $file . "' target='_blank'>" . $file . "</a></td>";
-                        echo "<td>" . $date . "</td>";
-                        echo "</tr>";
+                        if($this::canDownload()){
+                            echo "<td><a href='$plugin_dir/front/document.send.php?file=$file' target='_blank'> $file </a></td>";
+                        }else{
+                            echo "<td>$file</td>";
+                        }
+                        $dateFormated = substr($dateFile, 0, 10);
+                        $afterDate = substr($dateFile, 11);
+                        if ((strpos($afterDate, "csv") === false) && ($_SESSION["glpilanguage"] == "fr_FR")) {
+                            $dateFormated1 = preg_replace("/(\d{4})-(\d{2})-(\d{2})/", "$3-$2-$1", substr($dateFile, 0, 10));
+                            $dateFormated2 = preg_replace("/(\d{2})-(\d{2})-(\d{2})/", "$1h$2min$3s", substr($dateFile, 11));
+                            $dateFormated = $dateFormated1 . " " . $dateFormated2;
+                        } elseif ((strpos($afterDate, "csv") === false) && ($_SESSION["glpilanguage"] !== "fr_FR")) {
+                            $dateFormated = str_replace("-", ":", substr($dateFile, 11));
+                            $dateFormated = substr($dateFile, 0, 10) . " " . $dateFormated;
+                        }
+                        elseif ((strpos($afterDate, "csv") === true) && ($_SESSION["glpilanguage"] == "fr_FR")) {
+                            $dateFormated1 = preg_replace("/(\d{4})-(\d{2})-(\d{2})/", "$3-$2-$1", substr($dateFile, 0, 10));
+                            $dateFormated = $dateFormated1;
+                        }
+                        elseif((strpos($afterDate, "csv") === true) && ($_SESSION["glpilanguage"] !== "fr_FR")){
+                            $dateFormated .= "";
+                        }
+                        echo "<td>" . $dateFormated . "</td></tr>";
+                        $i++;
                     }
                 }
                 echo "</table>";
+
                 echo "<br />";
                 echo Html::submit(
                     __("Delete"),
@@ -290,22 +312,26 @@ class PluginAutoexportsearchesFiles extends CommonDBTM
      *
      * @return bool|string
      */
-    function getDateFile($file, string $formatOut = "Ymd")
+    function getDateFile($file, $formatOut = "Ymd")
     {
-        $config = new PluginAutoexportsearchesConfig();
-        $config->getFromDB(1);
-        $folder = $config->getField("folder");
-
-        $dateFile = filemtime(GLPI_PLUGIN_DOC_DIR."/$folder/$file");
-
         switch ($formatOut) {
-            case "Ymd" :
-                $out = date("Ymd",$dateFile);
+            case "Y" :
+                $out = substr($file, strpos($file, "_") + 1, 4);
                 break;
-            case "view" :
-                $out = date("d/m/Y H:i:s",$dateFile);
+            case "m" :
+                $out = substr($file, strpos($file, "_") + 6, 2);
+                break;
+            case "d" :
+                $out = substr($file, strpos($file, "_") + 9, 2);
+                break;
+            case "Ymd" :
+                $out = substr($file, strpos($file, "_") + 1, 10);
+                break;
+            case "YmdHis" :
+                $out = substr($file, strpos($file, "_") + 1, 19);
                 break;
         }
+        $out = str_replace("_", "-", $out);
 
         return $out;
     }
@@ -336,16 +362,6 @@ class PluginAutoexportsearchesFiles extends CommonDBTM
                     }
                 }
                 break;
-                case "getAll" :
-                $res = [];
-                // Get files in defined dir
-                $files = scandir($dir);
-                foreach ($files as $file) {
-                    if (!is_dir($dir . "/" . $file)) {
-                        $res[] = $file;
-                    }
-                }
-                break;
             case "delete" :
                 // delete file
                 $res = unlink($dir . "/" . $file);
@@ -360,7 +376,7 @@ class PluginAutoexportsearchesFiles extends CommonDBTM
     function deleteByMonths($nbMonths)
     {
         $today = date("Ymd");
-        $files = $this->processFiles("getAll");
+        $files = $this->processFiles("get");
         if (is_array($files)) {
             foreach ($files as $file) {
                 $dateFile = strtotime($this->getDateFile($file));

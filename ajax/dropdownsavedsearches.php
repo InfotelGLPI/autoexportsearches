@@ -2,8 +2,9 @@
 /*
  -------------------------------------------------------------------------
  autoexportsearches plugin for GLPI
- Copyright (C) 2016-2024 by the autoexportsearches Development Team.
+ Copyright (C) 2020-2025 by the autoexportsearches Development Team.
 
+ https://github.com/InfotelGLPI/autoexportsearches
  -------------------------------------------------------------------------
 
  LICENSE
@@ -31,23 +32,24 @@ Html::header_nocache();
 
 Session::checkLoginUser();
 
-switch ($_POST['action']) {
-   case 'loadSearches':
-      if (isset($_POST["users_id"])) {
-         $val = $_POST['savedsearches_id'];
-         if($_POST['users_id'] != $_POST["current_user"]){
-            $val = 0;
-         }
-         $rand = mt_rand();
-         SavedSearch::dropdown([
-                                  'name'   => 'savedsearches_id',
-                                  'value'  => $val,
-                                  'condition' => ['users_id' => $_POST['users_id']],
-                                  'rand'   => $_POST["rand"]
-                               ]);
-         $url = Plugin::getWebDir('autoexportsearches') . "/ajax/customsearchcriterias.php";
-         $exportConfigId = isset($_POST['exportconfigs_id']) ? $_POST['exportconfigs_id'] : 0;
-         echo "
+if (Session::haveRight("plugin_autoexportsearches_exportconfigs", READ)) {
+    switch ($_POST['action']) {
+        case 'loadSearches':
+            if (isset($_POST["users_id"])) {
+                $val = $_POST['savedsearches_id'];
+                if ($_POST['users_id'] != $_POST["current_user"]) {
+                    $val = 0;
+                }
+                $rand = mt_rand();
+                SavedSearch::dropdown([
+                    'name' => 'savedsearches_id',
+                    'value' => $val,
+                    'condition' => ['users_id' => $_POST['users_id']],
+                    'rand' => $_POST["rand"]
+                ]);
+                $url = Plugin::getWebDir('autoexportsearches') . "/ajax/customsearchcriterias.php";
+                $exportConfigId = isset($_POST['exportconfigs_id']) ? $_POST['exportconfigs_id'] : 0;
+                echo "
             <script>
                 if (!window.autoexportsearches) window.autoexportsearches = {};
                 autoexportsearches.searchSelect = $('#dropdown_savedsearches_id{$_POST["rand"]}');
@@ -60,8 +62,10 @@ switch ($_POST['action']) {
                 autoexportsearches.searchSelect.trigger('change');
             </script>
          ";
-      }
-      break;
+            }
+            break;
+    }
+} else {
+    Html::displayRightError();
 }
-
 

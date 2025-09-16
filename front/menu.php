@@ -1,9 +1,8 @@
 <?php
 /*
- * @version $Id: HEADER 15930 2011-10-30 15:47:55Z tsmr $
  -------------------------------------------------------------------------
  autoexportsearches plugin for GLPI
- Copyright (C) 2009-2016 by the autoexportsearches Development Team.
+ Copyright (C) 2020-2025 by the autoexportsearches Development Team.
 
  https://github.com/InfotelGLPI/autoexportsearches
  -------------------------------------------------------------------------
@@ -36,9 +35,8 @@ if (Session::getCurrentInterface() == 'central') {
    Html::helpHeader(PluginAutoexportsearchesMenu::getTypeName(2));
 }
 
-$autoexportsearchesMenu = new PluginAutoexportsearchesMenu();
 if (Session::haveRight("plugin_autoexportsearches_exportconfigs", READ)) {
-   PluginAutoexportsearchesMenu::showMenu($autoexportsearchesMenu);
+   PluginAutoexportsearchesMenu::showMenu();
 } else {
    Html::displayRightError();
 }
