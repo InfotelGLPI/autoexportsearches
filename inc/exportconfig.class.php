@@ -259,7 +259,7 @@ class PluginAutoexportsearchesExportconfig extends CommonDBTM
 
         $menu['icon'] = static::getIcon();
         if (self::canCreate()) {
-            $menu['links']['add'] = self::getStr() . "/front/exportconfig.form.php";
+            $menu['links']['add'] = PLUGINAUTOEXPORTSEARCH_WEBDIR . "/front/exportconfig.form.php";
         }
 
 
