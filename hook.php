@@ -103,6 +103,23 @@ function plugin_autoexportsearches_uninstall()
     foreach ($tables as $table) {
         $DB->doQuery("DROP TABLE IF EXISTS `$table`;");
     }
+
+    $itemtypes = ['Alert',
+        'DisplayPreference',
+        'Document_Item',
+        'ImpactItem',
+        'Item_Ticket',
+        'Link_Itemtype',
+        'Notepad',
+        'SavedSearch',
+        'DropdownTranslation',
+        'NotificationTemplate',
+        'Notification'];
+    foreach ($itemtypes as $itemtype) {
+        $item = new $itemtype;
+        $item->deleteByCriteria(['itemtype' => PluginAutoexportsearchesExportconfig::class]);
+    }
+
     CronTask::unregister("autoexportsearches");
     $rep_files_autoexportsearches = GLPI_PLUGIN_DOC_DIR . "/autoexportsearches";
 

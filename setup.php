@@ -81,7 +81,7 @@ function plugin_version_autoexportsearches()
     return [
         'name' => _n('Auto export searches', 'Auto exports searches', 2, 'autoexportsearches'),
         'version' => PLUGIN_AUTOEXPORTSEARCH_VERSION,
-        'author' => "<a href='http://blogglpi.infotel.com'>Infotel</a>, Alban Lesellier",
+        'author' => "<a href='https//blogglpi.infotel.com'>Infotel</a>, Alban LESELLIER",
         'license' => 'GPLv2+',
         'homepage' => '',
         'requirements' => [
