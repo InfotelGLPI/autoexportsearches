@@ -156,7 +156,7 @@ class PluginAutoexportsearchesFiles extends CommonDBTM
                 } else {
                     $limitNb = 0;
                 }
-                $target = PLUGINAUTOEXPORTSEARCH_WEBDIR . '/autoexportsearches/front/files.php?type=' . $type;
+                $target = PLUGINAUTOEXPORTSEARCH_WEBDIR . '/front/files.php?type=' . $type;
                 if (isset($_GET['orderType'])) {
                     $parameters = "orderCol=" . $_GET['orderCol'] . "&orderType=" . $_GET['orderType'];
                 } else {
