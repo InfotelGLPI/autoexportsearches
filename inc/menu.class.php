@@ -94,7 +94,7 @@ class PluginAutoexportsearchesMenu extends CommonDBTM
     static function showMenu()
     {
 
-        echo "<div align='center'>
+        echo "<div class='center'>
         <table class='tab_cadre' width='30%' cellpadding='5'>";
         echo "<tr><th colspan='6'>" . __('Menu', 'autoexportsearches') . "</th></tr>";
 

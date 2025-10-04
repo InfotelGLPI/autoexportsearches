@@ -55,7 +55,7 @@ class PluginAutoexportsearchesFiles extends CommonDBTM
     {
         global $CFG_GLPI;
 
-        echo "<div align='center'>";
+        echo "<div class='center'>";
         echo "<table class='tab_cadre' cellpadding='5' height='150'>";
         echo "<tr>";
         echo "<th colspan='6'>" . self::getTypeName() . "</th>";
