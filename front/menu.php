@@ -28,16 +28,18 @@
 
 use Glpi\Exception\Http\AccessDeniedHttpException;
 
+use GlpiPlugin\Autoexportsearches\Menu;
+
 Session::checkLoginUser();
 //central or helpdesk access
 if (Session::getCurrentInterface() == 'central') {
-   Html::header(PluginAutoexportsearchesMenu::getTypeName(2), '', 'tools',"PluginAutoexportsearchesMenu");
+   Html::header(Menu::getTypeName(2), '', 'tools',Menu::class);
 } else {
-   Html::helpHeader(PluginAutoexportsearchesMenu::getTypeName(2));
+   Html::helpHeader(Menu::getTypeName(2));
 }
 
 if (Session::haveRight("plugin_autoexportsearches_exportconfigs", READ)) {
-   PluginAutoexportsearchesMenu::showMenu();
+    Menu::showMenu();
 } else {
     throw new AccessDeniedHttpException();
 }

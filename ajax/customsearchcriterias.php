@@ -27,6 +27,7 @@
  */
 
 use Glpi\Exception\Http\AccessDeniedHttpException;
+use GlpiPlugin\Autoexportsearches\Customsearchcriteria;
 
 header("Content-Type: text/html; charset=UTF-8");
 Html::header_nocache();
@@ -92,7 +93,7 @@ if (Session::haveRight("plugin_autoexportsearches_exportconfigs", READ)) {
                                 }
 
                                 $customValue = null;
-                                $customCriteria = new PluginAutoexportsearchesCustomsearchcriteria();
+                                $customCriteria = new Customsearchcriteria();
                                 if ($customCriteria->getFromDBByCrit([
                                     'savedsearches_id' => $savedSearchId,
                                     'exportconfigs_id' => $_POST['exportconfigs_id'],
@@ -113,7 +114,7 @@ if (Session::haveRight("plugin_autoexportsearches_exportconfigs", READ)) {
                                         $value[1]
                                     );
                                 $label = $timeValue === 'month' ? __('Beginning of the month') : __('Monday');
-                                $inputValue = $timeValue === 'month' ? PluginAutoexportsearchesCustomsearchcriteria::CRITERIA_FIRST_DAY_OF_MONTH : PluginAutoexportsearchesCustomsearchcriteria::CRITERIA_FIRST_DAY_OF_WEEK;
+                                $inputValue = $timeValue === 'month' ? Customsearchcriteria::CRITERIA_FIRST_DAY_OF_MONTH : Customsearchcriteria::CRITERIA_FIRST_DAY_OF_WEEK;
                                 $checked = $customValue === $inputValue ? 'checked' : '';
                                 echo "
                                 <tr class='tab_bg_1 text-center'>

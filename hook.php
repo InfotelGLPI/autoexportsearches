@@ -26,6 +26,10 @@
  --------------------------------------------------------------------------
  */
 
+use GlpiPlugin\Autoexportsearches\Exportconfig;
+use GlpiPlugin\Autoexportsearches\Files;
+use GlpiPlugin\Autoexportsearches\Profile;
+
 function plugin_autoexportsearches_install()
 {
     global $DB;
@@ -49,13 +53,13 @@ function plugin_autoexportsearches_install()
     }
 
     CronTask::Register(
-        'PluginAutoexportsearchesExportconfig',
+        Exportconfig::class,
         'AutoexportsearchesExportconfigExport',
         DAY_TIMESTAMP,
         ['mode' => CronTask::MODE_EXTERNAL]
     );
-    PluginAutoexportsearchesProfile::createFirstAccess($_SESSION['glpiactiveprofile']['id']);
-    PluginAutoexportsearchesProfile::initProfile();
+    Profile::createFirstAccess($_SESSION['glpiactiveprofile']['id']);
+    Profile::initProfile();
 
     //Displayprefs
     $prefs = [2 => 1, 3 => 2, 5 => 32, 6 => 4];
@@ -63,20 +67,20 @@ function plugin_autoexportsearches_install()
         if (
             !countElementsInTable(
                 "glpi_displaypreferences",
-                ['itemtype' => 'PluginAutoexportsearchesExportconfig',
+                ['itemtype' => Exportconfig::class,
                     'num' => $num,
                     'users_id' => 0
                 ]
             )
         ) {
             $DB->doQuery("INSERT INTO glpi_displaypreferences
-                                  (`itemtype`, `num`, `rank`, `users_id`)
-                           VALUES ('PluginAutoexportsearchesExportconfig','$num','$rank','0');");
+                                  (`itemtype`, `num`, `rank`, `users_id`, `interface`)
+                           VALUES ('GlpiPlugin\\Autoexportsearches\\Exportconfig','$num','$rank','0', 'central');");
         }
     }
 
     CronTask::Register(
-        'PluginAutoexportsearchesFiles',
+        Files::class,
         'DeleteFile',
         MONTH_TIMESTAMP,
         ['state' => CronTask::STATE_DISABLE]
@@ -101,7 +105,7 @@ function plugin_autoexportsearches_uninstall()
         "glpi_plugin_autoexportsearches_customsearchcriterias",
     ];
     foreach ($tables as $table) {
-        $DB->doQuery("DROP TABLE IF EXISTS `$table`;");
+        $DB->dropTable($table, true);
     }
 
     $itemtypes = ['Alert',
@@ -117,7 +121,7 @@ function plugin_autoexportsearches_uninstall()
         'Notification'];
     foreach ($itemtypes as $itemtype) {
         $item = new $itemtype;
-        $item->deleteByCriteria(['itemtype' => PluginAutoexportsearchesExportconfig::class]);
+        $item->deleteByCriteria(['itemtype' => Exportconfig::class]);
     }
 
     CronTask::unregister("autoexportsearches");
@@ -159,7 +163,7 @@ function plugin_autoexportsearches_item_purge(CommonDBTM $item) {
         $DB->delete('glpi_plugin_autoexportsearches_customsearchcriterias', [
             'savedsearches_id' => 0
         ]);
-    } elseif ($item::getType() === PluginAutoexportsearchesExportconfig::getType()) {
+    } elseif ($item::getType() === Exportconfig::getType()) {
         $DB->delete('glpi_plugin_autoexportsearches_customsearchcriterias', [
             'exportconfigs_id' => $item->fields['id']
         ]);

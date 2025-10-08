@@ -1,4 +1,5 @@
 <?php
+
 /*
  -------------------------------------------------------------------------
  autoexportsearches plugin for GLPI
@@ -49,10 +50,10 @@ if (Session::haveRight("plugin_autoexportsearches_exportconfigs", READ)) {
                     'name' => 'savedsearches_id',
                     'value' => $val,
                     'condition' => ['users_id' => $_POST['users_id']],
-                    'rand' => $_POST["rand"]
+                    'rand' => $_POST["rand"],
                 ]);
-                $url =	PLUGINAUTOEXPORTSEARCH_WEBDIR . "/autoexportsearches/ajax/customsearchcriterias.php";
-                $exportConfigId = isset($_POST['exportconfigs_id']) ? $_POST['exportconfigs_id'] : 0;
+                $url =	PLUGINAUTOEXPORTSEARCH_WEBDIR . "/ajax/customsearchcriterias.php";
+                $exportConfigId = $_POST['exportconfigs_id'] ?? 0;
                 echo "
             <script>
                 if (!window.autoexportsearches) window.autoexportsearches = {};
@@ -72,4 +73,3 @@ if (Session::haveRight("plugin_autoexportsearches_exportconfigs", READ)) {
 } else {
     throw new AccessDeniedHttpException();
 }
-

@@ -27,14 +27,16 @@
  */
 
 use Glpi\Exception\Http\AccessDeniedHttpException;
+use GlpiPlugin\Autoexportsearches\Exportconfig;
+use GlpiPlugin\Autoexportsearches\Menu;
 
 Session::checkLoginUser();
 
-Html::header(PluginAutoexportsearchesMenu::getTypeName(2), '', 'tools',"PluginAutoexportsearchesMenu",PluginAutoexportsearchesExportconfig::getType());
-$export = new PluginAutoexportsearchesExportconfig();
+Html::header(Menu::getTypeName(2), '', 'tools',Menu::class,Exportconfig::getType());
+$export = new Exportconfig();
 
 if ($export->canView()) {
-   Search::show(PluginAutoexportsearchesExportconfig::getType());
+   Search::show(Exportconfig::getType());
 
 } else {
     throw new AccessDeniedHttpException();

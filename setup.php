@@ -26,7 +26,12 @@
  --------------------------------------------------------------------------
  */
 
-define('PLUGIN_AUTOEXPORTSEARCH_VERSION', '2.1.6');
+use GlpiPlugin\Autoexportsearches\Customsearchcriteria;
+use GlpiPlugin\Autoexportsearches\Exportconfig;
+use GlpiPlugin\Autoexportsearches\Menu;
+use GlpiPlugin\Autoexportsearches\Profile;
+
+define('PLUGIN_AUTOEXPORTSEARCH_VERSION', '2.2.0');
 
 global $CFG_GLPI;
 
@@ -42,27 +47,27 @@ function plugin_init_autoexportsearches()
     global $PLUGIN_HOOKS;
 
     $PLUGIN_HOOKS['csrf_compliant']['autoexportsearches'] = true;
-    $PLUGIN_HOOKS['change_profile']['autoexportsearches'] = ['PluginAutoexportsearchesProfile', 'initProfile'];
+    $PLUGIN_HOOKS['change_profile']['autoexportsearches'] = [Profile::class, 'initProfile'];
 
     if (Session::getLoginUserID()) {
         if (Session::haveRightsOr('plugin_autoexportsearches_exportconfigs', [READ, CREATE, UPDATE]
             ) || Session::haveRightsOr('plugin_autoexportsearches_accessfiles', [READ, CREATE, UPDATE])) {
-            $PLUGIN_HOOKS['menu_toadd']['autoexportsearches'] = ['tools' => 'PluginAutoexportsearchesMenu'];
+            $PLUGIN_HOOKS['menu_toadd']['autoexportsearches'] = ['tools' => Menu::class];
         }
-        Plugin::registerClass('PluginAutoexportsearchesProfile', ['addtabon' => 'Profile']);
+        Plugin::registerClass(Profile::class, ['addtabon' => 'Profile']);
         $PLUGIN_HOOKS['use_massive_action']['autoexportsearches'] = 1;
 
         $PLUGIN_HOOKS['pre_item_update']['autoexportsearches'] = [
-            'PluginAutoexportsearchesExportconfig' =>
-                ['PluginAutoexportsearchesCustomsearchcriteria', 'createCriterias']
+            Exportconfig::class =>
+                [Customsearchcriteria::class, 'createCriterias']
         ];
         $PLUGIN_HOOKS['item_add']['autoexportsearches'] = [
-            'PluginAutoexportsearchesExportconfig' =>
-                ['PluginAutoexportsearchesCustomsearchcriteria', 'createCriterias']
+            Exportconfig::class =>
+                [Customsearchcriteria::class, 'createCriterias']
         ];
         $PLUGIN_HOOKS['item_purge']['autoexportsearches'] = [
             'SavedSearch' => 'plugin_autoexportsearches_item_purge',
-            'PluginAutoexportsearchesExportconfig' => 'plugin_autoexportsearches_item_purge'
+            Exportconfig::class => 'plugin_autoexportsearches_item_purge'
         ];
 
         if (Session::haveRight("config", READ)) {

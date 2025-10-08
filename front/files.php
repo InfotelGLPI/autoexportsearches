@@ -28,10 +28,9 @@
 
 
 use Glpi\Exception\Http\AccessDeniedHttpException;
-
-if (!defined('GLPI_ROOT')) {
-   define('GLPI_ROOT', realpath('../../..'));
-}
+use GlpiPlugin\Autoexportsearches\Config;
+use GlpiPlugin\Autoexportsearches\Files;
+use GlpiPlugin\Autoexportsearches\Menu;
 
 Session::checkLoginUser();
 
@@ -40,19 +39,19 @@ if (Session::haveRight("plugin_autoexportsearches_exportconfigs", READ)) {
         $_SESSION['glpiactiveprofile']['interface'] == 'central' &&
         !isset($_POST['export'])) {
         Html::header(
-            PluginAutoexportsearchesFiles::getTypeName(2),
+            Files::getTypeName(2),
             '',
             "tools",
-            "PluginAutoexportsearchesMenu",
-            PluginAutoexportsearchesFiles::getType()
+            Menu::class,
+            Files::getType()
         );
     } elseif (!isset($_POST['export'])) {
-        Html::helpHeader(PluginAutoexportsearchesFiles::getTypeName(2));
+        Html::helpHeader(Files::getTypeName(2));
     }
 
 
-    $files = new PluginAutoexportsearchesFiles();
-    $config = new PluginAutoexportsearchesConfig();
+    $files = new Files();
+    $config = new Config();
     $config->getFromDB(1);
     $dir = GLPI_PLUGIN_DOC_DIR . $config->getField('folder');
     if (isset($_POST["filedelete"])) {

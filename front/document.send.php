@@ -27,14 +27,18 @@
  */
 
 use Glpi\Exception\Http\BadRequestHttpException;
+use GlpiPlugin\Autoexportsearches\Config;
+use GlpiPlugin\Autoexportsearches\Files;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
-$files = new PluginAutoexportsearchesFiles();
+
+$files = new Files();
+
 $check_download = $files::canDownload();
 
 if (isset($_GET["file"]) && $check_download) { // for other file
 
-    $config = new PluginAutoexportsearchesConfig();
+    $config = new Config();
     $config->getFromDB(1);
     $dir = GLPI_PLUGIN_DOC_DIR . $config->getField('folder') . '/';
     $filename = basename($_GET["file"]);

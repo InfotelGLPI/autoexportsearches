@@ -28,7 +28,8 @@
 
 Session::checkLoginUser();
 
-use Glpi\Event;
+use GlpiPlugin\Autoexportsearches\Exportconfig;
+use GlpiPlugin\Autoexportsearches\Menu;
 
 if (!isset($_GET["id"])) {
     $_GET["id"] = "";
@@ -37,7 +38,7 @@ if (!isset($_GET["withtemplate"])) {
     $_GET["withtemplate"] = "";
 }
 
-$export = new PluginAutoexportsearchesExportconfig();
+$export = new Exportconfig();
 
 if (!isset($_POST['periodicity_open_days'])) {
     $_POST['periodicity_open_days'] = 0;
@@ -71,11 +72,11 @@ if (isset($_POST["add"])) {
     $export->checkGlobal(READ);
 
     Html::header(
-        PluginAutoexportsearchesMenu::getTypeName(2),
+        Menu::getTypeName(2),
         '',
         'tools',
-        "PluginAutoexportsearchesMenu",
-        PluginAutoexportsearchesExportconfig::getType()
+        Menu::class,
+        Exportconfig::getType()
     );
 
     $export->display($_GET);

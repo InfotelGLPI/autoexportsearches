@@ -27,12 +27,17 @@
  */
 
 global $CFG_GLPI;
+
+use GlpiPlugin\Autoexportsearches\Config;
+use GlpiPlugin\Autoexportsearches\Files;
+use GlpiPlugin\Autoexportsearches\Menu;
+
 $plugin = new Plugin();
 
 if ($plugin->isActivated("autoexportsearches")) {
 
    Session::checkRight("config", UPDATE);
-   $config = new PluginAutoexportsearchesConfig();
+   $config = new Config();
    if (isset($_POST["update"])) {
       if ($config->getFromDB(1)) {
           if(isset($_POST['monthBeforePurge']) && is_numeric($_POST['monthBeforePurge'])){
@@ -43,7 +48,7 @@ if ($plugin->isActivated("autoexportsearches")) {
       }
       Html::back();
    } else {
-      Html::header(PluginAutoexportsearchesFiles::getTypeName(2), '', "tools",'PluginAutoexportsearchesMenu');
+      Html::header(Files::getTypeName(2), '', "tools",Menu::class);
       $config->showConfigForm();
       Html::footer();
    }
