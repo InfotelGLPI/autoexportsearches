@@ -1,4 +1,5 @@
 <?php
+
 /*
  -------------------------------------------------------------------------
  autoexportsearches plugin for GLPI
@@ -31,6 +32,7 @@ namespace GlpiPlugin\Autoexportsearches;
 use CommonDBTM;
 use DBConnection;
 use Html;
+use Migration;
 use Toolbox;
 
 if (!defined('GLPI_ROOT')) {
@@ -39,10 +41,9 @@ if (!defined('GLPI_ROOT')) {
 
 class Config extends CommonDBTM
 {
+    public static $rightname = 'plugin_autoexportsearches_configs';
 
-    static $rightname = 'plugin_autoexportsearches_configs';
-
-    static public function install($migration)
+    public static function install(Migration $migration)
     {
         global $DB;
 
@@ -70,18 +71,20 @@ class Config extends CommonDBTM
         }
     }
 
-    static public function uninstall()
+    public static function uninstall()
     {
         global $DB;
 
         $DB->dropTable(self::getTable(), true);
     }
-   /**
-    * Show form
-    *
-    * @return boolean
-    */
-    function showConfigForm()
+
+
+    /**
+     * Show form
+     *
+     * @return boolean
+     */
+    public function showConfigForm()
     {
 
         if (!$this->canView() && !$this->canUpdate()) {

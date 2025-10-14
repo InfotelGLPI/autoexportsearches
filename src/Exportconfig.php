@@ -38,6 +38,7 @@ use Dropdown;
 use GLPIMailer;
 use GLPINetwork;
 use Html;
+use Migration;
 use Profile;
 use SavedSearch;
 use Search;
@@ -76,7 +77,7 @@ class Exportconfig extends CommonDBTM
         return __('Auto export config', 'autoexportsearches');
     }
 
-    static public function install($migration)
+    public static function install(Migration $migration)
     {
         global $DB;
 
@@ -120,7 +121,8 @@ class Exportconfig extends CommonDBTM
                 $table,
                 [
                     'periodicity_type' => 0,
-                ], []
+                ],
+                []
             );
             $DB->doQuery($query);
         }
@@ -132,7 +134,8 @@ class Exportconfig extends CommonDBTM
                 $table,
                 [
                     'periodicity_open_days' => 0,
-                ], []
+                ],
+                []
             );
             $DB->doQuery($query);
         }
@@ -151,12 +154,12 @@ class Exportconfig extends CommonDBTM
                 6 => 4];
         foreach ($prefs as $num => $rank) {
             if (!countElementsInTable(
-                    "glpi_displaypreferences",
-                    ['itemtype' => Exportconfig::class,
+                "glpi_displaypreferences",
+                ['itemtype' => Exportconfig::class,
                         'num' => $num,
                         'users_id' => 0
                     ]
-                )
+            )
             ) {
                 $DB->insert(
                     'glpi_displaypreferences',
@@ -170,7 +173,7 @@ class Exportconfig extends CommonDBTM
         }
     }
 
-    static public function uninstall()
+    public static function uninstall()
     {
         global $DB;
 
@@ -574,7 +577,6 @@ class Exportconfig extends CommonDBTM
                 return [
                     'description' => __('Export saved searches', 'autoexportsearches'),
                 ];   // Optional
-
         }
         return [];
     }

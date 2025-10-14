@@ -31,6 +31,7 @@ namespace GlpiPlugin\Autoexportsearches;
 use CommonDBTM;
 use CronTask;
 use Html;
+use Migration;
 use ProfileRight;
 
 if (!defined('GLPI_ROOT')) {
@@ -50,7 +51,7 @@ class Files extends CommonDBTM
         return __('Download files', 'autoexportsearches');
     }
 
-    static public function install($migration)
+    public static function install(Migration $migration)
     {
         CronTask::Register(
             Files::class,
