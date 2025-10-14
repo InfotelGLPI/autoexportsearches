@@ -29,6 +29,7 @@
 namespace GlpiPlugin\Autoexportsearches;
 
 use CommonDBTM;
+use DBConnection;
 use Html;
 use Toolbox;
 
@@ -41,6 +42,40 @@ class Config extends CommonDBTM
 
     static $rightname = 'plugin_autoexportsearches_configs';
 
+    static public function install($migration)
+    {
+        global $DB;
+
+        $default_charset   = DBConnection::getDefaultCharset();
+        $default_collation = DBConnection::getDefaultCollation();
+        $default_key_sign  = DBConnection::getDefaultPrimaryKeySignOption();
+        $table  = self::getTable();
+
+        if (!$DB->tableExists($table)) {
+            $query = "CREATE TABLE `$table` (
+                        `id` int {$default_key_sign} NOT NULL auto_increment,
+                        `folder` varchar(255) collate utf8mb4_unicode_ci NOT NULL default '',
+                        `monthBeforePurge` int {$default_key_sign} NOT NULL DEFAULT '0',
+                        PRIMARY KEY (`id`)
+               ) ENGINE=InnoDB DEFAULT CHARSET={$default_charset} COLLATE={$default_collation} ROW_FORMAT=DYNAMIC;";
+
+            $DB->doQuery($query);
+
+            $DB->insert(
+                $table,
+                ['id' => 1,
+                    'folder' => 'autoexportsearches',
+                    'monthBeforePurge' => 3]
+            );
+        }
+    }
+
+    static public function uninstall()
+    {
+        global $DB;
+
+        $DB->dropTable(self::getTable(), true);
+    }
    /**
     * Show form
     *

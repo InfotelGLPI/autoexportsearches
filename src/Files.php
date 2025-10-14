@@ -50,6 +50,16 @@ class Files extends CommonDBTM
         return __('Download files', 'autoexportsearches');
     }
 
+    static public function install($migration)
+    {
+        CronTask::Register(
+            Files::class,
+            'DeleteFile',
+            MONTH_TIMESTAMP,
+            ['state' => CronTask::STATE_DISABLE]
+        );
+    }
+
     static function canDownload()
     {
         return ProfileRight::getProfileRights(

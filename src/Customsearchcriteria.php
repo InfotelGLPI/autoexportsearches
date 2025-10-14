@@ -29,6 +29,7 @@
 namespace GlpiPlugin\Autoexportsearches;
 
 use CommonDBTM;
+use DBConnection;
 
 if (!defined('GLPI_ROOT')) {
     die("Sorry. You can't access directly to this file");
@@ -38,6 +39,39 @@ class Customsearchcriteria extends CommonDBTM
 {
     const CRITERIA_FIRST_DAY_OF_MONTH = 'first day of ';
     const CRITERIA_FIRST_DAY_OF_WEEK = 'last monday';
+
+    public static function install($migration)
+    {
+        global $DB;
+
+        $default_charset   = DBConnection::getDefaultCharset();
+        $default_collation = DBConnection::getDefaultCollation();
+        $default_key_sign  = DBConnection::getDefaultPrimaryKeySignOption();
+        $table  = self::getTable();
+
+        if (!$DB->tableExists($table)) {
+            $query = "CREATE TABLE `$table` (
+                        `id` int {$default_key_sign} NOT NULL auto_increment,
+                        `exportconfigs_id`    int {$default_key_sign} NOT NULL COMMENT 'RELATION to glpi_plugin_autoexportsearches_exportconfigs (id)',
+                        `savedsearches_id`    int {$default_key_sign} NOT NULL COMMENT 'RELATION to glpi_savedsearches (id)',
+                        `criteria_field`      int {$default_key_sign} NOT NULL,
+                        `criteria_value`      VARCHAR(255) NOT NULL,
+                        `criteria_searchtype` VARCHAR(255) NOT NULL,
+                        PRIMARY KEY (`id`),
+                        KEY                   `exportconfigs_id` (`exportconfigs_id`),
+                        KEY                   `savedsearches_id` (`savedsearches_id`)
+               ) ENGINE=InnoDB DEFAULT CHARSET={$default_charset} COLLATE={$default_collation} ROW_FORMAT=DYNAMIC;";
+
+            $DB->doQuery($query);
+        }
+    }
+
+    public static function uninstall()
+    {
+        global $DB;
+
+        $DB->dropTable(self::getTable(), true);
+    }
 
     public static function createCriterias(ExportConfig $exportConfig)
     {

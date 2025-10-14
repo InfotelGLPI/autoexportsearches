@@ -32,6 +32,8 @@ namespace GlpiPlugin\Autoexportsearches;
 use Ajax;
 use Auth;
 use CommonDBTM;
+use CronTask;
+use DBConnection;
 use Dropdown;
 use GLPIMailer;
 use GLPINetwork;
@@ -72,6 +74,123 @@ class Exportconfig extends CommonDBTM
     public static function getTypeName($nb = 0)
     {
         return __('Auto export config', 'autoexportsearches');
+    }
+
+    static public function install($migration)
+    {
+        global $DB;
+
+        $default_charset   = DBConnection::getDefaultCharset();
+        $default_collation = DBConnection::getDefaultCollation();
+        $default_key_sign  = DBConnection::getDefaultPrimaryKeySignOption();
+        $table  = self::getTable();
+
+        if (!$DB->tableExists($table)) {
+            $query = "CREATE TABLE `$table` (
+                        `id` int {$default_key_sign} NOT NULL auto_increment,
+                        `users_id`              int {$default_key_sign} NOT NULL DEFAULT '0' COMMENT 'RELATION to glpi_users (id)',
+                        `savedsearches_id`      int {$default_key_sign} NOT NULL DEFAULT '0' COMMENT 'RELATION to glpi_savedsearches (id)',
+                        `last_export`           timestamp NULL DEFAULT NULL,
+                        `periodicity_type`      int     NOT NULL DEFAULT '0',
+                        `periodicity`           int {$default_key_sign} NOT NULL DEFAULT '1',
+                        `periodicity_open_days` tinyint NOT NULL DEFAULT '0',
+                        `is_active`             tinyint NOT NULL DEFAULT '1',
+                        `is_deleted`            tinyint NOT NULL DEFAULT '0',
+                        `sendto`                VARCHAR(255)     DEFAULT '',
+                        PRIMARY KEY (`id`),
+                        KEY                     `users_id` (`users_id`),
+                        KEY                     `savedsearches_id` (`savedsearches_id`)
+               ) ENGINE=InnoDB DEFAULT CHARSET={$default_charset} COLLATE={$default_collation} ROW_FORMAT=DYNAMIC;";
+
+            $DB->doQuery($query);
+        }
+
+        if (!$DB->fieldExists($table, "sendto")) {
+            $migration->addField($table, "sendto", "VARCHAR(255) DEFAULT ''");
+            $migration->migrationOneTable($table);
+        }
+        if ($DB->fieldExists($table, "searches_id")) {
+            $migration->changeField($table, 'searches_id', 'savedsearches_id', "int {$default_key_sign} NOT NULL DEFAULT '0'");
+            $migration->migrationOneTable($table);
+        }
+        if (!$DB->fieldExists($table, "periodicity_type")) {
+            $migration->addField($table, "periodicity_type", "int NOT NULL DEFAULT '0'");
+            $migration->migrationOneTable($table);
+            $query = $DB->buildUpdate(
+                $table,
+                [
+                    'periodicity_type' => 0,
+                ], []
+            );
+            $DB->doQuery($query);
+        }
+
+        if (!$DB->fieldExists($table, "periodicity_open_days")) {
+            $migration->addField($table, "periodicity_open_days", "tinyint NOT NULL DEFAULT '0'");
+            $migration->migrationOneTable($table);
+            $query = $DB->buildUpdate(
+                $table,
+                [
+                    'periodicity_open_days' => 0,
+                ], []
+            );
+            $DB->doQuery($query);
+        }
+
+        CronTask::Register(
+            Exportconfig::class,
+            'AutoexportsearchesExportconfigExport',
+            DAY_TIMESTAMP,
+            ['mode' => CronTask::MODE_EXTERNAL]
+        );
+
+        //Displayprefs
+        $prefs = [2 => 1,
+                3 => 2,
+                5 => 3,
+                6 => 4];
+        foreach ($prefs as $num => $rank) {
+            if (!countElementsInTable(
+                    "glpi_displaypreferences",
+                    ['itemtype' => Exportconfig::class,
+                        'num' => $num,
+                        'users_id' => 0
+                    ]
+                )
+            ) {
+                $DB->insert(
+                    'glpi_displaypreferences',
+                    ['itemtype' => Exportconfig::class,
+                        'num' => $num,
+                        'rank' => $rank,
+                        'users_id' => 0,
+                        'interface' => 'central']
+                );
+            }
+        }
+    }
+
+    static public function uninstall()
+    {
+        global $DB;
+
+        $DB->dropTable(self::getTable(), true);
+
+        $itemtypes = ['Alert',
+            'DisplayPreference',
+            'Document_Item',
+            'ImpactItem',
+            'Item_Ticket',
+            'Link_Itemtype',
+            'Notepad',
+            'SavedSearch',
+            'DropdownTranslation',
+            'NotificationTemplate',
+            'Notification'];
+        foreach ($itemtypes as $itemtype) {
+            $item = new $itemtype;
+            $item->deleteByCriteria(['itemtype' => Exportconfig::class]);
+        }
     }
 
     /**
