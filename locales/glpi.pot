@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - AutoExportSearches plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-08 12:55+0000\n"
+"POT-Creation-Date: 2025-10-14 15:04+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -88,55 +88,55 @@ msgstr ""
 msgid "No file selected"
 msgstr ""
 
-#: src/Config.php:65
+#: src/Config.php:100
 msgid "Number of months before purge files"
 msgstr ""
 
-#: src/Exportconfig.php:74 src/Profile.php:216
+#: src/Exportconfig.php:76 src/Profile.php:216
 msgid "Auto export config"
 msgstr ""
 
-#: src/Exportconfig.php:101 src/Exportconfig.php:161
+#: src/Exportconfig.php:220 src/Exportconfig.php:280
 msgid "User who owns the saved search"
 msgstr ""
 
-#: src/Exportconfig.php:109 src/Exportconfig.php:177
+#: src/Exportconfig.php:228 src/Exportconfig.php:296
 msgid "Saved search to export"
 msgstr ""
 
-#: src/Exportconfig.php:126
+#: src/Exportconfig.php:245
 msgid "Last export"
 msgstr ""
 
-#: src/Exportconfig.php:157
+#: src/Exportconfig.php:276
 msgid "Search to export"
 msgstr ""
 
-#: src/Exportconfig.php:208
+#: src/Exportconfig.php:327
 msgid "Periodicity type"
 msgstr ""
 
-#: src/Exportconfig.php:216
+#: src/Exportconfig.php:335
 msgid "Every x days"
 msgstr ""
 
-#: src/Exportconfig.php:219
+#: src/Exportconfig.php:338
 msgid "Every x minutes"
 msgstr ""
 
-#: src/Exportconfig.php:220
+#: src/Exportconfig.php:339
 msgid "Every x hours"
 msgstr ""
 
-#: src/Exportconfig.php:249
+#: src/Exportconfig.php:368
 msgid "Options"
 msgstr ""
 
-#: src/Exportconfig.php:253
+#: src/Exportconfig.php:372
 msgid "Send mail to"
 msgstr ""
 
-#: src/Exportconfig.php:456
+#: src/Exportconfig.php:575
 msgid "Export saved searches"
 msgstr ""
 
@@ -144,31 +144,31 @@ msgstr ""
 msgid "Download files"
 msgstr ""
 
-#: src/Files.php:112
+#: src/Files.php:122
 msgid "No export files available"
 msgstr ""
 
-#: src/Files.php:146
+#: src/Files.php:156
 msgid "Files"
 msgstr ""
 
-#: src/Files.php:212
+#: src/Files.php:222
 msgid "File name"
 msgstr ""
 
-#: src/Files.php:216
+#: src/Files.php:226
 msgid "Generation date"
 msgstr ""
 
-#: src/Files.php:292
+#: src/Files.php:302
 msgid "No file to download in the directory"
 msgstr ""
 
-#: src/Files.php:297
+#: src/Files.php:307
 msgid "The folder doesn't exist"
 msgstr ""
 
-#: src/Files.php:411
+#: src/Files.php:421
 msgid "Delete export files"
 msgstr ""
 
