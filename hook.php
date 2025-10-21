@@ -32,6 +32,7 @@ use GlpiPlugin\Autoexportsearches\Customsearchcriteria;
 use GlpiPlugin\Autoexportsearches\Exportconfig;
 use GlpiPlugin\Autoexportsearches\Files;
 use GlpiPlugin\Autoexportsearches\Profile;
+use function Safe\mkdir;
 
 function plugin_autoexportsearches_install()
 {
@@ -51,6 +52,8 @@ function plugin_autoexportsearches_install()
     Customsearchcriteria::install($migration);
 
     Files::install($migration);
+
+    $migration->executeMigration();
 
     $rep_files_autoexportsearches = GLPI_PLUGIN_DOC_DIR . "/autoexportsearches";
     if (!is_dir($rep_files_autoexportsearches)) {
