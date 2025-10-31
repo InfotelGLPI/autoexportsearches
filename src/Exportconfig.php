@@ -122,7 +122,7 @@ class Exportconfig extends CommonDBTM
                 [
                     'periodicity_type' => 0,
                 ],
-                []
+                [1]
             );
             $DB->doQuery($query);
         }
@@ -135,7 +135,7 @@ class Exportconfig extends CommonDBTM
                 [
                     'periodicity_open_days' => 0,
                 ],
-                []
+                [1]
             );
             $DB->doQuery($query);
         }
