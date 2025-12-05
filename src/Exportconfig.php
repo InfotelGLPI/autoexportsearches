@@ -171,6 +171,12 @@ class Exportconfig extends CommonDBTM
                 );
             }
         }
+
+        $query = $DB->buildDelete(
+            'glpi_crontasks',
+            ['itemtype' => ['LIKE', 'PluginAutoexportsearches' . '%']]
+        );
+        $DB->doQuery($query);
     }
 
     public static function uninstall()
