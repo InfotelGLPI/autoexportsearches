@@ -53,7 +53,7 @@ if (Session::haveRight("plugin_autoexportsearches_exportconfigs", READ)) {
     $files = new Files();
     $config = new Config();
     $config->getFromDB(1);
-    $dir = GLPI_PLUGIN_DOC_DIR . $config->getField('folder');
+    $dir = GLPI_PLUGIN_DOC_DIR .'/'. $config->getField('folder');
     if (isset($_POST["filedelete"])) {
         $noFile = true;
         foreach ($_POST["filedelete"] as $fileName => $file) {

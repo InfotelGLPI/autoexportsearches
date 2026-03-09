@@ -40,7 +40,7 @@ if (isset($_GET["file"]) && $check_download) { // for other file
 
     $config = new Config();
     $config->getFromDB(1);
-    $dir = GLPI_PLUGIN_DOC_DIR . $config->getField('folder') . '/';
+    $dir = GLPI_PLUGIN_DOC_DIR . '/'.$config->getField('folder') . '/';
     $filename = basename($_GET["file"]);
     if(is_file("$dir$filename")){
         $response = new BinaryFileResponse($dir . $filename);

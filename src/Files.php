@@ -131,7 +131,7 @@ class Files extends CommonDBTM
         $types = [];
         $config = new Config();
         $config->getFromDB(1);
-        $dir = GLPI_PLUGIN_DOC_DIR . $config->getField('folder');
+        $dir = GLPI_PLUGIN_DOC_DIR . '/'.$config->getField('folder');
         //If the dir folder exist
         if (is_dir($dir)) {
             // Get all files in an array
@@ -363,7 +363,7 @@ class Files extends CommonDBTM
     {
         $config = new Config();
         $config->getFromDB(1);
-        $dir = GLPI_PLUGIN_DOC_DIR . $config->getField('folder');
+        $dir = GLPI_PLUGIN_DOC_DIR .'/'. $config->getField('folder');
 
         switch ($action) {
             case "get":
