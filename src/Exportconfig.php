@@ -510,8 +510,6 @@ class Exportconfig extends CommonDBTM
 
     public static function executeExport($plugin_exportconfigs_id)
     {
-        global $CFG_GLPI;
-
 
         $export = new self();
         $export->getFromDB($plugin_exportconfigs_id);
@@ -557,15 +555,28 @@ class Exportconfig extends CommonDBTM
                 }
             }
 
-            $params = Search::manageParams($itemtype, $p, 1, 1);
-            $name = Dropdown::getDropdownName('glpi_savedsearches', $export->fields['savedsearches_id']);
-            $name .= "_" . date('Y_m_d_H_i_s') . ".csv";
-            $titleMail = $name;
-            $filename = GLPI_PLUGIN_DOC_DIR . "/autoexportsearches/" . $name;
-            self::createCSVFile(Search::getDatas($itemtype, $params), $filename);
-            if (!empty($export->fields['sendto'])) {
-                self::sendMail($titleMail, $export->fields['sendto'], $name, $filename);
+            if (getItemForItemtype($itemtype)) {
+                $params = Search::manageParams($itemtype, $p, 1, 1);
+                $name = Dropdown::getDropdownName('glpi_savedsearches', $export->fields['savedsearches_id']);
+                $name .= "_" . date('Y_m_d_H_i_s') . ".csv";
+                $titleMail = $name;
+                $filename = GLPI_PLUGIN_DOC_DIR . "/autoexportsearches/" . $name;
+
+
+                self::createCSVFile(Search::getDatas($itemtype, $params), $filename);
+                if (!empty($export->fields['sendto'])) {
+                    self::sendMail($titleMail, $export->fields['sendto'], $name, $filename);
+                }
+
+                // add custom criterias for call to createCriterias
+                $customSearchCriteria = new Customsearchcriteria();
+                $customCriterias = $customSearchCriteria->find(['exportconfigs_id' => $export->fields['id']]);
+                $input['custom_criterias'] = $customCriterias;
+                $input['last_export'] = date("Y-m-d H:i:s");
+                $input['id'] = $export->fields['id'];
+                $export->update($input);
             }
+
         }
     }
 
@@ -597,7 +608,7 @@ class Exportconfig extends CommonDBTM
         // For exchange
         $mmail->AddCustomHeader("X-Auto-Response-Suppress: OOF, DR, NDR, RN, NRN");
         if (empty($CFG_GLPI["from_email"])) {
-            $config = new Config();
+            $config = new \Config();
             $results = $config->find(['name' => 'from_email']);
 
             foreach ($results as $result) {
@@ -668,7 +679,8 @@ class Exportconfig extends CommonDBTM
         ]);
         $count = 0;
         $user_id_back = Session::getLoginUserID();
-        $user = new User();
+        $savedProfile = $_SESSION['glpiactiveprofile'] ?? 0;
+
         foreach ($exportConfigs as $export) {
             // check if export has to be done
             if ($export['periodicity_type'] == self::PERIODICITY_MINUTES) {
@@ -755,39 +767,30 @@ class Exportconfig extends CommonDBTM
             $_SESSION["glpicronuserrunning"] = $export['users_id'];
             $_SESSION['glpidefault_entity'] = 0;
             Session::initEntityProfiles($export['users_id']);
+
             $user = new User();
             $user->getFromDB($export['users_id']);
+
             $profile = new Profile();
-            $savedProfile = $_SESSION['glpiactiveprofile'] ?? 0;
+
+            //TOCHANGE ASAP
             if ($profile->getFromDB($user->fields['profiles_id'])) {
                 $_SESSION['glpiactiveprofile'] = $profile->fields;
             }
             $_SESSION['glpiname'] = 'crontab';
             $_SESSION['glpiactiveentities'] = getSonsOf('glpi_entities', 0);
-            $user->getFromDB($export['users_id']);
+
             $auth = new Auth();
             $auth->auth_succeded = true;
             $auth->user = $user;
             Session::init($auth);
             Session::loadGroups();
-            $user = new User();
-            $user->getFromDB($export['users_id']);
+
             $_SESSION["glpiID"] = $export['users_id'];
             $_SESSION["glpicronuserrunning"] = $export['users_id'];
+
             self::executeExport($export['id']);
-            $_SESSION['glpiactiveprofile'] = $savedProfile;
 
-            // add custom criterias for call to createCriterias
-            $customSearchCriteria = new Customsearchcriteria();
-            $customCriterias = $customSearchCriteria->find(['exportconfigs_id' => $export['id']]);
-            $export['custom_criterias'] = $customCriterias;
-            if ($export['periodicity_type'] == self::PERIODICITY_MINUTES || $export['periodicity_type'] == self::PERIODICITY_HOURS) {
-                $export['last_export'] = date("Y-m-d H:i:s");
-            } else {
-                $export['last_export'] = date("Y-m-d");
-            }
-
-            $exportConfig->update($export);
             $count++;
         }
         $user->getFromDB($user_id_back);
@@ -795,6 +798,11 @@ class Exportconfig extends CommonDBTM
         $auth->auth_succeded = true;
         $auth->user = $user;
         Session::init($auth);
+        Session::loadGroups();
+        $_SESSION["glpiID"] = $user_id_back;
+        $_SESSION["glpicronuserrunning"] = $user_id_back;
+        $_SESSION['glpiactiveprofile'] = $savedProfile;
+
         ini_set("memory_limit", $old_memory);
         ini_set("max_execution_time", $old_execution);
         $task->addVolume($count);
