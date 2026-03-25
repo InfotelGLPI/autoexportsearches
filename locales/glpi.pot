@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - AutoExportSearches plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-25 13:13+0000\n"
+"POT-Creation-Date: 2026-03-25 15:32+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -96,47 +96,51 @@ msgstr ""
 msgid "Auto export config"
 msgstr ""
 
-#: src/Exportconfig.php:229 src/Exportconfig.php:289
+#: src/Exportconfig.php:234 src/Exportconfig.php:294
 msgid "User who owns the saved search"
 msgstr ""
 
-#: src/Exportconfig.php:237 src/Exportconfig.php:305
+#: src/Exportconfig.php:242 src/Exportconfig.php:325
 msgid "Saved search to export"
 msgstr ""
 
-#: src/Exportconfig.php:254
+#: src/Exportconfig.php:259
 msgid "Last export"
 msgstr ""
 
-#: src/Exportconfig.php:285
+#: src/Exportconfig.php:290
 msgid "Search to export"
 msgstr ""
 
-#: src/Exportconfig.php:336
+#: src/Exportconfig.php:309
+msgid "Profil used"
+msgstr ""
+
+#: src/Exportconfig.php:356
 msgid "Periodicity type"
 msgstr ""
 
-#: src/Exportconfig.php:344
+#: src/Exportconfig.php:364
 msgid "Every x days"
 msgstr ""
 
-#: src/Exportconfig.php:347
+#: src/Exportconfig.php:367
 msgid "Every x minutes"
 msgstr ""
 
-#: src/Exportconfig.php:348
+#: src/Exportconfig.php:368
 msgid "Every x hours"
 msgstr ""
 
-#: src/Exportconfig.php:377
+#: src/Exportconfig.php:397
 msgid "Options"
 msgstr ""
 
-#: src/Exportconfig.php:381
+#: src/Exportconfig.php:401
 msgid "Send mail to"
 msgstr ""
 
-#: src/Exportconfig.php:595
+#: src/Exportconfig.php:615
 msgid "Export saved searches"
 msgstr ""
 
