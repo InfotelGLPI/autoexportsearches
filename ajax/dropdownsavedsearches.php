@@ -69,6 +69,34 @@ if (Session::haveRight("plugin_autoexportsearches_exportconfigs", READ)) {
          ";
             }
             break;
+
+        case 'loadProfiles':
+            if (isset($_POST["users_id"])) {
+                $val = $_POST['profiles_id'] ?? 0;
+                if ($_POST['users_id'] != $_POST["current_user"]) {
+                    $val = 0;
+                }
+                $profileuserdatas = (new Profile_User())->find(['users_id' =>$_POST["users_id"]]);
+                $profileuserused = [];
+                foreach ($profileuserdatas as $profileuserdata) {
+                    $profileuserused[] = $profileuserdata['profiles_id'];
+                }
+                $profildatas = (new Profile())->find();
+                $profilnotused = [];
+                foreach ($profildatas as $profildata) {
+                    if (!in_array($profildata['id'], $profileuserused)) {
+                        $profilnotused[] = $profildata['id'];
+                    }
+                }
+
+                Profile::dropdown([
+                    'name' => 'profiles_id',
+                    'value' => $val,
+                    'used' => $profilnotused,
+                    'rand' => $_POST["rand"],
+                ]);
+            }
+            break;
     }
 } else {
     throw new AccessDeniedHttpException();
