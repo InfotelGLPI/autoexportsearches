@@ -140,6 +140,11 @@ class Exportconfig extends CommonDBTM
             $DB->doQuery($query);
         }
 
+        if (!$DB->fieldExists($table, "profiles_id")) {
+            $migration->addField($table, "profiles_id", "int NOT NULL DEFAULT '0'");
+            $migration->migrationOneTable($table);
+        }
+
         CronTask::Register(
             Exportconfig::class,
             'AutoexportsearchesExportconfigExport',
@@ -299,6 +304,21 @@ class Exportconfig extends CommonDBTM
         ]);
         echo "</td>";
         echo "</tr>";
+
+        echo "<tr class='tab_bg_1'>";
+        echo "<td>" . __('Profil used', 'autoexportsearches') . "</td>";
+        echo "<td id='savedProfile'>";
+        echo "</td>";
+        echo "</tr>";
+        $params = [
+            "users_id" => '__VALUE__',
+            "current_user" => $this->fields['users_id'],
+            'profiles_id' => $this->fields["profiles_id"],
+            "rand" => $rand,
+            "action" => "loadProfiles",
+        ];
+        $url = PLUGINAUTOEXPORTSEARCH_WEBDIR . "/ajax/dropdownsavedsearches.php";
+        Ajax::updateItemOnSelectEvent("dropdown_users_id$rand", "savedProfile", $url, $params);
 
         echo "<tr class='tab_bg_1'>";
 
@@ -774,7 +794,7 @@ class Exportconfig extends CommonDBTM
             $profile = new Profile();
 
             //TOCHANGE ASAP
-            if ($profile->getFromDB($user->fields['profiles_id'])) {
+            if (isset($export['profiles_id']) && $profile->getFromDB($export['profiles_id'])) {
                 $_SESSION['glpiactiveprofile'] = $profile->fields;
             }
             $_SESSION['glpiname'] = 'crontab';
