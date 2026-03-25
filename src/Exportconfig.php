@@ -306,7 +306,7 @@ class Exportconfig extends CommonDBTM
         echo "</tr>";
 
         echo "<tr class='tab_bg_1'>";
-        echo "<td>" . __('Profil used', 'autoexportsearches') . "</td>";
+        echo "<td>" . __('Used profile', 'autoexportsearches') . "</td>";
         echo "<td id='savedProfile'>";
         echo "</td>";
         echo "</tr>";
