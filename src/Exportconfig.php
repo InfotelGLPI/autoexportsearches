@@ -634,8 +634,6 @@ class Exportconfig extends CommonDBTM
             foreach ($results as $result) {
                 $mmail->SetFrom($result['value'], $CFG_GLPI["from_email_name"], false);
             }
-        } else {
-            $mmail->SetFrom($CFG_GLPI["from_email"], $CFG_GLPI["from_email_name"], false);
         }
 
         $text = __('Mail autoexportsearches');
@@ -679,7 +677,7 @@ class Exportconfig extends CommonDBTM
      */
     public static function cronAutoexportsearchesExportconfigExport($task = null)
     {
-        global $DB, $CFG_GLPI;
+        global $CFG_GLPI;
         if (!isset($CFG_GLPI['planning_work_days'])) {
             $CFG_GLPI['planning_work_days'] = importArrayFromDB($CFG_GLPI['planning_work_days']);
         }
@@ -792,8 +790,6 @@ class Exportconfig extends CommonDBTM
             $user->getFromDB($export['users_id']);
 
             $profile = new Profile();
-
-            //TOCHANGE ASAP
             if (isset($export['profiles_id']) && $profile->getFromDB($export['profiles_id'])) {
                 $_SESSION['glpiactiveprofile'] = $profile->fields;
             }
