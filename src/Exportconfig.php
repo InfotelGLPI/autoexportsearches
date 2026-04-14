@@ -628,9 +628,9 @@ class Exportconfig extends CommonDBTM
 
         $mmail = new GLPIMailer($transport);
         $mail = $mmail->getEmail();
-        $mail->getHeaders()->addTextHeader("Auto-Submitted: auto-generated");
+        $mail->getHeaders()->addTextHeader("Auto-Submitted", "auto-generated");
         // For exchange
-        $mail->getHeaders()->addTextHeader("X-Auto-Response-Suppress: OOF, DR, NDR, RN, NRN");
+        $mail->getHeaders()->addTextHeader("X-Auto-Response-Suppress", "OOF, DR, NDR, RN, NRN");
         if (empty($CFG_GLPI["from_email"])) {
             $config = new \Config();
             $results = $config->find(['name' => 'from_email']);
