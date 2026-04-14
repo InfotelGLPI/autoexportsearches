@@ -43,6 +43,8 @@ use Profile;
 use SavedSearch;
 use Search;
 use Session;
+use Symfony\Component\Mailer\Transport;
+use Symfony\Component\Mime\Address;
 use User;
 
 if (!defined('GLPI_ROOT')) {
@@ -622,38 +624,32 @@ class Exportconfig extends CommonDBTM
     {
         global $CFG_GLPI;
 
-        $mmail = new GLPIMailer();
+        $transport = Transport::fromDsn(GLPIMailer::buildDsn(true));
 
-        $mmail->AddCustomHeader("Auto-Submitted: auto-generated");
+        $mmail = new GLPIMailer($transport);
+        $mail = $mmail->getEmail();
+        $mail->getHeaders()->addTextHeader("Auto-Submitted: auto-generated");
         // For exchange
-        $mmail->AddCustomHeader("X-Auto-Response-Suppress: OOF, DR, NDR, RN, NRN");
+        $mail->getHeaders()->addTextHeader("X-Auto-Response-Suppress: OOF, DR, NDR, RN, NRN");
         if (empty($CFG_GLPI["from_email"])) {
             $config = new \Config();
             $results = $config->find(['name' => 'from_email']);
 
             foreach ($results as $result) {
-                $mmail->SetFrom($result['value'], $CFG_GLPI["from_email_name"], false);
+                $mail->from(new Address($result['value'],  $CFG_GLPI["from_email_name"]));
             }
         }
 
         $text = __('Mail autoexportsearches');
+        $mail->to(new Address($recipient, $recipient));
 
-        $mmail->AddAddress($recipient, $recipient);
-        $mmail->Subject = "[GLPI] " . $title;
-        $mmail->Body = $text;
+        $mail->subject("[GLPI] " . $title);
 
-        //      $mmail->AddEmbeddedImage($filepath,
-        //                               0,
-        //                               $filename,
-        //                               'base64',
-        //                               'text/csv');
-        $mmail->addAttachment(
-            $filepath,
-            $filename
-        );
+        $mail->html($text);
 
+        $mail->attachFromPath($filepath, $filename);
 
-        if (!$mmail->Send()) {
+        if (!$mmail->send()) {
             Session::addMessageAfterRedirect(
                 __('Failed to send email to ' . $recipient),
                 false,
