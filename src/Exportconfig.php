@@ -655,7 +655,6 @@ class Exportconfig extends CommonDBTM
                 false,
                 ERROR
             );
-            GLPINetwork::addErrorMessageAfterRedirect();
             return false;
         } else {
             Session::addMessageAfterRedirect(__('Mail send to ' . $recipient));
