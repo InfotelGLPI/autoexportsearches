@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - AutoExportSearches plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-16 15:17+0000\n"
+"POT-Creation-Date: 2026-04-23 07:09+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,23 +18,11 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 
-#: setup.php:87
+#: setup.php:88
 msgid "Auto export searches"
 msgid_plural "Auto exports searches"
 msgstr[0] ""
 msgstr[1] ""
-
-#: ajax/customsearchcriterias.php:81
-msgid "Customise the export of"
-msgstr ""
-
-#: ajax/customsearchcriterias.php:89
-msgid "Value"
-msgstr ""
-
-#: ajax/customsearchcriterias.php:90
-msgid "Customise"
-msgstr ""
 
 #: ajax/periodicityfields.php:51
 msgid "Periodicity (in minutes)"
@@ -76,7 +64,7 @@ msgid ""
 "the selected day"
 msgstr ""
 
-#: front/config.form.php:60
+#: front/config.form.php:63
 msgid "Please activate the plugin"
 msgstr ""
 
@@ -88,91 +76,43 @@ msgstr ""
 msgid "No file selected"
 msgstr ""
 
-#: src/Config.php:103
-msgid "Number of months before purge files"
-msgstr ""
-
-#: src/Exportconfig.php:79 src/Profile.php:216
+#: src/Exportconfig.php:80 src/Profile.php:204
 msgid "Auto export config"
 msgstr ""
 
-#: src/Exportconfig.php:236 src/Exportconfig.php:296
+#: src/Exportconfig.php:237
 msgid "User who owns the saved search"
 msgstr ""
 
-#: src/Exportconfig.php:244 src/Exportconfig.php:327
+#: src/Exportconfig.php:245
 msgid "Saved search to export"
 msgstr ""
 
-#: src/Exportconfig.php:261
+#: src/Exportconfig.php:262
 msgid "Last export"
 msgstr ""
 
-#: src/Exportconfig.php:292
-msgid "Search to export"
-msgstr ""
-
-#: src/Exportconfig.php:311
-msgid "Used profile"
-msgstr ""
-
-#: src/Exportconfig.php:358
-msgid "Periodicity type"
-msgstr ""
-
-#: src/Exportconfig.php:366
+#: src/Exportconfig.php:334
 msgid "Every x days"
 msgstr ""
 
-#: src/Exportconfig.php:369
+#: src/Exportconfig.php:337
 msgid "Every x minutes"
 msgstr ""
 
-#: src/Exportconfig.php:370
+#: src/Exportconfig.php:338
 msgid "Every x hours"
 msgstr ""
 
-#: src/Exportconfig.php:399
-msgid "Options"
-msgstr ""
-
-#: src/Exportconfig.php:403
-msgid "Send mail to"
-msgstr ""
-
-#: src/Exportconfig.php:617
+#: src/Exportconfig.php:564
 msgid "Export saved searches"
 msgstr ""
 
-#: src/Files.php:51
+#: src/Files.php:52
 msgid "Download files"
 msgstr ""
 
-#: src/Files.php:123
-msgid "No export files available"
-msgstr ""
-
-#: src/Files.php:157
-msgid "Files"
-msgstr ""
-
-#: src/Files.php:223
-msgid "File name"
-msgstr ""
-
-#: src/Files.php:227
-msgid "Generation date"
-msgstr ""
-
-#: src/Files.php:303
-msgid "No file to download in the directory"
-msgstr ""
-
-#: src/Files.php:308
-msgid "The folder doesn't exist"
-msgstr ""
-
-#: src/Files.php:422
+#: src/Files.php:304
 msgid "Delete export files"
 msgstr ""
 
@@ -194,14 +134,10 @@ msgstr ""
 msgid "List of export files"
 msgstr ""
 
-#: src/Profile.php:179
-msgid "Access to download files"
-msgstr ""
-
-#: src/Profile.php:223
+#: src/Profile.php:211
 msgid "Access export files"
 msgstr ""
 
-#: src/Profile.php:228
+#: src/Profile.php:216
 msgid "Configuration"
 msgstr ""
