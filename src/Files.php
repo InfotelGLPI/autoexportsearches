@@ -30,6 +30,7 @@ namespace GlpiPlugin\Autoexportsearches;
 
 use CommonDBTM;
 use CronTask;
+use Glpi\Application\View\TemplateRenderer;
 use Html;
 use Migration;
 use ProfileRight;
@@ -71,59 +72,14 @@ class Files extends CommonDBTM
 
     function showMenu()
     {
-
-        echo "<div class='center'>";
-        echo "<table class='tab_cadre' cellpadding='5' height='150'>";
-        echo "<tr>";
-        echo "<th colspan='6'>" . self::getTypeName() . "</th>";
-        echo "</tr>";
-        $types = self::getTypes();
-        $max = count($types);
-        for ($i = 0; $i < $max; $i += 3) {
-            echo "<tr>";
-            if (($max - $i) >= 3) {
-                $size = 2;
-            } elseif (($max - $i) == 2) {
-                $size = 3;
-            } else {
-                $size = 6;
-            }
-            if (isset($types[$i])) {
-                $type = $types[$i];
-                echo "<td class='center' colspan='$size'>";
-                echo "<a href='./files.php?type=$type'>";
-                echo "<i class=\"fas fa-folder-open fa-4x\"></i>";
-                echo "<br>" . $type . "</a>";
-                echo "</td>";
-            }
-
-            if (isset($types[$i + 1])) {
-                $type = $types[$i + 1];
-                echo "<td class='center' colspan='$size'>";
-                echo "<a href='./files.php?type=$type'>";
-                echo "<i class=\"fas fa-folder-open fa-4x\"></i>";
-                echo "<br>" . $type . "</a>";
-                echo "</td>";
-            }
-
-            if (isset($types[$i + 2])) {
-                $type = $types[$i + 2];
-                echo "<td class='center' colspan='$size'>";
-                echo "<a href='./files.php?type=$type'>";
-                echo "<i class=\"fas fa-folder-open fa-4x\"></i>";
-                echo "<br>" . $type . "</a>";
-                echo "</td>";
-            }
-
-
-            echo "</tr>";
-        }
-        if ($max == 0) {
-            echo "<tr><td class='center tab_bg_1' colspan='6'>";
-            echo __("No export files available", 'autoexportsearches');
-            echo "</td></tr>";
-        }
-        echo "</table></div>";
+        TemplateRenderer::getInstance()->display(
+            '@autoexportsearches/files_menu.html.twig',
+            [
+                'type_name' => self::getTypeName(),
+                'types'     => array_values(self::getTypes()),
+                'base_url'  => PLUGINAUTOEXPORTSEARCH_WEBDIR . '/front/files.php',
+            ]
+        );
     }
 
     function getTypes()
@@ -151,162 +107,81 @@ class Files extends CommonDBTM
      */
     function showListFiles($dir, $type)
     {
-        global $CFG_GLPI;
+        $dir_exists = is_dir($dir);
+        $files      = $dir_exists ? $this->processFiles("get", "", $type) : [];
 
-        echo "<div class='center'>";
-        echo "<h1>" . __('Files', 'autoexportsearches') . "</h1>";
-        //If the dir folder exist
-        if (is_dir($dir)) {
-            // Get all files in an array
-            $files = $this->processFiles("get", "", $type);
+        $limit_begin = (int) ($_GET['start'] ?? 0);
+        $limit_nb    = (int) ($_SESSION['glpilist_limit'] ?? 0);
+        $order_type  = isset($_GET['orderType']) && $_GET['orderType'] === 'ASC' ? 'DESC' : 'ASC';
+        $start       = (int) ($_GET['start'] ?? 0);
 
-            // If there is files in the folder
-            if ($files == true) {
-                //Pagination
-                $limitBegin = 0;
-                $nbRows = count($files);
-                if (isset($_GET['start'])) {
-                    $limitBegin = $_GET['start'];
+        if ($files) {
+            if (isset($_GET['orderCol'])) {
+                switch ($_GET['orderCol']) {
+                    case 'name':
+                    case 'date':
+                        $_GET['orderType'] === 'ASC' ? sort($files) : rsort($files);
+                        break;
+                    case 'month':
+                        $_GET['orderType'] === 'ASC'
+                            ? usort($files, [$this, 'sortArrayAsc'])
+                            : usort($files, [$this, 'sortArrayDesc']);
+                        break;
                 }
-                if (isset($_SESSION['glpilist_limit'])) {
-                    $limitNb = $_SESSION['glpilist_limit'];
-                } else {
-                    $limitNb = 0;
-                }
-                $target = PLUGINAUTOEXPORTSEARCH_WEBDIR . '/front/files.php?type=' . $type;
-                if (isset($_GET['orderType'])) {
-                    $parameters = "orderCol=" . $_GET['orderCol'] . "&orderType=" . $_GET['orderType'];
-                } else {
-                    $parameters = "";
-                }
-                Html::printPager($limitBegin, $nbRows, $target, $parameters);
-                echo "<form name='deleteCSV' method='post'>";
-
-                echo "<table id='tableCsv' class='tab_cadre_fixe'><thead>";
-                echo "<tr>";
-                // Checkbox colomn for select delete datas
-                echo "<th>
-                   <div class='form-group-checkbox'>
-                      <input title='" . __("Delete") . "' type='checkbox' class='new_checkbox' name='checkall_delete' id='checkall_delete'
-                      onclick='checkAll(this.checked);' >";
-                echo "<script>
-               function checkAll(state) {
-                  var cases = document.getElementsByTagName('input');
-                  for(var i=0; i<cases.length; i++){
-                    if(cases[i].type == 'checkbox'){
-                         cases[i].checked = state;
-                     }
-                  }
-              }
-            </script>";
-                echo "<label class='label-checkbox' for='checkall_delete' title='" . __("Check all") . "'>
-                         <span class='check'></span>
-                         <span class='box'></span>
-                      </label>
-                   </div>
-                 </th>";
-                $ordertype = "ASC";
-                if (isset($_GET['orderType'])) {
-                    if ($_GET['orderType'] == "ASC") {
-                        $ordertype = "DESC";
-                    } else {
-                        $ordertype = "ASC";
-                    }
-                }
-
-                $start = 0;
-                if (isset($_GET['start'])) {
-                    $start = $_GET['start'];
-                }
-
-                echo "<th><a href='files.php?type=$type&orderCol=name&orderType=$ordertype&start=$start'>" . __(
-                    'File name',
-                    'autoexportsearches'
-                ) . "</a></th>";
-                echo "<th><a href='files.php?type=$type&orderCol=date&orderType=$ordertype&start=$start'>" . __(
-                    'Generation date',
-                    'autoexportsearches'
-                ) . "</a></th>";
-                echo "</thead></tr>";
-
-                //Sort table order with headers
-                if (isset($_GET['orderCol'])) {
-                    switch ($_GET['orderCol']) {
-                        case 'name':
-                        case 'date':
-                            if (isset($_GET['orderType'])) {
-                                if ($_GET['orderType'] == 'ASC') {
-                                    sort($files);
-                                } elseif ($_GET['orderType'] == 'DESC') {
-                                    rsort($files);
-                                }
-                            }
-                            break;
-                        case 'month':
-                            if (isset($_GET['orderType'])) {
-                                if ($_GET['orderType'] == 'ASC') {
-                                    usort($files, [$this, 'sortArrayAsc']);
-                                } elseif ($_GET['orderType'] == 'DESC') {
-                                    usort($files, [$this, 'sortArrayDesc']);
-                                }
-                            }
-                            break;
-                    }
-                }
-
-                $plugin_dir = PLUGINAUTOEXPORTSEARCH_WEBDIR;
-                $i = 0;
-                foreach ($files as $key => $file) {
-                    if ($key >= $limitBegin &&
-                        $key < ($limitNb + $limitBegin)) {
-                        //Show datas from file name
-                        echo "<tr>";
-                        $dateFile = $this->getDateFile($file, 'YmdHis');
-                        echo "<td width='10' valign='top'>";
-                        echo Html::showCheckbox(["name" => "filedelete[$file]"]);
-                        echo "</td>";
-                        if ($this::canDownload()) {
-                            echo "<td><a href='$plugin_dir/front/document.send.php?file=$file' target='_blank'> $file </a></td>";
-                        } else {
-                            echo "<td>$file</td>";
-                        }
-                        $dateFormated = substr($dateFile, 0, 10);
-                        $afterDate = substr($dateFile, 11);
-                        if ((strpos($afterDate, "csv") === false) && ($_SESSION["glpilanguage"] == "fr_FR")) {
-                            $dateFormated1 = preg_replace("/(\d{4})-(\d{2})-(\d{2})/", "$3-$2-$1", substr($dateFile, 0, 10));
-                            $dateFormated2 = preg_replace("/(\d{2})-(\d{2})-(\d{2})/", "$1h$2min$3s", substr($dateFile, 11));
-                            $dateFormated = $dateFormated1 . " " . $dateFormated2;
-                        } elseif ((strpos($afterDate, "csv") === false) && ($_SESSION["glpilanguage"] !== "fr_FR")) {
-                            $dateFormated = str_replace("-", ":", substr($dateFile, 11));
-                            $dateFormated = substr($dateFile, 0, 10) . " " . $dateFormated;
-                        } elseif ((strpos($afterDate, "csv") === true) && ($_SESSION["glpilanguage"] == "fr_FR")) {
-                            $dateFormated1 = preg_replace("/(\d{4})-(\d{2})-(\d{2})/", "$3-$2-$1", substr($dateFile, 0, 10));
-                            $dateFormated = $dateFormated1;
-                        } elseif ((strpos($afterDate, "csv") === true) && ($_SESSION["glpilanguage"] !== "fr_FR")) {
-                            $dateFormated .= "";
-                        }
-                        echo "<td>" . $dateFormated . "</td></tr>";
-                        $i++;
-                    }
-                }
-                echo "</table>";
-
-                echo "<br />";
-                echo Html::submit(
-                    __("Delete"),
-                    ['confirm' => __('Confirm the final deletion?'), 'class' => 'btn btn-primary']
-                );
-                echo Html::closeForm(false);
-                echo "</div>";
-            } else {
-                echo "<div class='center b'>" . __(
-                    'No file to download in the directory',
-                    'autoexportsearches'
-                ) . "</div>";
             }
-        } else {
-            echo "<div class='center b'>" . __('The folder doesn\'t exist', 'autoexportsearches') . "</div>";
         }
+
+        $target     = PLUGINAUTOEXPORTSEARCH_WEBDIR . '/front/files.php?type=' . rawurlencode($type);
+        $parameters = isset($_GET['orderType'])
+            ? 'orderCol=' . rawurlencode($_GET['orderCol'] ?? '') . '&orderType=' . rawurlencode($_GET['orderType'])
+            : '';
+
+        ob_start();
+        Html::printPager($limit_begin, count($files ?: []), $target, $parameters);
+        $pager = ob_get_clean();
+
+        $lang        = $_SESSION['glpilanguage'] ?? '';
+        $visible     = [];
+        foreach (($files ?: []) as $key => $file) {
+            if ($key < $limit_begin || ($limit_nb > 0 && $key >= $limit_nb + $limit_begin)) {
+                continue;
+            }
+            $date_raw  = $this->getDateFile($file, 'YmdHis');
+            $after     = substr($date_raw, 11);
+            $is_csv    = str_contains($after, 'csv');
+            if (!$is_csv && $lang === 'fr_FR') {
+                $d = preg_replace("/(\d{4})-(\d{2})-(\d{2})/", '$3-$2-$1', substr($date_raw, 0, 10));
+                $t = preg_replace("/(\d{2})-(\d{2})-(\d{2})/", '$1h$2min$3s', substr($date_raw, 11));
+                $date_formatted = $d . ' ' . $t;
+            } elseif (!$is_csv) {
+                $date_formatted = substr($date_raw, 0, 10) . ' ' . str_replace('-', ':', substr($date_raw, 11));
+            } elseif ($lang === 'fr_FR') {
+                $date_formatted = preg_replace("/(\d{4})-(\d{2})-(\d{2})/", '$3-$2-$1', substr($date_raw, 0, 10));
+            } else {
+                $date_formatted = substr($date_raw, 0, 10);
+            }
+            $visible[] = [
+                'name'           => $file,
+                'date_formatted' => $date_formatted,
+            ];
+        }
+
+        TemplateRenderer::getInstance()->display(
+            '@autoexportsearches/files_list.html.twig',
+            [
+                'dir_exists'    => $dir_exists,
+                'files'         => $files ?: [],
+                'visible_files' => $visible,
+                'pager'         => $pager,
+                'can_download'  => (bool) self::canDownload(),
+                'plugin_dir'    => PLUGINAUTOEXPORTSEARCH_WEBDIR,
+                'base_url'      => PLUGINAUTOEXPORTSEARCH_WEBDIR . '/front/files.php',
+                'type'          => $type,
+                'order_toggle'  => $order_type,
+                'start'         => $start,
+                'form_action'   => PLUGINAUTOEXPORTSEARCH_WEBDIR . '/front/files.php',
+            ]
+        );
     }
 
     function sortArrayAsc($a, $b)
@@ -380,8 +255,15 @@ class Files extends CommonDBTM
                 }
                 break;
             case "delete":
-                // delete file
-                $res = unlink($dir . "/" . $file);
+                $safeDir  = realpath($dir);
+                $safePath = realpath($dir . '/' . $file);
+                if ($safePath !== false
+                    && $safeDir !== false
+                    && str_starts_with($safePath, $safeDir . DIRECTORY_SEPARATOR)) {
+                    $res = unlink($safePath);
+                } else {
+                    $res = false;
+                }
                 break;
         }
         return $res;

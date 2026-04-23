@@ -30,6 +30,7 @@ namespace GlpiPlugin\Autoexportsearches;
 
 use CommonGLPI;
 use DbUtils;
+use Glpi\Application\View\TemplateRenderer;
 use Html;
 use ProfileRight;
 use Session;
@@ -44,7 +45,7 @@ if (!defined('GLPI_ROOT')) {
 class Profile extends \Profile
 {
 
-    static $rightname = "profile";
+    public static $rightname = "profile";
 
    /**
     * @param CommonGLPI $item
@@ -156,50 +157,37 @@ class Profile extends \Profile
     function showForm($profiles_id = 0, $openform = true, $closeform = true)
     {
 
-        echo "<div class='firstbloc'>";
-        if (($canedit = Session::haveRightsOr(self::$rightname, [CREATE, UPDATE, PURGE]))
-          && $openform) {
-            $profile = new \Profile();
-            echo "<form method='post' action='" . $profile->getFormURL() . "'>";
-        }
+        $canedit = Session::haveRightsOr(self::$rightname, [CREATE, UPDATE, PURGE]);
 
         $profile = new \Profile();
         $profile->getFromDB($profiles_id);
-       //      if ($profile->getField('interface') == 'central') {
         $rights = $this->getAllRights();
-        $profile->displayRightsChoiceMatrix($rights, ['canedit'       => $canedit,
-                                                    'default_class' => 'tab_bg_2',
-                                                    'title'         => __('General')]);
 
-        echo "<table class='tab_cadre_fixehov'>";
-       //      echo "<tr class='tab_bg_1'><th colspan='4'>" . __('Helpdesk') . "</th></tr>\n";
+        ob_start();
+        $profile->displayRightsChoiceMatrix($rights, [
+            'canedit'       => $canedit,
+            'default_class' => 'tab_bg_2',
+            'title'         => __('General'),
+        ]);
+        $rights_matrix = ob_get_clean();
 
-        $effective_rights = ProfileRight::getProfileRights($profiles_id, ['plugin_autoexportsearches_accessfiles', 'plugin_autoexportsearches_configs']);
-        echo "<tr class='tab_bg_2'>";
-        echo "<td width='20%'>" . __('Access to download files', 'autoexportsearches') . "</td>";
-        echo "<td colspan='5'>";
-        Html::showCheckbox(['name'    => '_plugin_autoexportsearches_accessfiles',
-                          'checked' => $effective_rights['plugin_autoexportsearches_accessfiles']]);
-        echo "</td></tr>\n";
+        $effective_rights = ProfileRight::getProfileRights(
+            $profiles_id,
+            ['plugin_autoexportsearches_accessfiles', 'plugin_autoexportsearches_configs']
+        );
 
-        echo "<tr class='tab_bg_2'>";
-        echo "<td width='20%'>" . __('Configuration') . "</td>";
-        echo "<td colspan='5'>";
-        Html::showCheckbox(['name'    => '_plugin_autoexportsearches_configs',
-                          'checked' => $effective_rights['plugin_autoexportsearches_configs']]);
-        echo "</td></tr>\n";
-        echo "</table>";
-
-        if ($canedit
-          && $closeform
-        ) {
-            echo "<div class='center'>";
-            echo Html::hidden('id', ['value' => $profiles_id]);
-            echo Html::submit(_sx('button', 'Save'), ['name' => 'update', 'class' => 'btn btn-primary']);
-            echo "</div>\n";
-            Html::closeForm();
-        }
-        echo "</div>";
+        TemplateRenderer::getInstance()->display(
+            '@autoexportsearches/profile.html.twig',
+            [
+                'canedit'              => $canedit && $openform,
+                'profile_form_url'     => $profile->getFormURL(),
+                'rights_matrix'        => $rights_matrix,
+                'access_files_checked' => (bool) $effective_rights['plugin_autoexportsearches_accessfiles'],
+                'configs_checked'      => (bool) $effective_rights['plugin_autoexportsearches_configs'],
+                'profiles_id'          => $profiles_id,
+                'closeform'            => $closeform,
+            ]
+        );
 
         return true;
     }

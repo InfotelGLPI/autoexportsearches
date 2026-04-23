@@ -35,6 +35,7 @@ use CommonDBTM;
 use CronTask;
 use DBConnection;
 use Dropdown;
+use Glpi\Application\View\TemplateRenderer;
 use GLPIMailer;
 use GLPINetwork;
 use Html;
@@ -281,132 +282,78 @@ class Exportconfig extends CommonDBTM
         $this->initForm($ID, $options);
         $this->showFormHeader($options);
 
-        echo "<tr class='tab_bg_1'>";
-        echo "<td>" . __('Active') . "</td>";
-        echo "<td>";
+        $rand_user = mt_rand();
+
+        ob_start();
         Dropdown::showYesNo("is_active", $this->fields['is_active']);
-        echo "</td>";
-        echo "</tr>";
+        $yesno_active = ob_get_clean();
 
-        echo "<tr class='tab_bg_1'>";
-        echo "<td colspan='2'><h3>" . __('Search to export', 'autoexportsearches') . "</h3></td>";
-        echo "</tr>";
-
-        echo "<tr class='tab_bg_1'>";
-        echo "<td>" . __('User who owns the saved search', 'autoexportsearches') . "</td>";
-        echo "<td>";
-
-        $rand = mt_rand();
+        ob_start();
         User::dropdown([
-            'name' => 'users_id',
+            'name'  => 'users_id',
             'value' => $this->fields["users_id"],
-            //                        'entity' => $this->fields["entities_id"],
             'right' => 'own_ticket',
-            'rand' => $rand,
+            'rand'  => $rand_user,
         ]);
-        echo "</td>";
-        echo "</tr>";
+        $user_dropdown = ob_get_clean();
 
-        echo "<tr class='tab_bg_1'>";
-        echo "<td>" . __('Used profile', 'autoexportsearches') . "</td>";
-        echo "<td id='savedProfile'>";
-        echo "</td>";
-        echo "</tr>";
-        $params = [
-            "users_id" => '__VALUE__',
-            "current_user" => $this->fields['users_id'],
-            'profiles_id' => $this->fields["profiles_id"],
-            "rand" => $rand,
-            "action" => "loadProfiles",
-        ];
-        $url = PLUGINAUTOEXPORTSEARCH_WEBDIR . "/ajax/dropdownsavedsearches.php";
-        Ajax::updateItemOnSelectEvent("dropdown_users_id$rand", "savedProfile", $url, $params);
+        $ajax_url = PLUGINAUTOEXPORTSEARCH_WEBDIR . "/ajax/dropdownsavedsearches.php";
 
-        echo "<tr class='tab_bg_1'>";
+        Ajax::updateItemOnSelectEvent(
+            "dropdown_users_id$rand_user",
+            "savedProfile",
+            $ajax_url,
+            [
+                "users_id"     => '__VALUE__',
+                "current_user" => $this->fields['users_id'],
+                'profiles_id'  => $this->fields["profiles_id"],
+                "rand"         => $rand_user,
+                "action"       => "loadProfiles",
+            ]
+        );
+        Ajax::updateItemOnSelectEvent(
+            "dropdown_users_id$rand_user",
+            "savedSearches",
+            $ajax_url,
+            [
+                "users_id"         => '__VALUE__',
+                "current_user"     => $this->fields['users_id'],
+                'savedsearches_id' => $this->fields["savedsearches_id"],
+                'exportconfigs_id' => $ID,
+                "rand"             => $rand_user,
+                "action"           => "loadSearches",
+            ]
+        );
 
-        echo "<td>" . __('Saved search to export', 'autoexportsearches') . "</td>";
-        echo "<td id='savedSearches'>";
-        echo "</td>";
-        echo "</tr>";
-        $params = [
-            "users_id" => '__VALUE__',
-            "current_user" => $this->fields['users_id'],
-            'savedsearches_id' => $this->fields["savedsearches_id"],
-            'exportconfigs_id' => $ID,
-            "rand" => $rand,
-            "action" => "loadSearches",
-        ];
-        $url = PLUGINAUTOEXPORTSEARCH_WEBDIR . "/ajax/dropdownsavedsearches.php";
-        Ajax::updateItemOnSelectEvent("dropdown_users_id$rand", "savedSearches", $url, $params);
+        $rand_period = mt_rand();
 
-        echo "
-            <script>
-                $(document).ready(function() {
-                   $('#dropdown_users_id$rand').trigger('change');
-                });
-            </script>
-        ";
-
-        echo "<tr class='tab_bg_1'><td id='custom_search_criterias' colspan='2'>";
-        echo "</td></tr>";
-
-        echo "<tr class='tab_bg_1'>";
-        echo "<td colspan='2'><h3>" . __('Periodicity') . "</h3></td>";
-        echo "</tr>";
-
-        echo "<tr class='tab_bg_1'>";
-        echo "<td>" . __('Periodicity type', 'autoexportsearches') . "</td>";
-        echo "<td>";
-
-        $rand = mt_rand();
+        ob_start();
         Dropdown::showFromArray(
             'periodicity_type',
             [
-
-                self::PERIODICITY_DAYS => __('Every x days', 'autoexportsearches'),
-                self::PERIODICITY_WEEKLY => _x('periodicity', 'Weekly'),
+                self::PERIODICITY_DAYS    => __('Every x days', 'autoexportsearches'),
+                self::PERIODICITY_WEEKLY  => _x('periodicity', 'Weekly'),
                 self::PERIODICITY_MONTHLY => _x('periodicity', 'Monthly'),
                 self::PERIODICITY_MINUTES => __('Every x minutes', 'autoexportsearches'),
-                self::PERIODICITY_HOURS => __('Every x hours', 'autoexportsearches'),
+                self::PERIODICITY_HOURS   => __('Every x hours', 'autoexportsearches'),
             ],
+            ['value' => $this->fields['periodicity_type'], 'rand' => $rand_period]
+        );
+        $periodicity_dropdown = ob_get_clean();
+
+        TemplateRenderer::getInstance()->display(
+            '@autoexportsearches/exportconfig_form.html.twig',
             [
-                'value' => $this->fields['periodicity_type'],
-                'rand' => $rand,
+                'rand'                => $rand_user,
+                'rand_period'         => $rand_period,
+                'item_id'             => (int) $ID,
+                'yesno_active'        => $yesno_active,
+                'user_dropdown'       => $user_dropdown,
+                'periodicity_dropdown' => $periodicity_dropdown,
+                'periodicity_url'     => PLUGINAUTOEXPORTSEARCH_WEBDIR . '/ajax/periodicityfields.php',
+                'sendto'              => $this->fields['sendto'],
             ]
         );
-        echo "</td></tr>";
-
-        echo "<tr class='tab_bg_1' id='periodicity_value'></tr>";
-        $url = PLUGINAUTOEXPORTSEARCH_WEBDIR . "/ajax/periodicityfields.php";
-        // let ajax determine the fields shown depending on the choosen periodicity_type
-        echo "
-            <script>
-                $(document).ready(function() {
-                    const selectType = $('#dropdown_periodicity_type$rand');
-                    const periodicityRow = $('#periodicity_value');
-                    selectType.change(e => {
-                        periodicityRow.load('$url', {
-                            'id' : $ID,
-                            'periodicity_type' : e.target.selectedIndex
-                        })
-                    })
-                    selectType.trigger('change');
-                });
-            </script>
-        ";
-
-        echo "<tr class='tab_bg_1'>";
-        echo "<td colspan='2'><h3>" . __('Options', 'autoexportsearches') . "</h3></td>";
-        echo "</tr>";
-
-        echo "<tr class='tab_bg_1'>";
-        echo "<td>" . __('Send mail to', 'autoexportsearches') . "</td>";
-        echo "<td>";
-        echo Html::input('sendto', ['type' => 'mail', 'value' => $this->fields['sendto']]);
-        echo "</td>";
-
-        echo "</tr>";
-
 
         $this->showFormButtons($options);
 
@@ -678,7 +625,7 @@ class Exportconfig extends CommonDBTM
         }
 
         $cron_status = 0;
-        $old_memory = ini_set("memory_limit", "-1");
+        $old_memory = ini_set("memory_limit", "512M");
         $old_execution = ini_set("max_execution_time", "0");
         $dateActual = strtotime(date("Y-m-d"));
         $day = date('j'); // 1 to 31, today

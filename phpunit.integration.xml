@@ -1,0 +1,10 @@
+<phpunit bootstrap="../../tests/bootstrap.php" colors="true" testdox="true">
+   <testsuites>
+      <testsuite name="Integration">
+         <file>tests/ConfigTest.php</file>
+         <file>tests/ExportconfigTest.php</file>
+         <file>tests/CustomsearchcriteriaTest.php</file>
+         <file>tests/ProfileTest.php</file>
+      </testsuite>
+   </testsuites>
+</phpunit>

@@ -1,0 +1,98 @@
+{#
+# -------------------------------------------------------------------------
+# Autoexportsearches plugin for GLPI
+# -------------------------------------------------------------------------
+#
+# LICENSE
+#
+# This file is part of Autoexportsearches.
+#
+# Autoexportsearches is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# Autoexportsearches is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with Autoexportsearches. If not, see <http://www.gnu.org/licenses/>.
+# -------------------------------------------------------------------------
+# @copyright Copyright (C) 2026-2026 by Autoexportsearches plugin team.
+# @license   GPLv2 https://www.gnu.org/licenses/gpl-2.0.html
+# @link      https://github.com/InfotelGLPI/Autoexportsearches
+# -------------------------------------------------------------------------
+#}
+
+{# Rows rendered between showFormHeader() and showFormButtons() #}
+<tr class="tab_bg_1">
+   <td>{{ __('Active') }}</td>
+   <td>{{ yesno_active|raw }}</td>
+</tr>
+
+<tr class="tab_bg_1">
+   <td colspan="2"><h3>{{ __('Search to export', 'autoexportsearches') }}</h3></td>
+</tr>
+
+<tr class="tab_bg_1">
+   <td>{{ __('User who owns the saved search', 'autoexportsearches') }}</td>
+   <td>{{ user_dropdown|raw }}</td>
+</tr>
+
+<tr class="tab_bg_1">
+   <td>{{ __('Used profile', 'autoexportsearches') }}</td>
+   <td id="savedProfile"></td>
+</tr>
+
+<tr class="tab_bg_1">
+   <td>{{ __('Saved search to export', 'autoexportsearches') }}</td>
+   <td id="savedSearches"></td>
+</tr>
+
+<script>
+$(document).ready(function () {
+   $('#dropdown_users_id{{ rand }}').trigger('change');
+});
+</script>
+
+<tr class="tab_bg_1">
+   <td id="custom_search_criterias" colspan="2"></td>
+</tr>
+
+<tr class="tab_bg_1">
+   <td colspan="2"><h3>{{ __('Periodicity') }}</h3></td>
+</tr>
+
+<tr class="tab_bg_1">
+   <td>{{ __('Periodicity type', 'autoexportsearches') }}</td>
+   <td>{{ periodicity_dropdown|raw }}</td>
+</tr>
+
+<tr class="tab_bg_1" id="periodicity_value"></tr>
+
+<script>
+$(document).ready(function () {
+   var selectType = $('#dropdown_periodicity_type{{ rand_period }}');
+   var periodicityRow = $('#periodicity_value');
+   selectType.change(function (e) {
+      periodicityRow.load('{{ periodicity_url }}', {
+         'id': {{ item_id }},
+         'periodicity_type': e.target.selectedIndex
+      });
+   });
+   selectType.trigger('change');
+});
+</script>
+
+<tr class="tab_bg_1">
+   <td colspan="2"><h3>{{ __('Options', 'autoexportsearches') }}</h3></td>
+</tr>
+
+<tr class="tab_bg_1">
+   <td>{{ __('Send mail to', 'autoexportsearches') }}</td>
+   <td>
+      <input type="email" name="sendto" value="{{ sendto }}" class="form-control">
+   </td>
+</tr>

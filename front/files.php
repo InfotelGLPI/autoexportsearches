@@ -59,7 +59,7 @@ if (Session::haveRight("plugin_autoexportsearches_exportconfigs", READ)) {
         foreach ($_POST["filedelete"] as $fileName => $file) {
             if ($file == 1) {
                 $noFile = false;
-                $files->processFiles("delete", $fileName);
+                $files->processFiles("delete", basename($fileName));
             }
         }
         if (!$noFile) {

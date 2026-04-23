@@ -1,0 +1,60 @@
+{#
+# -------------------------------------------------------------------------
+# Autoexportsearches plugin for GLPI
+# -------------------------------------------------------------------------
+#
+# LICENSE
+#
+# This file is part of Autoexportsearches.
+#
+# Autoexportsearches is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# Autoexportsearches is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with Autoexportsearches. If not, see <http://www.gnu.org/licenses/>.
+# -------------------------------------------------------------------------
+# @copyright Copyright (C) 2026-2026 by Autoexportsearches plugin team.
+# @license   GPLv2 https://www.gnu.org/licenses/gpl-2.0.html
+# @link      https://github.com/InfotelGLPI/Autoexportsearches
+# -------------------------------------------------------------------------
+#}
+{% if rows is not empty %}
+<table style="width:100%">
+   <tbody style="width:100%">
+      <tr class="tab_bg_1">
+         <td colspan="3">
+            <h4>{{ __('Customise the export of', 'autoexportsearches') }} {{ itemtype_label }}</h4>
+         </td>
+      </tr>
+      <tr class="tab_bg_1 text-center">
+         <td><h5>{{ __('Criterion') }}</h5></td>
+         <td><h5>{{ __('Value', 'autoexportsearches') }}</h5></td>
+         <td><h5>{{ __('Customise', 'autoexportsearches') }}</h5></td>
+      </tr>
+      {% for row in rows %}
+         <tr class="tab_bg_1 text-center">
+            <td><label>{{ row.field_name }}</label></td>
+            <td class="text-center">{{ row.search_value }}</td>
+            <td>
+               <label for="custom_criterias[{{ row.index }}][criteria_value]">{{ row.label }}</label>
+               <input type="hidden" name="custom_criterias[{{ row.index }}][savedsearches_id]"
+                      value="{{ row.savedsearches_id }}">
+               <input type="hidden" name="custom_criterias[{{ row.index }}][criteria_field]"
+                      value="{{ row.criteria_field }}">
+               <input type="hidden" name="custom_criterias[{{ row.index }}][criteria_searchtype]"
+                      value="{{ row.criteria_searchtype }}">
+               <input type="checkbox" name="custom_criterias[{{ row.index }}][criteria_value]"
+                      value="{{ row.input_value }}"{% if row.checked %} checked{% endif %}>
+            </td>
+         </tr>
+      {% endfor %}
+   </tbody>
+</table>
+{% endif %}

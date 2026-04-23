@@ -33,7 +33,6 @@ use Glpi\Exception\Http\AccessDeniedHttpException;
 
 header("Content-Type: text/html; charset=UTF-8");
 Html::header_nocache();
-Session::checkRight('plugin_autoexportsearches_exportconfigs', UPDATE);
 
 Session::checkLoginUser();
 
@@ -45,19 +44,19 @@ if (Session::haveRight("plugin_autoexportsearches_exportconfigs", READ)) {
                 if ($_POST['users_id'] != $_POST["current_user"]) {
                     $val = 0;
                 }
-                $rand = mt_rand();
+                $rand           = (int) ($_POST["rand"] ?? mt_rand());
+                $exportConfigId = (int) ($_POST['exportconfigs_id'] ?? 0);
                 SavedSearch::dropdown([
                     'name' => 'savedsearches_id',
                     'value' => $val,
                     'condition' => ['users_id' => $_POST['users_id']],
-                    'rand' => $_POST["rand"],
+                    'rand' => $rand,
                 ]);
-                $url =	PLUGINAUTOEXPORTSEARCH_WEBDIR . "/ajax/customsearchcriterias.php";
-                $exportConfigId = $_POST['exportconfigs_id'] ?? 0;
+                $url = PLUGINAUTOEXPORTSEARCH_WEBDIR . "/ajax/customsearchcriterias.php";
                 echo "
             <script>
                 if (!window.autoexportsearches) window.autoexportsearches = {};
-                autoexportsearches.searchSelect = $('#dropdown_savedsearches_id{$_POST["rand"]}');
+                autoexportsearches.searchSelect = $('#dropdown_savedsearches_id{$rand}');
                 autoexportsearches.searchSelect.change(e => {
                     $('#custom_search_criterias').load('$url', {
                         'savedsearches_id' : e.target.options[e.target.selectedIndex].value,

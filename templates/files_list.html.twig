@@ -1,0 +1,100 @@
+{#
+# -------------------------------------------------------------------------
+# Autoexportsearches plugin for GLPI
+# -------------------------------------------------------------------------
+#
+# LICENSE
+#
+# This file is part of Autoexportsearches.
+#
+# Autoexportsearches is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# Autoexportsearches is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with Autoexportsearches. If not, see <http://www.gnu.org/licenses/>.
+# -------------------------------------------------------------------------
+# @copyright Copyright (C) 2026-2026 by Autoexportsearches plugin team.
+# @license   GPLv2 https://www.gnu.org/licenses/gpl-2.0.html
+# @link      https://github.com/InfotelGLPI/Autoexportsearches
+# -------------------------------------------------------------------------
+#}
+
+<div class="center">
+   <h1>{{ __('Files', 'autoexportsearches') }}</h1>
+
+   {% if not dir_exists %}
+      <div class="center b">{{ __("The folder doesn't exist", 'autoexportsearches') }}</div>
+   {% elseif files is empty %}
+      <div class="center b">{{ __('No file to download in the directory', 'autoexportsearches') }}</div>
+   {% else %}
+      {{ pager|raw }}
+
+      <form name="deleteCSV" method="post" action="{{ form_action }}">
+         <table id="tableCsv" class="tab_cadre_fixe">
+            <thead>
+               <tr>
+                  <th>
+                     <div class="form-group-checkbox">
+                        <input title="{{ __('Delete') }}" type="checkbox" class="new_checkbox"
+                               name="checkall_delete" id="checkall_delete"
+                               onclick="checkAll(this.checked);">
+                        <script>
+                           function checkAll(state) {
+                              document.querySelectorAll('input[type=checkbox]').forEach(cb => cb.checked = state);
+                           }
+                        </script>
+                        <label class="label-checkbox" for="checkall_delete" title="{{ __('Check all') }}">
+                           <span class="check"></span>
+                           <span class="box"></span>
+                        </label>
+                     </div>
+                  </th>
+                  <th>
+                     <a href="{{ base_url }}?type={{ type|url_encode }}&orderCol=name&orderType={{ order_toggle }}&start={{ start }}">
+                        {{ __('File name', 'autoexportsearches') }}
+                     </a>
+                  </th>
+                  <th>
+                     <a href="{{ base_url }}?type={{ type|url_encode }}&orderCol=date&orderType={{ order_toggle }}&start={{ start }}">
+                        {{ __('Generation date', 'autoexportsearches') }}
+                     </a>
+                  </th>
+               </tr>
+            </thead>
+            <tbody>
+               {% for file in visible_files %}
+                  <tr>
+                     <td width="10" valign="top">
+                        <input type="checkbox" name="filedelete[{{ file.name }}]" value="1">
+                     </td>
+                     <td>
+                        {% if can_download %}
+                           <a href="{{ plugin_dir }}/front/document.send.php?file={{ file.name|url_encode }}" target="_blank">
+                              {{ file.name }}
+                           </a>
+                        {% else %}
+                           {{ file.name }}
+                        {% endif %}
+                     </td>
+                     <td>{{ file.date_formatted }}</td>
+                  </tr>
+               {% endfor %}
+            </tbody>
+         </table>
+
+         <br>
+         <input type="hidden" name="_glpi_csrf_token" value="{{ csrf_token() }}">
+         <button type="submit" class="btn btn-primary"
+                 onclick="return confirm('{{ __('Confirm the final deletion?') }}')">
+            {{ __('Delete') }}
+         </button>
+      </form>
+   {% endif %}
+</div>

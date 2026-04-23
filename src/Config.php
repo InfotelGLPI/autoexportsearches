@@ -31,6 +31,7 @@ namespace GlpiPlugin\Autoexportsearches;
 
 use CommonDBTM;
 use DBConnection;
+use Glpi\Application\View\TemplateRenderer;
 use Html;
 use Migration;
 use Toolbox;
@@ -42,6 +43,16 @@ if (!defined('GLPI_ROOT')) {
 class Config extends CommonDBTM
 {
     public static $rightname = 'plugin_autoexportsearches_configs';
+
+    public function prepareInputForAdd($input)
+    {
+        return array_intersect_key($input, array_flip(['folder', 'monthBeforePurge']));
+    }
+
+    public function prepareInputForUpdate($input)
+    {
+        return array_intersect_key($input, array_flip(['id', 'folder', 'monthBeforePurge']));
+    }
 
     public static function install(Migration $migration)
     {
@@ -95,23 +106,13 @@ class Config extends CommonDBTM
             $this->getEmpty();
         }
 
-        echo "<form name='form' method='post' action='" . Toolbox::getItemTypeFormURL(Config::class) . "'>";
-        echo "<div class='center'><table class='tab_cadre_fixe'>";
-        echo "<tr><th colspan='2'>" . __('Setup') . "</th></tr>";
-
-        echo "<tr class='tab_bg_1'>";
-        echo "<td>" . __('Number of months before purge files', 'autoexportsearches') . "</td>";
-        echo "<td>";
-        echo Html::input('monthBeforePurge', ['value' => $this->fields['monthBeforePurge'], 'size' => 6]);
-        echo "</td>";
-        echo "</tr>";
-
-        echo "<tr><td class='tab_bg_2 center' colspan='2'>";
-        echo Html::submit(_sx('button', 'Save'), ['name' => 'update', 'class' => 'btn btn-primary']);
-        echo "</td></tr>";
-
-        echo "</table></div>";
-        Html::closeForm();
+        TemplateRenderer::getInstance()->display(
+            '@autoexportsearches/config.html.twig',
+            [
+                'item_form_url'    => Toolbox::getItemTypeFormURL(Config::class),
+                'month_before_purge' => $this->fields['monthBeforePurge'],
+            ]
+        );
 
         return true;
     }

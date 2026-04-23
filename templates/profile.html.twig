@@ -1,0 +1,61 @@
+{#
+# -------------------------------------------------------------------------
+# Autoexportsearches plugin for GLPI
+# -------------------------------------------------------------------------
+#
+# LICENSE
+#
+# This file is part of Autoexportsearches.
+#
+# Autoexportsearches is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# Autoexportsearches is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with Autoexportsearches. If not, see <http://www.gnu.org/licenses/>.
+# -------------------------------------------------------------------------
+# @copyright Copyright (C) 2026-2026 by Autoexportsearches plugin team.
+# @license   GPLv2 https://www.gnu.org/licenses/gpl-2.0.html
+# @link      https://github.com/InfotelGLPI/Autoexportsearches
+# -------------------------------------------------------------------------
+#}
+
+<div class="firstbloc">
+   {% if canedit %}
+      <form method="post" action="{{ profile_form_url }}">
+   {% endif %}
+
+   {{ rights_matrix|raw }}
+
+   <table class="tab_cadre_fixehov">
+      <tr class="tab_bg_2">
+         <td width="20%">{{ __('Access to download files', 'autoexportsearches') }}</td>
+         <td colspan="5">
+            <input type="checkbox" name="_plugin_autoexportsearches_accessfiles"
+                   value="1"{% if access_files_checked %} checked{% endif %}>
+         </td>
+      </tr>
+      <tr class="tab_bg_2">
+         <td width="20%">{{ __('Configuration') }}</td>
+         <td colspan="5">
+            <input type="checkbox" name="_plugin_autoexportsearches_configs"
+                   value="1"{% if configs_checked %} checked{% endif %}>
+         </td>
+      </tr>
+   </table>
+
+   {% if canedit %}
+      <div class="center">
+         <input type="hidden" name="id" value="{{ profiles_id }}">
+         <input type="hidden" name="_glpi_csrf_token" value="{{ csrf_token() }}">
+         <button type="submit" name="update" class="btn btn-primary">{{ __('Save') }}</button>
+      </div>
+      </form>
+   {% endif %}
+</div>

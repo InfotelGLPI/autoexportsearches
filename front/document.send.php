@@ -32,6 +32,10 @@ use GlpiPlugin\Autoexportsearches\Files;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 
+Session::checkLoginUser();
+
+Session::checkRight('plugin_autoexportsearches_accessfiles', READ);
+
 $files = new Files();
 
 $check_download = $files::canDownload();

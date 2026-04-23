@@ -44,7 +44,10 @@ if ($plugin->isActivated("autoexportsearches")) {
               $config->update(['id' => 1, 'monthBeforePurge' => $_POST['monthBeforePurge']]);
           }
       } else {
-         $config->add($_POST);
+         $config->add([
+             'folder'           => 'autoexportsearches',
+             'monthBeforePurge' => (int) ($_POST['monthBeforePurge'] ?? 3),
+         ]);
       }
       Html::back();
    } else {

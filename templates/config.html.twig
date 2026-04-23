@@ -1,0 +1,53 @@
+{#
+# -------------------------------------------------------------------------
+# Autoexportsearches plugin for GLPI
+# -------------------------------------------------------------------------
+#
+# LICENSE
+#
+# This file is part of Autoexportsearches.
+#
+# Autoexportsearches is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# Autoexportsearches is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with Autoexportsearches. If not, see <http://www.gnu.org/licenses/>.
+# -------------------------------------------------------------------------
+# @copyright Copyright (C) 2026-2026 by Autoexportsearches plugin team.
+# @license   GPLv2 https://www.gnu.org/licenses/gpl-2.0.html
+# @link      https://github.com/InfotelGLPI/Autoexportsearches
+# -------------------------------------------------------------------------
+#}
+
+{% import 'components/form/fields_macros.html.twig' as fields %}
+
+<form name="form" method="post" action="{{ item_form_url }}">
+   <div class="center">
+      <table class="tab_cadre_fixe">
+         <tr><th colspan="2">{{ __('Setup') }}</th></tr>
+         <tr class="tab_bg_1">
+            <td>{{ __('Number of months before purge files', 'autoexportsearches') }}</td>
+            <td>
+               <input type="number" name="monthBeforePurge"
+                      value="{{ month_before_purge }}" size="6"
+                      class="form-control form-control-sm d-inline-block w-auto">
+            </td>
+         </tr>
+         <tr>
+            <td class="tab_bg_2 center" colspan="2">
+               <input type="hidden" name="_glpi_csrf_token" value="{{ csrf_token() }}">
+               <button type="submit" name="update" class="btn btn-primary">
+                  {{ __('Save') }}
+               </button>
+            </td>
+         </tr>
+      </table>
+   </div>
+</form>
