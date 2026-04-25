@@ -62,7 +62,7 @@ class ExportconfigTest extends DbTestCase
             'is_active'        => 1,
         ]);
 
-        $this->assertSame('1', $item->getField('is_active'));
+        $this->assertSame(1, $item->getField('is_active'));
     }
 
     public function testIsDeletedDefaultIsZero(): void
@@ -77,7 +77,7 @@ class ExportconfigTest extends DbTestCase
             'is_active'        => 1,
         ]);
 
-        $this->assertSame('0', $item->getField('is_deleted'));
+        $this->assertSame(0, $item->getField('is_deleted'));
     }
 
     public function testSendtoFieldIsStoredCorrectly(): void
@@ -113,7 +113,7 @@ class ExportconfigTest extends DbTestCase
         ]);
 
         $item->getFromDB($item->getID());
-        $this->assertSame((string) Exportconfig::PERIODICITY_MONTHLY, $item->getField('periodicity_type'));
+        $this->assertSame(Exportconfig::PERIODICITY_MONTHLY, $item->getField('periodicity_type'));
     }
 
     public function testRawSearchOptionsContainsIdOption(): void

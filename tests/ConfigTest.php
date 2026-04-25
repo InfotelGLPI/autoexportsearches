@@ -44,7 +44,7 @@ class ConfigTest extends DbTestCase
         $config = new Config();
         $config->getFromDB(1);
 
-        $this->assertSame('3', $config->getField('monthBeforePurge'));
+        $this->assertSame(3, $config->getField('monthBeforePurge'));
     }
 
     public function testUpdateMonthBeforePurge(): void
@@ -61,7 +61,7 @@ class ConfigTest extends DbTestCase
         ]);
 
         $config->getFromDB(1);
-        $this->assertSame('6', $config->getField('monthBeforePurge'));
+        $this->assertSame(6, $config->getField('monthBeforePurge'));
     }
 
     public function testUpdateFolder(): void
