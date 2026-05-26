@@ -1,4 +1,4 @@
-{#
+/*
  -------------------------------------------------------------------------
  autoexportsearches plugin for GLPI
  Copyright (C) 2025-2026 by the autoexportsearches Development Team.
@@ -23,30 +23,4 @@
  You should have received a copy of the GNU General Public License
  along with autoexportsearches. If not, see <http://www.gnu.org/licenses/>.
  --------------------------------------------------------------------------
- #}
-
-{% import 'components/form/fields_macros.html.twig' as fields %}
-
-<form name="form" method="post" action="{{ item_form_url }}">
-   <div class="center">
-      <table class="tab_cadre_fixe">
-         <tr><th colspan="2">{{ __('Setup') }}</th></tr>
-         <tr class="tab_bg_1">
-            <td>{{ __('Number of months before purge files', 'autoexportsearches') }}</td>
-            <td>
-               <input type="number" name="monthBeforePurge"
-                      value="{{ month_before_purge }}" size="6"
-                      class="form-control form-control-sm d-inline-block w-auto">
-            </td>
-         </tr>
-         <tr>
-            <td class="tab_bg_2 center" colspan="2">
-               <input type="hidden" name="_glpi_csrf_token" value="{{ csrf_token() }}">
-               <button type="submit" name="update" class="btn btn-primary">
-                  {{ __('Save') }}
-               </button>
-            </td>
-         </tr>
-      </table>
-   </div>
-</form>
+ */

@@ -1,8 +1,9 @@
 <?php
+
 /*
  -------------------------------------------------------------------------
  autoexportsearches plugin for GLPI
- Copyright (C) 2020-2025 by the autoexportsearches Development Team.
+ Copyright (C) 2025-2026 by the autoexportsearches Development Team.
 
  https://github.com/InfotelGLPI/autoexportsearches
  -------------------------------------------------------------------------
@@ -25,7 +26,6 @@
  along with autoexportsearches. If not, see <http://www.gnu.org/licenses/>.
  --------------------------------------------------------------------------
  */
-
 
 use Glpi\Exception\Http\AccessDeniedHttpException;
 use GlpiPlugin\Autoexportsearches\Config;

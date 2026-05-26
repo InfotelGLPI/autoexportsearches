@@ -3,7 +3,7 @@
 /*
  -------------------------------------------------------------------------
  autoexportsearches plugin for GLPI
- Copyright (C) 2020-2025 by the autoexportsearches Development Team.
+ Copyright (C) 2025-2026 by the autoexportsearches Development Team.
 
  https://github.com/InfotelGLPI/autoexportsearches
  -------------------------------------------------------------------------
