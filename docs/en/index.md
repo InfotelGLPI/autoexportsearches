@@ -1,6 +1,6 @@
 # Documentation — AutoExportSearches Plugin for GLPI
  
-**License:** GNU GPL v2+  
+**License:** GNU GPL v3+  
 **Author:** Infotel (Alban LESELLIER)  
 **Repository:** https://github.com/InfotelGLPI/autoexportsearches
 
