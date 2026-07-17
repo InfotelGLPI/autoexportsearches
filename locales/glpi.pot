@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - AutoExportSearches plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-01 16:41+0000\n"
+"POT-Creation-Date: 2026-07-17 14:31+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -76,35 +76,51 @@ msgstr ""
 msgid "No file selected"
 msgstr ""
 
-#: src/Exportconfig.php:80 src/Profile.php:205
+#: src/Config.php:79
+msgid "Invalid folder name."
+msgstr ""
+
+#: src/Exportconfig.php:81 src/Profile.php:205
 msgid "Auto export config"
 msgstr ""
 
-#: src/Exportconfig.php:237
+#: src/Exportconfig.php:238
 msgid "User who owns the saved search"
 msgstr ""
 
-#: src/Exportconfig.php:245
+#: src/Exportconfig.php:246
 msgid "Saved search to export"
 msgstr ""
 
-#: src/Exportconfig.php:262
+#: src/Exportconfig.php:263
 msgid "Last export"
 msgstr ""
 
-#: src/Exportconfig.php:334
+#: src/Exportconfig.php:325
+msgid "The selected profile is not assigned to this user."
+msgstr ""
+
+#: src/Exportconfig.php:339
+msgid "The selected saved search does not belong to this user."
+msgstr ""
+
+#: src/Exportconfig.php:351
+msgid "Invalid recipient email address."
+msgstr ""
+
+#: src/Exportconfig.php:419
 msgid "Every x days"
 msgstr ""
 
-#: src/Exportconfig.php:337
+#: src/Exportconfig.php:422
 msgid "Every x minutes"
 msgstr ""
 
-#: src/Exportconfig.php:338
+#: src/Exportconfig.php:423
 msgid "Every x hours"
 msgstr ""
 
-#: src/Exportconfig.php:564
+#: src/Exportconfig.php:657
 msgid "Export saved searches"
 msgstr ""
 
