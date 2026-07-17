@@ -41,6 +41,7 @@ use GLPINetwork;
 use Html;
 use Migration;
 use Profile;
+use Profile_User;
 use SavedSearch;
 use Search;
 use Session;
@@ -274,6 +275,90 @@ class Exportconfig extends CommonDBTM
         return $tab;
     }
 
+    public function prepareInputForAdd($input)
+    {
+        return $this->validateExportInput($input);
+    }
+
+    public function prepareInputForUpdate($input)
+    {
+        return $this->validateExportInput($input);
+    }
+
+    /**
+     * Server-side validation of the impersonation fields.
+     *
+     * The form dropdowns are restricted client-side only (ajax/dropdownsavedsearches.php),
+     * so without this every POSTed users_id / profiles_id / savedsearches_id / sendto would
+     * be persisted verbatim and later impersonated by the export cron. This enforces:
+     *  - non-elevated users can only schedule exports for themselves;
+     *  - profiles_id must be a profile actually assigned to the target user;
+     *  - savedsearches_id must belong to the target user;
+     *  - sendto must be a valid email address.
+     *
+     * @param array $input
+     * @return array|false
+     */
+    private function validateExportInput($input)
+    {
+        // Only elevated users (config UPDATE) may schedule an export on behalf of another
+        // user; everyone else is forced to their own identity.
+        if (!Session::haveRight('config', UPDATE)) {
+            $input['users_id'] = Session::getLoginUserID();
+        }
+
+        $target_users_id = (int) ($input['users_id']
+            ?? ($this->fields['users_id'] ?? Session::getLoginUserID()));
+        if ($target_users_id <= 0) {
+            $target_users_id = Session::getLoginUserID();
+        }
+        $input['users_id'] = $target_users_id;
+
+        // profiles_id must be a profile actually assigned to the target user
+        if (isset($input['profiles_id']) && (int) $input['profiles_id'] > 0) {
+            $assigned = (new Profile_User())->find([
+                'users_id'    => $target_users_id,
+                'profiles_id' => (int) $input['profiles_id'],
+            ]);
+            if (count($assigned) === 0) {
+                Session::addMessageAfterRedirect(
+                    __('The selected profile is not assigned to this user.', 'autoexportsearches'),
+                    false,
+                    ERROR
+                );
+                return false;
+            }
+        }
+
+        // savedsearches_id must belong to the target user
+        if (isset($input['savedsearches_id']) && (int) $input['savedsearches_id'] > 0) {
+            $search = new SavedSearch();
+            if (!$search->getFromDB((int) $input['savedsearches_id'])
+                || (int) $search->fields['users_id'] !== $target_users_id) {
+                Session::addMessageAfterRedirect(
+                    __('The selected saved search does not belong to this user.', 'autoexportsearches'),
+                    false,
+                    ERROR
+                );
+                return false;
+            }
+        }
+
+        // sendto must be a valid single email address
+        if (isset($input['sendto']) && $input['sendto'] !== '') {
+            if (filter_var($input['sendto'], FILTER_VALIDATE_EMAIL) === false) {
+                Session::addMessageAfterRedirect(
+                    __('Invalid recipient email address.', 'autoexportsearches'),
+                    false,
+                    ERROR
+                );
+                return false;
+            }
+        }
+
+        return $input;
+    }
+
     public function showForm($ID, $options = [])
     {
         global $CFG_GLPI;
@@ -453,8 +538,16 @@ class Exportconfig extends CommonDBTM
 
                 $value = html_entity_decode(strip_tags($value), ENT_QUOTES | ENT_HTML5, 'UTF-8');
                 $value = preg_replace("/[\r\n]+/", ' ', $value);
+                $value = trim($value);
 
-                $line[] = trim($value);
+                // Neutralize CSV/spreadsheet formula injection (OWASP guidance): a cell
+                // beginning with =, +, -, @, tab or CR is prefixed with a single quote so
+                // the spreadsheet treats it as text rather than executing it as a formula.
+                if ($value !== '' && preg_match('/^[=+\-@\t\r]/', $value)) {
+                    $value = "'" . $value;
+                }
+
+                $line[] = $value;
             }
 
 

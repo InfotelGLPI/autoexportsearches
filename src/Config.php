@@ -34,6 +34,7 @@ use DBConnection;
 use Glpi\Application\View\TemplateRenderer;
 use Html;
 use Migration;
+use Session;
 use Toolbox;
 
 if (!defined('GLPI_ROOT')) {
@@ -46,12 +47,44 @@ class Config extends CommonDBTM
 
     public function prepareInputForAdd($input)
     {
-        return array_intersect_key($input, array_flip(['folder', 'monthBeforePurge']));
+        $input = array_intersect_key($input, array_flip(['folder', 'monthBeforePurge']));
+        return $this->sanitizeFolderInput($input);
     }
 
     public function prepareInputForUpdate($input)
     {
-        return array_intersect_key($input, array_flip(['id', 'folder', 'monthBeforePurge']));
+        $input = array_intersect_key($input, array_flip(['id', 'folder', 'monthBeforePurge']));
+        return $this->sanitizeFolderInput($input);
+    }
+
+    /**
+     * Ensure the folder is a single, safe path segment.
+     *
+     * The value is concatenated with GLPI_PLUGIN_DOC_DIR to build the export
+     * directory (see Files::class), so path separators or traversal sequences
+     * would allow writing/reading outside the intended location.
+     *
+     * @param array $input
+     *
+     * @return array|false
+     */
+    private function sanitizeFolderInput($input)
+    {
+        if (isset($input['folder'])) {
+            $folder = trim((string) $input['folder']);
+            if ($folder === '' || $folder === '.' || $folder === '..'
+                || preg_match('#[/\\\\]#', $folder)
+                || strpos($folder, '..') !== false) {
+                Session::addMessageAfterRedirect(
+                    __('Invalid folder name.', 'autoexportsearches'),
+                    false,
+                    ERROR
+                );
+                return false;
+            }
+            $input['folder'] = $folder;
+        }
+        return $input;
     }
 
     public static function install(Migration $migration)
