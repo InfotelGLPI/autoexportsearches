@@ -4,17 +4,17 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # 
 # Translators:
-# Xavier CAILLAUD <thetsmr@gmail.com>, 2025
 # Edison Jaçe, 2025
+# Xavier CAILLAUD <thetsmr@gmail.com>, 2026
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - AutoExportSearches plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-23 07:09+0000\n"
+"POT-Creation-Date: 2026-07-17 14:31+0000\n"
 "PO-Revision-Date: 2025-02-21 16:08+0000\n"
-"Last-Translator: Edison Jaçe, 2025\n"
+"Last-Translator: Xavier CAILLAUD <thetsmr@gmail.com>, 2026\n"
 "Language-Team: French (France) (https://app.transifex.com/infotelGLPI/teams/205440/fr_FR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22,42 +22,42 @@ msgstr ""
 "Language: fr_FR\n"
 "Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
-#: setup.php:88
+#: setup.php:89
 msgid "Auto export searches"
 msgid_plural "Auto exports searches"
 msgstr[0] "Export automatique de recherches"
 msgstr[1] "Exports automatiques de recherches"
 msgstr[2] "Exports automatiques de recherches"
 
-#: ajax/periodicityfields.php:51
+#: ajax/periodicityfields.php:52
 msgid "Periodicity (in minutes)"
 msgstr "Périodicité (en minutes)"
 
-#: ajax/periodicityfields.php:67
+#: ajax/periodicityfields.php:68
 msgid "Periodicity (in hours)"
 msgstr "Périodicité (en heures)"
 
-#: ajax/periodicityfields.php:81
+#: ajax/periodicityfields.php:82
 msgid "Periodicity (in days)"
 msgstr "Périodicité ( en jours)"
 
-#: ajax/periodicityfields.php:92 ajax/periodicityfields.php:174
+#: ajax/periodicityfields.php:93 ajax/periodicityfields.php:175
 msgid "Work day only"
 msgstr "Seulement les jours ouvrés"
 
-#: ajax/periodicityfields.php:95
+#: ajax/periodicityfields.php:96
 msgid "If this option is checked, the export will be done only on worked day"
 msgstr "Si cette option est coché, l'export ne sera fait que les jours ouvrés"
 
-#: ajax/periodicityfields.php:143
+#: ajax/periodicityfields.php:144
 msgid "Weekday"
 msgstr "Jour de la semaine"
 
-#: ajax/periodicityfields.php:158
+#: ajax/periodicityfields.php:159
 msgid "Day of the month"
 msgstr "Jour du mois"
 
-#: ajax/periodicityfields.php:170
+#: ajax/periodicityfields.php:171
 msgid ""
 "For months having less days than the selected day, the export will be done "
 "on the last day of the month."
@@ -65,7 +65,7 @@ msgstr ""
 "Pour les mois plus court que le jour sélectionné, l'export sera fait le "
 "dernier jour du mois."
 
-#: ajax/periodicityfields.php:177
+#: ajax/periodicityfields.php:178
 msgid ""
 "If this option is checked, the export will be done the first work day from "
 "the selected day"
@@ -73,7 +73,7 @@ msgstr ""
 "Si cette option est cochée, l'export sera fait le jour premier ouvré à "
 "partir du jour sélectionné"
 
-#: front/config.form.php:63
+#: front/config.form.php:64
 msgid "Please activate the plugin"
 msgstr "Veuillez activer le plugin"
 
@@ -85,69 +85,86 @@ msgstr "Fichier supprimé avec succès"
 msgid "No file selected"
 msgstr "Pas de fichier sélectionné"
 
-#: src/Exportconfig.php:80 src/Profile.php:204
+#: src/Config.php:79
+msgid "Invalid folder name."
+msgstr "Nom de dossier invalide."
+
+#: src/Exportconfig.php:81 src/Profile.php:205
 msgid "Auto export config"
 msgstr "Configuration de l'export automatique"
 
-#: src/Exportconfig.php:237
+#: src/Exportconfig.php:238
 msgid "User who owns the saved search"
 msgstr "Utilisateur ayant la vue à exporter"
 
-#: src/Exportconfig.php:245
+#: src/Exportconfig.php:246
 msgid "Saved search to export"
 msgstr "Recherche sauvegardée à exporter"
 
-#: src/Exportconfig.php:262
+#: src/Exportconfig.php:263
 msgid "Last export"
 msgstr "Dernier export"
 
-#: src/Exportconfig.php:334
+#: src/Exportconfig.php:325
+msgid "The selected profile is not assigned to this user."
+msgstr "Le profil sélectionné n'est pas affecté à cet utilisateur."
+
+#: src/Exportconfig.php:339
+msgid "The selected saved search does not belong to this user."
+msgstr ""
+"La recherche sauvegardée sélectionnée n'appartient pas à cet utilisateur."
+
+#: src/Exportconfig.php:351
+msgid "Invalid recipient email address."
+msgstr "Adresse e-mail du destinataire invalide."
+
+#: src/Exportconfig.php:419
 msgid "Every x days"
 msgstr "Tout les x jours"
 
-#: src/Exportconfig.php:337
+#: src/Exportconfig.php:422
 msgid "Every x minutes"
 msgstr "Toutes les x minutes"
 
-#: src/Exportconfig.php:338
+#: src/Exportconfig.php:423
 msgid "Every x hours"
 msgstr "Toutes les x heures"
 
-#: src/Exportconfig.php:564
+#: src/Exportconfig.php:657
 msgid "Export saved searches"
 msgstr "Recherches sauvegardées exportées"
 
-#: src/Files.php:52
+#: src/Files.php:53
 msgid "Download files"
 msgstr "Téléchargements des fichiers"
 
-#: src/Files.php:304
+#: src/Files.php:305
 msgid "Delete export files"
 msgstr "Supprimer les fichiers exportés"
 
-#: src/Menu.php:48
+#: src/Menu.php:49
 msgid "Auto export"
 msgid_plural "Auto exports"
 msgstr[0] "Export automatique"
 msgstr[1] "Exports automatiques"
 msgstr[2] "Exports automatiques"
 
-#: src/Menu.php:104
+#: src/Menu.php:105
 msgid "Menu"
 msgstr "Menu"
 
-#: src/Menu.php:111
+#: src/Menu.php:112
 msgid "Export config list to export"
 msgstr "Liste des configurations d'export à exporter"
 
-#: src/Menu.php:118
+#: src/Menu.php:119
 msgid "List of export files"
 msgstr "Liste des fichiers exportés"
 
-#: src/Profile.php:211
+#: src/Profile.php:212
 msgid "Access export files"
 msgstr "Accès aux fichiers exportés"
 
-#: src/Profile.php:216
+#: src/Profile.php:217
 msgid "Configuration"
 msgstr "Configuration"
