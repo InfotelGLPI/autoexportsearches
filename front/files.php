@@ -34,7 +34,12 @@ use GlpiPlugin\Autoexportsearches\Menu;
 
 Session::checkLoginUser();
 
-if (Session::haveRight("plugin_autoexportsearches_exportconfigs", READ)) {
+// This page lists and permanently deletes exported files: gate on the feature's
+// own right (Files::$rightname = plugin_autoexportsearches_accessfiles), like
+// document.send.php and Menu do. The previous gate checked the unrelated
+// "exportconfigs" right, so an exportconfigs-only profile could delete files while
+// an accessfiles-only profile (shown the menu link) was denied.
+if (Session::haveRight(Files::$rightname, READ)) {
     if (isset($_SESSION['glpiactiveprofile']['interface']) &&
         $_SESSION['glpiactiveprofile']['interface'] == 'central' &&
         !isset($_POST['export'])) {
