@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - AutoExportSearches plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-17 14:31+0000\n"
+"POT-Creation-Date: 2026-07-19 21:19+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -68,11 +68,11 @@ msgstr ""
 msgid "Please activate the plugin"
 msgstr ""
 
-#: front/files.php:66
+#: front/files.php:71
 msgid "File successfully deleted"
 msgstr ""
 
-#: front/files.php:68
+#: front/files.php:73
 msgid "No file selected"
 msgstr ""
 
