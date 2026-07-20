@@ -67,7 +67,7 @@ class ExportconfigTest extends DbTestCase
         $this->login('glpi', 'glpi');
 
         $item = $this->createItem(Exportconfig::class, [
-            'users_id'          => 0,
+            'users_id'          => \Session::getLoginUserID(),
             'savedsearches_id'  => 0,
             'periodicity_type'  => Exportconfig::PERIODICITY_DAYS,
             'periodicity'       => 1,
@@ -82,7 +82,7 @@ class ExportconfigTest extends DbTestCase
         $this->login('glpi', 'glpi');
 
         $item = $this->createItem(Exportconfig::class, [
-            'users_id'         => 0,
+            'users_id'         => \Session::getLoginUserID(),
             'savedsearches_id' => 0,
             'periodicity_type' => Exportconfig::PERIODICITY_DAYS,
             'periodicity'      => 1,
@@ -97,7 +97,7 @@ class ExportconfigTest extends DbTestCase
         $this->login('glpi', 'glpi');
 
         $item = $this->createItem(Exportconfig::class, [
-            'users_id'         => 0,
+            'users_id'         => \Session::getLoginUserID(),
             'savedsearches_id' => 0,
             'periodicity_type' => Exportconfig::PERIODICITY_DAYS,
             'periodicity'      => 1,
@@ -112,7 +112,7 @@ class ExportconfigTest extends DbTestCase
         $this->login('glpi', 'glpi');
 
         $item = $this->createItem(Exportconfig::class, [
-            'users_id'         => 0,
+            'users_id'         => \Session::getLoginUserID(),
             'savedsearches_id' => 0,
             'periodicity_type' => Exportconfig::PERIODICITY_DAYS,
             'periodicity'      => 1,
@@ -128,7 +128,7 @@ class ExportconfigTest extends DbTestCase
         $this->login('glpi', 'glpi');
 
         $item = $this->createItem(Exportconfig::class, [
-            'users_id'         => 0,
+            'users_id'         => \Session::getLoginUserID(),
             'savedsearches_id' => 0,
             'periodicity_type' => Exportconfig::PERIODICITY_DAYS,
             'periodicity'      => 1,
@@ -174,7 +174,7 @@ class ExportconfigTest extends DbTestCase
         $this->login('glpi', 'glpi');
 
         $item = $this->createItem(Exportconfig::class, [
-            'users_id'         => 0,
+            'users_id'         => \Session::getLoginUserID(),
             'savedsearches_id' => 0,
             'periodicity_type' => Exportconfig::PERIODICITY_DAYS,
             'periodicity'      => 1,
