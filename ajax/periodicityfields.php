@@ -27,6 +27,7 @@
  --------------------------------------------------------------------------
  */
 
+use Glpi\Application\View\TemplateRenderer;
 use Glpi\Exception\Http\AccessDeniedHttpException;
 use GlpiPlugin\Autoexportsearches\Exportconfig;
 
@@ -47,165 +48,118 @@ if (Session::haveRight("plugin_autoexportsearches_exportconfigs", READ)
         $exportConfig = new Exportconfig();
         $exportConfig->getFromDB($id);
     }
-    switch ($_POST['periodicity_type']) {
-     case Exportconfig::PERIODICITY_MINUTES:
-         echo "<td>" . __('Periodicity (in minutes)', 'autoexportsearches') . "</td><td><div>";
+    $periodicity_type = (int) ($_POST['periodicity_type'] ?? 0);
+    $rand             = mt_rand();
+    $value            = $exportConfig ? $exportConfig->fields['periodicity'] : 1;
+    $dropdown         = '';
+    $monthly_note     = '';
+    $show_days_script = false;
 
-    $rand = mt_rand();
-
-    Dropdown::showNumber(
-        'periodicity',
-        [
-            'value' => $exportConfig ? $exportConfig->fields['periodicity'] : 1,
-            'rand' => $rand,
-            'min' => 30,
-            'max' => 59
-        ]
-    );
-    echo "</div></td>";
-    break;
-        case Exportconfig::PERIODICITY_HOURS:
-            echo "<td>" . __('Periodicity (in hours)', 'autoexportsearches') . "</td><td><div>";
-            $rand = mt_rand();
-            Dropdown::showNumber(
-                'periodicity',
-                [
-                    'value' => $exportConfig ? $exportConfig->fields['periodicity'] : 1,
-                    'rand' => $rand,
-                    'min' => 1,
-                    'max' => 23
-                ]
-            );
-            echo "</div></td>";
+    // Capture the GLPI dropdowns rendered by the framework so they can be handed to the
+    // Twig template as pre-rendered HTML (see the migration recipe for showForm -> Twig).
+    switch ($periodicity_type) {
+        case Exportconfig::PERIODICITY_MINUTES:
+            ob_start();
+            Dropdown::showNumber('periodicity', [
+                'value' => $value,
+                'rand'  => $rand,
+                'min'   => 30,
+                'max'   => 59,
+            ]);
+            $dropdown = ob_get_clean();
             break;
+
+        case Exportconfig::PERIODICITY_HOURS:
+            ob_start();
+            Dropdown::showNumber('periodicity', [
+                'value' => $value,
+                'rand'  => $rand,
+                'min'   => 1,
+                'max'   => 23,
+            ]);
+            $dropdown = ob_get_clean();
+            break;
+
         case Exportconfig::PERIODICITY_DAYS:
-            echo "<td>" . __('Periodicity (in days)', 'autoexportsearches') . "</td>";
-            echo "<td><div>";
-            $rand = mt_rand();
-            Dropdown::showNumber(
-                'periodicity',
-                [
-                    'value' => $exportConfig ? $exportConfig->fields['periodicity'] : 1,
-                    'rand' => $rand,
-                    'min' => 1
-                ]
-            );
-            $openDaysLabel = __('Work day only', 'autoexportsearches');
-            $checked = $exportConfig ? $exportConfig->fields['periodicity_open_days'] == 1 ? 'checked' : '' : '';
-            $openDaysExplanation = __(
-                'If this option is checked, the export will be done only on worked day',
-                'autoexportsearches'
-            );
-            echo "
-            </div>
-            <div id='periodicity_open_days'>
-                <div style='position:relative'>
-                <label for='periodicity_open_days' class='me-2'>
-                    $openDaysLabel <span class='fas fa-info fa-fw info-icon'></span>
-                  <small class='info-text'>$openDaysExplanation</small>
-                </label>
-                <input name='periodicity_open_days' type='checkbox' class='form-check-input' value='1' $checked>
-                </div>
-            </div>
-            <style>
-                .info-text {
-                    display: none;
-                    position: absolute;
-                    top: 0;
-                    right: 0;
-                    background-color: white; /* Optional: Adding a background color for better visibility */
-                    padding: 5px; /* Optional: Adding padding for better spacing */
-                    border: 1px solid #ccc; /* Optional: Adding a border for better separation */
-                }
-                .info-icon:hover + .info-text {
-                    display: block;
-                }
-            </style>
-        ";
-            echo "
-            <script>
-                if (!window.autoexportsearches) window.autoexportsearches = {};
-                autoexportsearches.periodicitySelect = $('#dropdown_periodicity$rand');
-                autoexportsearches.openDaysContainer = $('#periodicity_open_days');
-                autoexportsearches.periodicitySelect.change(e => {
-                    if (e.target.options[e.target.selectedIndex].value == 1) {
-                        autoexportsearches.openDaysContainer[0].style.display = '';
-                    } else {
-                        autoexportsearches.openDaysContainer[0].style.display = 'none';
-                    }
-                })
-                autoexportsearches.periodicitySelect.trigger('change');
-            </script>
-         ";
-            echo "</td>";
+            ob_start();
+            Dropdown::showNumber('periodicity', [
+                'value' => $value,
+                'rand'  => $rand,
+                'min'   => 1,
+            ]);
+            $dropdown         = ob_get_clean();
+            $show_days_script = true;
             break;
 
         case Exportconfig::PERIODICITY_WEEKLY:
-            echo "<td>" . __('Weekday', 'autoexportsearches') . "</td><td>";
-
-            $rand = mt_rand();
-            Dropdown::showFromArray(
-                'periodicity',
-                Toolbox::getDaysOfWeekArray(),
-                [
-                    'value' => $exportConfig ? $exportConfig->fields['periodicity'] : 1,
-                    'rand' => $rand
-                ]
-            );
-            echo "</td>";
+            ob_start();
+            Dropdown::showFromArray('periodicity', Toolbox::getDaysOfWeekArray(), [
+                'value' => $value,
+                'rand'  => $rand,
+            ]);
+            $dropdown = ob_get_clean();
             break;
 
         case Exportconfig::PERIODICITY_MONTHLY:
-            echo "<td>" . __('Day of the month', 'autoexportsearches') . "</td><td><div>";
-            $rand = mt_rand();
-            Dropdown::showNumber(
-                'periodicity',
-                [
-                    'value' => $exportConfig ? $exportConfig->fields['periodicity'] : 1,
-                    'rand' => $rand,
-                    'min' => 1,
-                    'max' => 31
-                ]
-            );
-            echo '<small class="ms-2">' . __(
-                    'For months having less days than the selected day, the export will be done on the last day of the month.',
-                    'autoexportsearches'
-                ) . '</small>';
-            echo '</div>';
-            $openDaysLabel = __('Work day only', 'autoexportsearches');
-            $checked = $exportConfig ? $exportConfig->fields['periodicity_open_days'] == 1 ? 'checked' : '' : '';
-            $openDaysExplanation = __(
-                'If this option is checked, the export will be done the first work day from the selected day',
+            ob_start();
+            Dropdown::showNumber('periodicity', [
+                'value' => $value,
+                'rand'  => $rand,
+                'min'   => 1,
+                'max'   => 31,
+            ]);
+            $dropdown     = ob_get_clean();
+            $monthly_note = __(
+                'For months having less days than the selected day, the export will be done on the last day of the month.',
                 'autoexportsearches'
             );
-            echo "
-            </div>
-            <div id='periodicity_open_days'>
-                <div style='position:relative'>
-                <label for='periodicity_open_days' class='me-2'>
-                    $openDaysLabel <span class='fas fa-info fa-fw info-icon'></span>
-                  <small class='info-text'>$openDaysExplanation</small>
-                </label>
-                <input name='periodicity_open_days' type='checkbox' class='form-check-input' value='1' $checked>
-                </div>
-            </div>
-            <style>
-                .info-text {
-                    display: none;
-                    position: absolute;
-                    top: 0;
-                    right: 0;
-                    background-color: white; /* Optional: Adding a background color for better visibility */
-                    padding: 5px; /* Optional: Adding padding for better spacing */
-                    border: 1px solid #ccc; /* Optional: Adding a border for better separation */
-                }
-                .info-icon:hover + .info-text {
-                    display: block;
-                }
-            </style>
-        ";
-            echo "</td>";
             break;
+    }
+
+    // The "work day only" explanation differs between the daily and monthly cases.
+    $open_days_explanation = '';
+    if ($periodicity_type === Exportconfig::PERIODICITY_DAYS) {
+        $open_days_explanation = __(
+            'If this option is checked, the export will be done only on worked day',
+            'autoexportsearches'
+        );
+    } elseif ($periodicity_type === Exportconfig::PERIODICITY_MONTHLY) {
+        $open_days_explanation = __(
+            'If this option is checked, the export will be done the first work day from the selected day',
+            'autoexportsearches'
+        );
+    }
+
+    TemplateRenderer::getInstance()->display('@autoexportsearches/periodicityfields.html.twig', [
+        'periodicity_type'      => $periodicity_type,
+        'PERIODICITY_MINUTES'   => Exportconfig::PERIODICITY_MINUTES,
+        'PERIODICITY_HOURS'     => Exportconfig::PERIODICITY_HOURS,
+        'PERIODICITY_DAYS'      => Exportconfig::PERIODICITY_DAYS,
+        'PERIODICITY_WEEKLY'    => Exportconfig::PERIODICITY_WEEKLY,
+        'PERIODICITY_MONTHLY'   => Exportconfig::PERIODICITY_MONTHLY,
+        'dropdown'              => $dropdown,
+        'monthly_note'          => $monthly_note,
+        'open_days_label'       => __('Work day only', 'autoexportsearches'),
+        'open_days_explanation' => $open_days_explanation,
+        'open_days_checked'     => $exportConfig ? ($exportConfig->fields['periodicity_open_days'] == 1) : false,
+    ]);
+
+    // Inline JS stays in PHP (echoed after the template): it toggles the "work day only"
+    // option depending on the selected daily periodicity value.
+    if ($show_days_script) {
+        echo Html::scriptBlock("
+            if (!window.autoexportsearches) window.autoexportsearches = {};
+            autoexportsearches.periodicitySelect = $('#dropdown_periodicity{$rand}');
+            autoexportsearches.openDaysContainer = $('#periodicity_open_days');
+            autoexportsearches.periodicitySelect.change(e => {
+                if (e.target.options[e.target.selectedIndex].value == 1) {
+                    autoexportsearches.openDaysContainer[0].style.display = '';
+                } else {
+                    autoexportsearches.openDaysContainer[0].style.display = 'none';
+                }
+            });
+            autoexportsearches.periodicitySelect.trigger('change');
+        ");
     }
 } else {
     throw new AccessDeniedHttpException();

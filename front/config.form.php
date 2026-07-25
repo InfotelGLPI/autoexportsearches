@@ -29,6 +29,7 @@
 
 global $CFG_GLPI;
 
+use Glpi\Application\View\TemplateRenderer;
 use GlpiPlugin\Autoexportsearches\Config;
 use GlpiPlugin\Autoexportsearches\Files;
 use GlpiPlugin\Autoexportsearches\Menu;
@@ -59,7 +60,7 @@ if ($plugin->isActivated("autoexportsearches")) {
 
 } else {
    Html::header(__('Setup'), '', "config", "plugin");
-   echo "<div class='center'><br><br>";
-   echo "<img src=\"" . $CFG_GLPI["root_doc"] . "/pics/warning.png\" alt=\"warning\"><br><br>";
-   echo "<b>" . __('Please activate the plugin', 'autoexportsearches') . "</b></div>";
+   TemplateRenderer::getInstance()->display('@autoexportsearches/config_not_activated.html.twig', [
+       'root_doc' => $CFG_GLPI["root_doc"],
+   ]);
 }

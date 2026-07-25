@@ -57,6 +57,17 @@ if (Session::haveRight("plugin_autoexportsearches_exportconfigs", READ)) {
         $search         = new SavedSearch();
 
         if ($search->getFromDB($savedSearchId)) {
+            // Ownership guard: mirror Exportconfig::validateExportInput() — a saved
+            // search may only be inspected by its owner, unless the user holds
+            // config UPDATE (the export-on-behalf feature). Without this, any
+            // exportconfigs READ user could enumerate the metadata (itemtype, date
+            // fields, relative offsets) of other users' saved searches by iterating
+            // savedsearches_id.
+            if ((int) $search->fields['users_id'] !== Session::getLoginUserID()
+                && !Session::haveRight('config', UPDATE)) {
+                throw new AccessDeniedHttpException();
+            }
+
             $url_components = parse_url("?" . $search->fields["query"]);
             parse_str($url_components['query'], $p);
 

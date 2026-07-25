@@ -1,0 +1,52 @@
+{#
+ -------------------------------------------------------------------------
+ autoexportsearches plugin for GLPI
+ Copyright (C) 2025-2026 by the autoexportsearches Development Team.
+
+ https://github.com/InfotelGLPI/autoexportsearches
+ -------------------------------------------------------------------------
+
+ LICENSE
+
+ This file is part of autoexportsearches.
+
+ autoexportsearches is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; either version 3 of the License, or
+ (at your option) any later version.
+
+ autoexportsearches is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with autoexportsearches. If not, see <http://www.gnu.org/licenses/>.
+ --------------------------------------------------------------------------
+ #}
+
+{% if periodicity_type == PERIODICITY_MINUTES %}
+   <td>{{ __('Periodicity (in minutes)', 'autoexportsearches') }}</td>
+   <td><div>{{ dropdown|raw }}</div></td>
+{% elseif periodicity_type == PERIODICITY_HOURS %}
+   <td>{{ __('Periodicity (in hours)', 'autoexportsearches') }}</td>
+   <td><div>{{ dropdown|raw }}</div></td>
+{% elseif periodicity_type == PERIODICITY_DAYS %}
+   <td>{{ __('Periodicity (in days)', 'autoexportsearches') }}</td>
+   <td>
+      <div>{{ dropdown|raw }}</div>
+      {{ include('@autoexportsearches/periodicity_open_days.html.twig') }}
+   </td>
+{% elseif periodicity_type == PERIODICITY_WEEKLY %}
+   <td>{{ __('Weekday', 'autoexportsearches') }}</td>
+   <td>{{ dropdown|raw }}</td>
+{% elseif periodicity_type == PERIODICITY_MONTHLY %}
+   <td>{{ __('Day of the month', 'autoexportsearches') }}</td>
+   <td>
+      <div>
+         {{ dropdown|raw }}
+         <small class="ms-2">{{ monthly_note }}</small>
+      </div>
+      {{ include('@autoexportsearches/periodicity_open_days.html.twig') }}
+   </td>
+{% endif %}

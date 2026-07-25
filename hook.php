@@ -81,6 +81,15 @@ function plugin_autoexportsearches_uninstall()
 
     CronTask::unregister("autoexportsearches");
 
+    // Remove the profile rights inserted at install (Profile::initProfile /
+    // addRight); GLPI does not purge plugin rights automatically, so they would
+    // otherwise linger in glpi_profilerights for every profile after uninstall.
+    ProfileRight::deleteProfileRights([
+        'plugin_autoexportsearches_exportconfigs',
+        'plugin_autoexportsearches_accessfiles',
+        'plugin_autoexportsearches_configs',
+    ]);
+
     $rep_files_autoexportsearches = GLPI_PLUGIN_DOC_DIR . "/autoexportsearches";
 
     if (is_dir($rep_files_autoexportsearches)) {
@@ -108,18 +117,30 @@ function plugin_autoexportsearches_getDatabaseRelations()
     }
 }
 
+function plugin_autoexportsearches_pre_item_purge(CommonDBTM $item)
+{
+    global $DB;
+    // Runs BEFORE the core zeroes the savedsearches_id foreign key
+    // (cleanRelationData, triggered by getDatabaseRelations): at this point
+    // $item->fields['id'] still identifies the SavedSearch being purged and the
+    // related export configs still point to it, so we can delete only its own
+    // rows. Doing this in item_purge (where the FK is already 0) would instead
+    // match every row with savedsearches_id = 0 and wipe unrelated users' export
+    // configs created without a saved search.
+    if ($item::getType() === SavedSearch::getType()) {
+        $DB->delete('glpi_plugin_autoexportsearches_exportconfigs', [
+            'savedsearches_id' => $item->fields['id'],
+        ]);
+        $DB->delete('glpi_plugin_autoexportsearches_customsearchcriterias', [
+            'savedsearches_id' => $item->fields['id'],
+        ]);
+    }
+}
+
 function plugin_autoexportsearches_item_purge(CommonDBTM $item)
 {
     global $DB;
-    if ($item::getType() === SavedSearch::getType()) {
-        // relation field set to 0 by the core when deleted (because of getDatabaseRelations?)
-        $DB->delete('glpi_plugin_autoexportsearches_exportconfigs', [
-            'savedsearches_id' => 0,
-        ]);
-        $DB->delete('glpi_plugin_autoexportsearches_customsearchcriterias', [
-            'savedsearches_id' => 0,
-        ]);
-    } elseif ($item::getType() === Exportconfig::getType()) {
+    if ($item::getType() === Exportconfig::getType()) {
         $DB->delete('glpi_plugin_autoexportsearches_customsearchcriterias', [
             'exportconfigs_id' => $item->fields['id'],
         ]);

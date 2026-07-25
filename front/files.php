@@ -59,6 +59,11 @@ if (Session::haveRight(Files::$rightname, READ)) {
     $config = new Config();
     $config->getFromDB(1);
     $dir = GLPI_PLUGIN_DOC_DIR .'/'. $config->getField('folder');
+    // Note: "accessfiles" is an all-or-nothing boolean right (there is no separate
+    // UPDATE/DELETE/PURGE level for it), so being able to read the exported files also
+    // grants the ability to delete them permanently below. This is an accepted design
+    // choice: the export files are transient artifacts and the feature is only granted to
+    // profiles that already manage the plugin.
     if (isset($_POST["filedelete"])) {
         $noFile = true;
         foreach ($_POST["filedelete"] as $fileName => $file) {

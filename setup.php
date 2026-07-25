@@ -48,7 +48,6 @@ function plugin_init_autoexportsearches()
 {
     global $PLUGIN_HOOKS;
 
-    $PLUGIN_HOOKS[Hooks::CSRF_COMPLIANT]['autoexportsearches'] = true;
     $PLUGIN_HOOKS[Hooks::CHANGE_PROFILE]['autoexportsearches'] = [Profile::class, 'initProfile'];
 
     if (Session::getLoginUserID()) {
@@ -67,8 +66,13 @@ function plugin_init_autoexportsearches()
             Exportconfig::class =>
                 [Customsearchcriteria::class, 'createCriterias']
         ];
+        // SavedSearch cleanup must run in PRE_ITEM_PURGE: the core zeroes the
+        // savedsearches_id foreign key during the purge, so only a pre-hook still
+        // sees the real id and can target that search's own export configs.
+        $PLUGIN_HOOKS[Hooks::PRE_ITEM_PURGE]['autoexportsearches'] = [
+            'SavedSearch' => fn($item) => plugin_autoexportsearches_pre_item_purge($item),
+        ];
         $PLUGIN_HOOKS[Hooks::ITEM_PURGE]['autoexportsearches'] = [
-            'SavedSearch'      => fn($item) => plugin_autoexportsearches_item_purge($item),
             Exportconfig::class => fn($item) => plugin_autoexportsearches_item_purge($item),
         ];
 

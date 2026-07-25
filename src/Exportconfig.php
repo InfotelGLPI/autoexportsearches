@@ -619,11 +619,29 @@ class Exportconfig extends CommonDBTM
 
             if (getItemForItemtype($itemtype)) {
                 $params = Search::manageParams($itemtype, $p, 1, 1);
-                $name = Dropdown::getDropdownName('glpi_savedsearches', $export->fields['savedsearches_id']);
-                $name .= "_" . date('Y_m_d_H_i_s') . ".csv";
+                $searchName = Dropdown::getDropdownName('glpi_savedsearches', $export->fields['savedsearches_id']);
+                // Sanitize the saved search name before using it to build the export filename:
+                // strip any path component and keep only safe characters so a name containing
+                // "../" cannot be used to write the CSV outside of the export directory.
+                $searchName = basename($searchName);
+                $searchName = preg_replace('/[^A-Za-z0-9_-]/', '_', $searchName);
+                if ($searchName === '' || $searchName === null) {
+                    $searchName = 'export';
+                }
+                $name = $searchName . "_" . date('Y_m_d_H_i_s') . ".csv";
                 $titleMail = $name;
-                $filename = GLPI_PLUGIN_DOC_DIR . "/autoexportsearches/" . $name;
+                $dir = GLPI_PLUGIN_DOC_DIR . "/autoexportsearches";
+                $filename = $dir . "/" . $name;
 
+                // Confine the resolved path to the export directory, mirroring the containment
+                // check used by Files::processFiles('delete'). Abort the export otherwise.
+                $safeDir  = realpath($dir);
+                $safePath = realpath(dirname($filename));
+                if ($safeDir === false
+                    || $safePath === false
+                    || !str_starts_with($safePath . DIRECTORY_SEPARATOR, $safeDir . DIRECTORY_SEPARATOR)) {
+                    return;
+                }
 
                 self::createCSVFile(Search::getDatas($itemtype, $params), $filename);
                 if (!empty($export->fields['sendto'])) {
@@ -680,7 +698,7 @@ class Exportconfig extends CommonDBTM
             }
         }
 
-        $text = __('Mail autoexportsearches');
+        $text = __('Mail autoexportsearches', 'autoexportsearches');
         $mail->to(new Address($recipient, $recipient));
 
         $mail->subject("[GLPI] " . $title);
@@ -691,13 +709,19 @@ class Exportconfig extends CommonDBTM
 
         if (!$mmail->send()) {
             Session::addMessageAfterRedirect(
-                __('Failed to send email to ' . $recipient),
+                sprintf(
+                    __('Failed to send email to %s', 'autoexportsearches'),
+                    $recipient,
+                ),
                 false,
                 ERROR
             );
             return false;
         } else {
-            Session::addMessageAfterRedirect(__('Mail send to ' . $recipient));
+            Session::addMessageAfterRedirect(sprintf(
+                __('Mail send to %s', 'autoexportsearches'),
+                $recipient,
+            ));
             return true;
         }
     }
@@ -829,7 +853,13 @@ class Exportconfig extends CommonDBTM
                 $_SESSION['glpiactiveprofile'] = $profile->fields;
             }
             $_SESSION['glpiname'] = 'crontab';
-            $_SESSION['glpiactiveentities'] = getSonsOf('glpi_entities', 0);
+            // Do NOT force the active entities to the whole tree here: Session::init()
+            // below fully destroys and rebuilds the session (Session::destroy()), so any
+            // glpiactiveentities set at this point is discarded. The active entities are
+            // recomputed from the impersonated user's own profile (initEntityProfiles +
+            // changeProfile), which correctly keeps the export within that user's
+            // entity scope. Forcing the full tree here was dead code that also looked
+            // like a multi-entity partitioning bypass.
 
             $auth = new Auth();
             $auth->auth_succeded = true;

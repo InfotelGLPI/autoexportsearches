@@ -40,8 +40,15 @@ if (Session::haveRight("plugin_autoexportsearches_exportconfigs", READ)) {
     switch ($_POST['action']) {
         case 'loadSearches':
             if (isset($_POST["users_id"])) {
+                // Only elevated users (config UPDATE) may enumerate another user's saved
+                // searches; everyone else is forced to their own identity, mirroring
+                // Exportconfig::validateExportInput().
+                $users_id = (int) $_POST["users_id"];
+                if ($users_id !== Session::getLoginUserID() && !Session::haveRight('config', UPDATE)) {
+                    $users_id = Session::getLoginUserID();
+                }
                 $val = $_POST['savedsearches_id'];
-                if ($_POST['users_id'] != $_POST["current_user"]) {
+                if ($users_id != Session::getLoginUserID()) {
                     $val = 0;
                 }
                 $rand           = (int) ($_POST["rand"] ?? mt_rand());
@@ -49,7 +56,7 @@ if (Session::haveRight("plugin_autoexportsearches_exportconfigs", READ)) {
                 SavedSearch::dropdown([
                     'name' => 'savedsearches_id',
                     'value' => $val,
-                    'condition' => ['users_id' => $_POST['users_id']],
+                    'condition' => ['users_id' => $users_id],
                     'rand' => $rand,
                 ]);
                 $url = PLUGINAUTOEXPORTSEARCH_WEBDIR . "/ajax/customsearchcriterias.php";
@@ -71,11 +78,18 @@ if (Session::haveRight("plugin_autoexportsearches_exportconfigs", READ)) {
 
         case 'loadProfiles':
             if (isset($_POST["users_id"])) {
+                // Only elevated users (config UPDATE) may enumerate another user's profiles;
+                // everyone else is forced to their own identity, mirroring
+                // Exportconfig::validateExportInput().
+                $users_id = (int) $_POST["users_id"];
+                if ($users_id !== Session::getLoginUserID() && !Session::haveRight('config', UPDATE)) {
+                    $users_id = Session::getLoginUserID();
+                }
                 $val = $_POST['profiles_id'] ?? 0;
-                if ($_POST['users_id'] != $_POST["current_user"]) {
+                if ($users_id != Session::getLoginUserID()) {
                     $val = 0;
                 }
-                $profileuserdatas = (new Profile_User())->find(['users_id' =>$_POST["users_id"]]);
+                $profileuserdatas = (new Profile_User())->find(['users_id' => $users_id]);
                 $profileuserused = [];
                 foreach ($profileuserdatas as $profileuserdata) {
                     $profileuserused[] = $profileuserdata['profiles_id'];

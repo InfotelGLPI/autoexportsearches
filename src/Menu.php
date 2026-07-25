@@ -30,6 +30,7 @@
 namespace GlpiPlugin\Autoexportsearches;
 
 use CommonDBTM;
+use Glpi\Application\View\TemplateRenderer;
 use Session;
 
 /**
@@ -99,29 +100,25 @@ class Menu extends CommonDBTM
 
     static function showMenu()
     {
-
-        echo "<div class='center'>
-        <table class='tab_cadre' width='30%' cellpadding='5'>";
-        echo "<tr><th colspan='6'>" . __('Menu', 'autoexportsearches') . "</th></tr>";
-
-        echo "<tr>";
+        $items = [];
         if (Session::haveRight("plugin_autoexportsearches_exportconfigs", READ)) {
-            echo "<td class='center' colspan='3'>";
-            echo "<a href=\"../front/exportconfig.php\">";
-            echo "<i class=\"fas fa-list fa-4x\"></i>";
-            echo "<br>" . __('Export config list to export', 'autoexportsearches') . "</a>";
-            echo "</td>";
+            $items[] = [
+                'url'   => '../front/exportconfig.php',
+                'icon'  => 'fas fa-list fa-4x',
+                'label' => __('Export config list to export', 'autoexportsearches'),
+            ];
         }
         if (Session::haveRight("plugin_autoexportsearches_accessfiles", READ)) {
-            echo "<td class='center' colspan='3'>";
-            echo "<a href=\"../front/files.php\">";
-            echo "<i class=\"fas fa-folder-open fa-4x\"></i>";
-            echo "<br>" . __('List of export files', 'autoexportsearches') . "</a>";
-            echo "</td>";
+            $items[] = [
+                'url'   => '../front/files.php',
+                'icon'  => 'fas fa-folder-open fa-4x',
+                'label' => __('List of export files', 'autoexportsearches'),
+            ];
         }
-        echo "</tr>";
 
-        echo "</table>";
-        echo "</div>";
+        TemplateRenderer::getInstance()->display('@autoexportsearches/menu.html.twig', [
+            'title' => __('Menu', 'autoexportsearches'),
+            'items' => $items,
+        ]);
     }
 }
