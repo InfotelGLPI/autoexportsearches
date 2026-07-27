@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - AutoExportSearches plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-17 14:31+0000\n"
+"POT-Creation-Date: 2026-07-25 13:57+0000\n"
 "PO-Revision-Date: 2025-02-21 16:08+0000\n"
 "Last-Translator: Xavier CAILLAUD <thetsmr@gmail.com>, 2026\n"
 "Language-Team: French (France) (https://app.transifex.com/infotelGLPI/teams/205440/fr_FR/)\n"
@@ -22,42 +22,14 @@ msgstr ""
 "Language: fr_FR\n"
 "Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
-#: setup.php:89
+#: setup.php:93
 msgid "Auto export searches"
 msgid_plural "Auto exports searches"
 msgstr[0] "Export automatique de recherches"
 msgstr[1] "Exports automatiques de recherches"
 msgstr[2] "Exports automatiques de recherches"
 
-#: ajax/periodicityfields.php:52
-msgid "Periodicity (in minutes)"
-msgstr "Périodicité (en minutes)"
-
-#: ajax/periodicityfields.php:68
-msgid "Periodicity (in hours)"
-msgstr "Périodicité (en heures)"
-
-#: ajax/periodicityfields.php:82
-msgid "Periodicity (in days)"
-msgstr "Périodicité ( en jours)"
-
-#: ajax/periodicityfields.php:93 ajax/periodicityfields.php:175
-msgid "Work day only"
-msgstr "Seulement les jours ouvrés"
-
-#: ajax/periodicityfields.php:96
-msgid "If this option is checked, the export will be done only on worked day"
-msgstr "Si cette option est coché, l'export ne sera fait que les jours ouvrés"
-
-#: ajax/periodicityfields.php:144
-msgid "Weekday"
-msgstr "Jour de la semaine"
-
-#: ajax/periodicityfields.php:159
-msgid "Day of the month"
-msgstr "Jour du mois"
-
-#: ajax/periodicityfields.php:171
+#: ajax/periodicityfields.php:113
 msgid ""
 "For months having less days than the selected day, the export will be done "
 "on the last day of the month."
@@ -65,7 +37,11 @@ msgstr ""
 "Pour les mois plus court que le jour sélectionné, l'export sera fait le "
 "dernier jour du mois."
 
-#: ajax/periodicityfields.php:178
+#: ajax/periodicityfields.php:123
+msgid "If this option is checked, the export will be done only on worked day"
+msgstr "Si cette option est coché, l'export ne sera fait que les jours ouvrés"
+
+#: ajax/periodicityfields.php:128
 msgid ""
 "If this option is checked, the export will be done the first work day from "
 "the selected day"
@@ -73,15 +49,15 @@ msgstr ""
 "Si cette option est cochée, l'export sera fait le jour premier ouvré à "
 "partir du jour sélectionné"
 
-#: front/config.form.php:64
-msgid "Please activate the plugin"
-msgstr "Veuillez activer le plugin"
+#: ajax/periodicityfields.php:142
+msgid "Work day only"
+msgstr "Seulement les jours ouvrés"
 
-#: front/files.php:66
+#: front/files.php:76
 msgid "File successfully deleted"
 msgstr "Fichier supprimé avec succès"
 
-#: front/files.php:68
+#: front/files.php:78
 msgid "No file selected"
 msgstr "Pas de fichier sélectionné"
 
@@ -130,9 +106,23 @@ msgstr "Toutes les x minutes"
 msgid "Every x hours"
 msgstr "Toutes les x heures"
 
-#: src/Exportconfig.php:657
+#: src/Exportconfig.php:675
 msgid "Export saved searches"
 msgstr "Recherches sauvegardées exportées"
+
+#: src/Exportconfig.php:701
+msgid "Mail autoexportsearches"
+msgstr "Notification autoexportsearches"
+
+#: src/Exportconfig.php:713
+#, php-format
+msgid "Failed to send email to %s"
+msgstr "Échec de l'envoi du courriel à %s"
+
+#: src/Exportconfig.php:722
+#, php-format
+msgid "Mail send to %s"
+msgstr "Envoi du courriel à %s"
 
 #: src/Files.php:53
 msgid "Download files"
@@ -142,24 +132,24 @@ msgstr "Téléchargements des fichiers"
 msgid "Delete export files"
 msgstr "Supprimer les fichiers exportés"
 
-#: src/Menu.php:49
+#: src/Menu.php:50
 msgid "Auto export"
 msgid_plural "Auto exports"
 msgstr[0] "Export automatique"
 msgstr[1] "Exports automatiques"
 msgstr[2] "Exports automatiques"
 
-#: src/Menu.php:105
-msgid "Menu"
-msgstr "Menu"
-
-#: src/Menu.php:112
+#: src/Menu.php:108
 msgid "Export config list to export"
 msgstr "Liste des configurations d'export à exporter"
 
-#: src/Menu.php:119
+#: src/Menu.php:115
 msgid "List of export files"
 msgstr "Liste des fichiers exportés"
+
+#: src/Menu.php:120
+msgid "Menu"
+msgstr "Menu"
 
 #: src/Profile.php:212
 msgid "Access export files"
