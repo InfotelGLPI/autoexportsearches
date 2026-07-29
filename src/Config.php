@@ -84,6 +84,13 @@ class Config extends CommonDBTM
             }
             $input['folder'] = $folder;
         }
+        // Bound the retention window server-side: is_numeric() (used elsewhere)
+        // accepts negatives and floats, and a negative value would make
+        // Files::deleteByMonths() compute a retention date in the past, so the
+        // purge cron would wipe every export regardless of age. Clamp to >= 0.
+        if (isset($input['monthBeforePurge'])) {
+            $input['monthBeforePurge'] = max(0, (int) $input['monthBeforePurge']);
+        }
         return $input;
     }
 

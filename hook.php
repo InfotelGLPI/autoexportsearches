@@ -100,6 +100,27 @@ function plugin_autoexportsearches_uninstall()
     return true;
 }
 
+/**
+ * Restrict the Exportconfig search list to the current user's own rows.
+ *
+ * The plugin is self-service: a non-elevated user (no core `config` UPDATE right)
+ * must only see the export configs they own. The Search engine does not scope this
+ * class (it has no entities_id), so without this every user holding the read right
+ * would list everyone's exports (sendto, targeted saved search, impersonated user).
+ * Mirrors Exportconfig::validateExportInput() and the canXItem() ownership guards.
+ *
+ * @param string $itemtype
+ * @return string SQL WHERE fragment (empty string = no restriction)
+ */
+function plugin_autoexportsearches_addDefaultWhere($itemtype)
+{
+    if ($itemtype === Exportconfig::class && !Session::haveRight('config', UPDATE)) {
+        $table = Exportconfig::getTable();
+        return "`$table`.`users_id` = " . (int) Session::getLoginUserID();
+    }
+    return '';
+}
+
 // Define dropdown relations
 /**
  * @return array|string[][]

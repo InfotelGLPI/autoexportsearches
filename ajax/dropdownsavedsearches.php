@@ -102,11 +102,15 @@ if (Session::haveRight("plugin_autoexportsearches_exportconfigs", READ)) {
                     }
                 }
 
+                // Cast rand to an int (as in loadSearches) before it is reflected
+                // into DOM ids / select2 init: a raw POST value could otherwise break
+                // out of the HTML/JS context (reflected XSS).
+                $rand = (int) ($_POST["rand"] ?? mt_rand());
                 Profile::dropdown([
                     'name' => 'profiles_id',
                     'value' => $val,
                     'used' => $profilnotused,
-                    'rand' => $_POST["rand"],
+                    'rand' => $rand,
                 ]);
             }
             break;

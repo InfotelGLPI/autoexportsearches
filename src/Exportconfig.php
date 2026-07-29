@@ -286,6 +286,46 @@ class Exportconfig extends CommonDBTM
     }
 
     /**
+     * Whether the current user owns THIS export config (or is elevated).
+     *
+     * The plugin is self-service: a non-elevated user (no core `config` UPDATE
+     * right) may only act on the export configs they own. This mirrors
+     * validateExportInput() on the write path and the addDefaultWhere() list
+     * scoping (hook.php). It is a complement to — never a replacement for — the
+     * global right check performed by CommonDBTM::can()/check() in the front
+     * controllers: can() enforces the rightname AND this canXItem() guard.
+     *
+     * @return bool
+     */
+    private function isOwnedByCurrentUser(): bool
+    {
+        if (Session::haveRight('config', UPDATE)) {
+            return true;
+        }
+        return (int) ($this->fields['users_id'] ?? 0) === (int) Session::getLoginUserID();
+    }
+
+    public function canViewItem(): bool
+    {
+        return parent::canViewItem() && $this->isOwnedByCurrentUser();
+    }
+
+    public function canUpdateItem(): bool
+    {
+        return parent::canUpdateItem() && $this->isOwnedByCurrentUser();
+    }
+
+    public function canDeleteItem(): bool
+    {
+        return parent::canDeleteItem() && $this->isOwnedByCurrentUser();
+    }
+
+    public function canPurgeItem(): bool
+    {
+        return parent::canPurgeItem() && $this->isOwnedByCurrentUser();
+    }
+
+    /**
      * Server-side validation of the impersonation fields.
      *
      * The form dropdowns are restricted client-side only (ajax/dropdownsavedsearches.php),
