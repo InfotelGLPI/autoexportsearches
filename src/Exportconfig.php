@@ -797,6 +797,11 @@ class Exportconfig extends CommonDBTM
         $count = 0;
         $user_id_back = Session::getLoginUserID();
         $savedProfile = $_SESSION['glpiactiveprofile'] ?? 0;
+        // Must exist before the loop: when every export is skipped (e.g. a weekly export
+        // evaluated on a non-matching weekday), the loop body that assigns $user is never
+        // reached, yet the post-loop session-restore block below relies on $user. Without
+        // this, restoring the impersonating user fatals with getFromDB() on null.
+        $user = new User();
 
         foreach ($exportConfigs as $export) {
             // check if export has to be done
