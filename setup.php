@@ -33,7 +33,7 @@ use GlpiPlugin\Autoexportsearches\Exportconfig;
 use GlpiPlugin\Autoexportsearches\Menu;
 use GlpiPlugin\Autoexportsearches\Profile;
 
-define('PLUGIN_AUTOEXPORTSEARCH_VERSION', '2.2.3');
+define('PLUGIN_AUTOEXPORTSEARCH_VERSION', '2.2.4');
 
 global $CFG_GLPI;
 
