@@ -1,30 +1,30 @@
 <?php
 
-/*
- -------------------------------------------------------------------------
- autoexportsearches plugin for GLPI
- Copyright (C) 2025-2026 by the autoexportsearches Development Team.
-
- https://github.com/InfotelGLPI/autoexportsearches
- -------------------------------------------------------------------------
-
- LICENSE
-
- This file is part of autoexportsearches.
-
- autoexportsearches is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation; either version 3 of the License, or
- (at your option) any later version.
-
- autoexportsearches is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
-
- You should have received a copy of the GNU General Public License
- along with autoexportsearches. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------
+/**
+ * -------------------------------------------------------------------------
+ * autoexportsearches plugin for GLPI
+ * Copyright (C) 2025-2026 by the autoexportsearches Development Team.
+ *
+ * https://github.com/InfotelGLPI/autoexportsearches
+ * -------------------------------------------------------------------------
+ *
+ * LICENSE
+ *
+ * This file is part of autoexportsearches.
+ *
+ * autoexportsearches is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * autoexportsearches is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with autoexportsearches. If not, see <http://www.gnu.org/licenses/>.
+ * --------------------------------------------------------------------------
  */
 
 namespace GlpiPlugin\Autoexportsearches;
@@ -39,8 +39,8 @@ if (!defined('GLPI_ROOT')) {
 
 class Customsearchcriteria extends CommonDBTM
 {
-    const CRITERIA_FIRST_DAY_OF_MONTH = 'first day of ';
-    const CRITERIA_FIRST_DAY_OF_WEEK = 'last monday';
+    public const CRITERIA_FIRST_DAY_OF_MONTH = 'first day of ';
+    public const CRITERIA_FIRST_DAY_OF_WEEK = 'last monday';
 
     public static function install(Migration $migration)
     {
@@ -83,17 +83,37 @@ class Customsearchcriteria extends CommonDBTM
             'glpi_plugin_autoexportsearches_customsearchcriterias',
             [
                 'exportconfigs_id' => $exportConfig->fields['id'],
-                'savedsearches_id' => $exportConfig->fields['savedsearches_id']
-            ]
+                'savedsearches_id' => $exportConfig->fields['savedsearches_id'],
+            ],
         );
 
         if (isset($exportConfig->input['custom_criterias'])) {
             $customCriterias = $exportConfig->input['custom_criterias'];
             if (is_array($customCriterias)) {
+                $allowed_values = [
+                    self::CRITERIA_FIRST_DAY_OF_MONTH,
+                    self::CRITERIA_FIRST_DAY_OF_WEEK,
+                ];
                 foreach ($customCriterias as $criteria) {
-                    $criteria['exportconfigs_id'] = $exportConfig->fields['id'];
+                    // Server-side validation: a criteria must reference the export's
+                    // own saved search and carry one of the two supported marker
+                    // values. Anything else is dropped rather than persisted verbatim,
+                    // mirroring the strict validation Exportconfig::validateExportInput()
+                    // already applies to the other user-supplied fields.
+                    if (!is_array($criteria)
+                        || !isset($criteria['savedsearches_id'], $criteria['criteria_value'])
+                        || (int) $criteria['savedsearches_id'] !== (int) $exportConfig->fields['savedsearches_id']
+                        || !in_array($criteria['criteria_value'], $allowed_values, true)) {
+                        continue;
+                    }
                     $self = new self();
-                    $self->add($criteria);
+                    $self->add([
+                        'exportconfigs_id'    => (int) $exportConfig->fields['id'],
+                        'savedsearches_id'    => (int) $exportConfig->fields['savedsearches_id'],
+                        'criteria_field'      => (int) ($criteria['criteria_field'] ?? 0),
+                        'criteria_searchtype' => (string) ($criteria['criteria_searchtype'] ?? ''),
+                        'criteria_value'      => $criteria['criteria_value'],
+                    ]);
                 }
             }
         }

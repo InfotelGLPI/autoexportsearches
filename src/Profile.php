@@ -1,30 +1,30 @@
 <?php
 
-/*
- -------------------------------------------------------------------------
- autoexportsearches plugin for GLPI
- Copyright (C) 2025-2026 by the autoexportsearches Development Team.
-
- https://github.com/InfotelGLPI/autoexportsearches
- -------------------------------------------------------------------------
-
- LICENSE
-
- This file is part of autoexportsearches.
-
- autoexportsearches is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation; either version 3 of the License, or
- (at your option) any later version.
-
- autoexportsearches is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
-
- You should have received a copy of the GNU General Public License
- along with autoexportsearches. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------
+/**
+ * -------------------------------------------------------------------------
+ * autoexportsearches plugin for GLPI
+ * Copyright (C) 2025-2026 by the autoexportsearches Development Team.
+ *
+ * https://github.com/InfotelGLPI/autoexportsearches
+ * -------------------------------------------------------------------------
+ *
+ * LICENSE
+ *
+ * This file is part of autoexportsearches.
+ *
+ * autoexportsearches is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * autoexportsearches is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with autoexportsearches. If not, see <http://www.gnu.org/licenses/>.
+ * --------------------------------------------------------------------------
  */
 
 namespace GlpiPlugin\Autoexportsearches;
@@ -45,15 +45,14 @@ if (!defined('GLPI_ROOT')) {
  */
 class Profile extends \Profile
 {
-
     public static $rightname = "profile";
 
-   /**
-    * @param CommonGLPI $item
-    * @param int        $withtemplate
-    *
-    * @return string
-    */
+    /**
+     * @param CommonGLPI $item
+     * @param int        $withtemplate
+     *
+     * @return string
+     */
     public function getTabNameForItem(CommonGLPI $item, $withtemplate = 0)
     {
 
@@ -65,17 +64,17 @@ class Profile extends \Profile
         return '';
     }
 
-    static function getIcon()
+    public static function getIcon()
     {
         return Menu::getIcon();
     }
-   /**
-    * @param CommonGLPI $item
-    * @param int        $tabnum
-    * @param int        $withtemplate
-    *
-    * @return bool
-    */
+    /**
+     * @param CommonGLPI $item
+     * @param int        $tabnum
+     * @param int        $withtemplate
+     *
+     * @return bool
+     */
     public static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0)
     {
 
@@ -86,37 +85,37 @@ class Profile extends \Profile
             self::addDefaultProfileInfos(
                 $ID,
                 ['plugin_autoexportsearches_exportconfigs' => 0,
-                                       'plugin_autoexportsearches_accessfiles'   => 0,
-                'plugin_autoexportsearches_configs'       => 0]
+                    'plugin_autoexportsearches_accessfiles'   => 0,
+                    'plugin_autoexportsearches_configs'       => 0],
             );
             $prof->showForm($ID);
         }
         return true;
     }
 
-   /**
-    * @param $ID
-    */
-    static function createFirstAccess($ID)
+    /**
+     * @param $ID
+     */
+    public static function createFirstAccess($ID)
     {
-       //85
+        //85
         self::addDefaultProfileInfos(
             $ID,
             ['plugin_autoexportsearches_exportconfigs' => ALLSTANDARDRIGHT,
-                                    'plugin_autoexportsearches_accessfiles'   => 1,
-            'plugin_autoexportsearches_configs'       => 1],
-            true
+                'plugin_autoexportsearches_accessfiles'   => 1,
+                'plugin_autoexportsearches_configs'       => 1],
+            true,
         );
     }
 
-   /**
-    * @param      $profiles_id
-    * @param      $rights
-    * @param bool $drop_existing
-    *
-    * @internal param $profile
-    */
-    static function addDefaultProfileInfos($profiles_id, $rights, $drop_existing = false)
+    /**
+     * @param      $profiles_id
+     * @param      $rights
+     * @param bool $drop_existing
+     *
+     * @internal param $profile
+     */
+    public static function addDefaultProfileInfos($profiles_id, $rights, $drop_existing = false)
     {
 
         $profileRight = new ProfileRight();
@@ -124,38 +123,38 @@ class Profile extends \Profile
         foreach ($rights as $right => $value) {
             if ($dbu->countElementsInTable(
                 'glpi_profilerights',
-                ["profiles_id" => $profiles_id, "name" => $right]
+                ["profiles_id" => $profiles_id, "name" => $right],
             ) && $drop_existing) {
                 $profileRight->deleteByCriteria(['profiles_id' => $profiles_id, 'name' => $right]);
             }
             if (!$dbu->countElementsInTable(
                 'glpi_profilerights',
-                ["profiles_id" => $profiles_id, "name" => $right]
+                ["profiles_id" => $profiles_id, "name" => $right],
             )) {
                 $myright['profiles_id'] = $profiles_id;
                 $myright['name']        = $right;
                 $myright['rights']      = $value;
                 $profileRight->add($myright);
 
-               //Add right to the current session
+                //Add right to the current session
                 $_SESSION['glpiactiveprofile'][$right] = $value;
             }
         }
     }
 
-   /**
-    * Show profile form
-    *
-    * @param int  $profiles_id
-    * @param bool $openform
-    * @param bool $closeform
-    *
-    * @return true
-    * @internal param int $items_id id of the profile
-    * @internal param value $target url of target
-    *
-    */
-    function showForm($profiles_id = 0, $openform = true, $closeform = true)
+    /**
+     * Show profile form
+     *
+     * @param int  $profiles_id
+     * @param bool $openform
+     * @param bool $closeform
+     *
+     * @return true
+     * @internal param int $items_id id of the profile
+     * @internal param value $target url of target
+     *
+     */
+    public function showForm($profiles_id = 0, $openform = true, $closeform = true)
     {
 
         $canedit = Session::haveRightsOr(self::$rightname, [CREATE, UPDATE, PURGE]);
@@ -174,7 +173,7 @@ class Profile extends \Profile
 
         $effective_rights = ProfileRight::getProfileRights(
             $profiles_id,
-            ['plugin_autoexportsearches_accessfiles', 'plugin_autoexportsearches_configs']
+            ['plugin_autoexportsearches_accessfiles', 'plugin_autoexportsearches_configs'],
         );
 
         TemplateRenderer::getInstance()->display(
@@ -187,50 +186,50 @@ class Profile extends \Profile
                 'configs_checked'      => (bool) $effective_rights['plugin_autoexportsearches_configs'],
                 'profiles_id'          => $profiles_id,
                 'closeform'            => $closeform,
-            ]
+            ],
         );
 
         return true;
     }
 
-   /**
-    * @param bool $all
-    *
-    * @return array
-    */
-    static function getAllRights($all = false)
+    /**
+     * @param bool $all
+     *
+     * @return array
+     */
+    public static function getAllRights($all = false)
     {
         $rights = [
-         ['itemtype' => Exportconfig::class,
-          'label'    => __('Auto export config', 'autoexportsearches'),
-          'field'    => 'plugin_autoexportsearches_exportconfigs'
-         ],
+            ['itemtype' => Exportconfig::class,
+                'label'    => __('Auto export config', 'autoexportsearches'),
+                'field'    => 'plugin_autoexportsearches_exportconfigs',
+            ],
         ];
 
         if ($all) {
             $rights[] = ['itemtype' => Exportconfig::class,
-                      'label'    => __('Access export files', 'autoexportsearches'),
-                      'field'    => 'plugin_autoexportsearches_accessfiles'
+                'label'    => __('Access export files', 'autoexportsearches'),
+                'field'    => 'plugin_autoexportsearches_accessfiles',
             ];
 
             $rights[] = ['itemtype' => Exportconfig::class,
-                      'label'    => __('Configuration', 'autoexportsearches'),
-                      'field'    => 'plugin_autoexportsearches_configs'
+                'label'    => __('Configuration', 'autoexportsearches'),
+                'field'    => 'plugin_autoexportsearches_configs',
             ];
         }
 
         return $rights;
     }
 
-   /**
-    * Init profiles
-    *
-    * @param $old_right
-    *
-    * @return int
-    */
+    /**
+     * Init profiles
+     *
+     * @param $old_right
+     *
+     * @return int
+     */
 
-    static function translateARight($old_right)
+    public static function translateARight($old_right)
     {
         switch ($old_right) {
             case '':
@@ -249,19 +248,19 @@ class Profile extends \Profile
     }
 
 
-   /**
-    * Initialize profiles, and migrate it necessary
-    */
-    static function initProfile()
+    /**
+     * Initialize profiles, and migrate it necessary
+     */
+    public static function initProfile()
     {
         global $DB;
         $profile = new self();
         $dbu     = new DbUtils();
-       //Add new rights in glpi_profilerights table
+        //Add new rights in glpi_profilerights table
         foreach ($profile->getAllRights(true) as $data) {
             if ($dbu->countElementsInTable(
                 "glpi_profilerights",
-                ["name" => $data['field']]
+                ["name" => $data['field']],
             ) == 0) {
                 ProfileRight::addProfileRights([$data['field']]);
             }
@@ -269,18 +268,18 @@ class Profile extends \Profile
         $profileId = $_SESSION['glpiactiveprofile']['id'];
 
         foreach ($DB->request([
-          'FROM'  => 'glpi_profilerights',
-          'WHERE' => [
-              'profiles_id' => $profileId,
-              'name'        => ['LIKE', '%plugin_autoexportsearches%']
-          ]
+            'FROM'  => 'glpi_profilerights',
+            'WHERE' => [
+                'profiles_id' => $profileId,
+                'name'        => ['LIKE', '%plugin_autoexportsearches%'],
+            ],
         ]) as $prof) {
             $_SESSION['glpiactiveprofile'][$prof['name']] = $prof['rights'];
         }
     }
 
 
-    static function removeRightsFromSession()
+    public static function removeRightsFromSession()
     {
         foreach (self::getAllRights(true) as $right) {
             if (isset($_SESSION['glpiactiveprofile'][$right['field']])) {

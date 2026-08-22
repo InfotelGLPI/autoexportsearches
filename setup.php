@@ -1,30 +1,30 @@
 <?php
 
-/*
- -------------------------------------------------------------------------
- autoexportsearches plugin for GLPI
- Copyright (C) 2025-2026 by the autoexportsearches Development Team.
-
- https://github.com/InfotelGLPI/autoexportsearches
- -------------------------------------------------------------------------
-
- LICENSE
-
- This file is part of autoexportsearches.
-
- autoexportsearches is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation; either version 3 of the License, or
- (at your option) any later version.
-
- autoexportsearches is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
-
- You should have received a copy of the GNU General Public License
- along with autoexportsearches. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------
+/**
+ * -------------------------------------------------------------------------
+ * autoexportsearches plugin for GLPI
+ * Copyright (C) 2025-2026 by the autoexportsearches Development Team.
+ *
+ * https://github.com/InfotelGLPI/autoexportsearches
+ * -------------------------------------------------------------------------
+ *
+ * LICENSE
+ *
+ * This file is part of autoexportsearches.
+ *
+ * autoexportsearches is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * autoexportsearches is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with autoexportsearches. If not, see <http://www.gnu.org/licenses/>.
+ * --------------------------------------------------------------------------
  */
 
 use Glpi\Plugin\Hooks;
@@ -33,7 +33,7 @@ use GlpiPlugin\Autoexportsearches\Exportconfig;
 use GlpiPlugin\Autoexportsearches\Menu;
 use GlpiPlugin\Autoexportsearches\Profile;
 
-define('PLUGIN_AUTOEXPORTSEARCH_VERSION', '2.2.4');
+define('PLUGIN_AUTOEXPORTSEARCH_VERSION', '2.2.5');
 
 global $CFG_GLPI;
 
@@ -51,8 +51,10 @@ function plugin_init_autoexportsearches()
     $PLUGIN_HOOKS[Hooks::CHANGE_PROFILE]['autoexportsearches'] = [Profile::class, 'initProfile'];
 
     if (Session::getLoginUserID()) {
-        if (Session::haveRightsOr('plugin_autoexportsearches_exportconfigs', [READ, CREATE, UPDATE]
-            ) || Session::haveRightsOr('plugin_autoexportsearches_accessfiles', [READ, CREATE, UPDATE])) {
+        if (Session::haveRightsOr(
+            'plugin_autoexportsearches_exportconfigs',
+            [READ, CREATE, UPDATE],
+        ) || Session::haveRightsOr('plugin_autoexportsearches_accessfiles', [READ, CREATE, UPDATE])) {
             $PLUGIN_HOOKS[Hooks::MENU_TOADD]['autoexportsearches'] = ['tools' => Menu::class];
         }
         Plugin::registerClass(Profile::class, ['addtabon' => 'Profile']);
@@ -60,11 +62,11 @@ function plugin_init_autoexportsearches()
 
         $PLUGIN_HOOKS[Hooks::PRE_ITEM_UPDATE]['autoexportsearches'] = [
             Exportconfig::class =>
-                [Customsearchcriteria::class, 'createCriterias']
+                [Customsearchcriteria::class, 'createCriterias'],
         ];
         $PLUGIN_HOOKS[Hooks::ITEM_ADD]['autoexportsearches'] = [
             Exportconfig::class =>
-                [Customsearchcriteria::class, 'createCriterias']
+                [Customsearchcriteria::class, 'createCriterias'],
         ];
         // SavedSearch cleanup must run in PRE_ITEM_PURGE: the core zeroes the
         // savedsearches_id foreign key during the purge, so only a pre-hook still
@@ -92,15 +94,15 @@ function plugin_version_autoexportsearches()
     return [
         'name' => _n('Auto export searches', 'Auto exports searches', 2, 'autoexportsearches'),
         'version' => PLUGIN_AUTOEXPORTSEARCH_VERSION,
-        'author' => "<a href='https//blogglpi.infotel.com'>Infotel</a>, Alban LESELLIER",
+        'author' => "<a href='https://blogglpi.infotel.com'>Infotel</a>, Alban LESELLIER",
         'license' => 'GPLv3+',
         'homepage' => '',
         'requirements' => [
             'glpi' => [
                 'min' => '11.0',
                 'max' => '12.0',
-                'dev' => false
-            ]
-        ]
+                'dev' => false,
+            ],
+        ],
     ];
 }

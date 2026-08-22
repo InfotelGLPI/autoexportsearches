@@ -1,30 +1,30 @@
 <?php
 
-/*
- -------------------------------------------------------------------------
- autoexportsearches plugin for GLPI
- Copyright (C) 2025-2026 by the autoexportsearches Development Team.
-
- https://github.com/InfotelGLPI/autoexportsearches
- -------------------------------------------------------------------------
-
- LICENSE
-
- This file is part of autoexportsearches.
-
- autoexportsearches is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation; either version 3 of the License, or
- (at your option) any later version.
-
- autoexportsearches is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
-
- You should have received a copy of the GNU General Public License
- along with autoexportsearches. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------
+/**
+ * -------------------------------------------------------------------------
+ * autoexportsearches plugin for GLPI
+ * Copyright (C) 2025-2026 by the autoexportsearches Development Team.
+ *
+ * https://github.com/InfotelGLPI/autoexportsearches
+ * -------------------------------------------------------------------------
+ *
+ * LICENSE
+ *
+ * This file is part of autoexportsearches.
+ *
+ * autoexportsearches is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * autoexportsearches is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with autoexportsearches. If not, see <http://www.gnu.org/licenses/>.
+ * --------------------------------------------------------------------------
  */
 
 namespace GlpiPlugin\Autoexportsearches;
@@ -66,7 +66,6 @@ class Exportconfig extends CommonDBTM
 
     public static $rightname = 'plugin_autoexportsearches_exportconfigs';
     //   static $rightname = 'ticket';
-
 
     /**
      * functions mandatory
@@ -126,7 +125,7 @@ class Exportconfig extends CommonDBTM
                 [
                     'periodicity_type' => 0,
                 ],
-                [1]
+                [1],
             );
             $DB->doQuery($query);
         }
@@ -139,7 +138,7 @@ class Exportconfig extends CommonDBTM
                 [
                     'periodicity_open_days' => 0,
                 ],
-                [1]
+                [1],
             );
             $DB->doQuery($query);
         }
@@ -153,21 +152,21 @@ class Exportconfig extends CommonDBTM
             Exportconfig::class,
             'AutoexportsearchesExportconfigExport',
             DAY_TIMESTAMP,
-            ['mode' => CronTask::MODE_EXTERNAL]
+            ['mode' => CronTask::MODE_EXTERNAL],
         );
 
         //Displayprefs
         $prefs = [2 => 1,
-                3 => 2,
-                5 => 3,
-                6 => 4];
+            3 => 2,
+            5 => 3,
+            6 => 4];
         foreach ($prefs as $num => $rank) {
             if (!countElementsInTable(
                 "glpi_displaypreferences",
                 ['itemtype' => Exportconfig::class,
-                        'num' => $num,
-                        'users_id' => 0
-                    ]
+                    'num' => $num,
+                    'users_id' => 0,
+                ],
             )
             ) {
                 $DB->insert(
@@ -176,14 +175,14 @@ class Exportconfig extends CommonDBTM
                         'num' => $num,
                         'rank' => $rank,
                         'users_id' => 0,
-                        'interface' => 'central']
+                        'interface' => 'central'],
                 );
             }
         }
 
         $query = $DB->buildDelete(
             'glpi_crontasks',
-            ['itemtype' => ['LIKE', 'PluginAutoexportsearches' . '%']]
+            ['itemtype' => ['LIKE', 'PluginAutoexportsearches' . '%']],
         );
         $DB->doQuery($query);
     }
@@ -206,7 +205,7 @@ class Exportconfig extends CommonDBTM
             'NotificationTemplate',
             'Notification'];
         foreach ($itemtypes as $itemtype) {
-            $item = new $itemtype;
+            $item = new $itemtype();
             $item->deleteByCriteria(['itemtype' => Exportconfig::class]);
         }
     }
@@ -270,7 +269,6 @@ class Exportconfig extends CommonDBTM
             'name' => __('Active'),
             'datatype' => 'bool',
         ];
-
 
         return $tab;
     }
@@ -364,7 +362,7 @@ class Exportconfig extends CommonDBTM
                 Session::addMessageAfterRedirect(
                     __('The selected profile is not assigned to this user.', 'autoexportsearches'),
                     false,
-                    ERROR
+                    ERROR,
                 );
                 return false;
             }
@@ -378,7 +376,7 @@ class Exportconfig extends CommonDBTM
                 Session::addMessageAfterRedirect(
                     __('The selected saved search does not belong to this user.', 'autoexportsearches'),
                     false,
-                    ERROR
+                    ERROR,
                 );
                 return false;
             }
@@ -390,7 +388,7 @@ class Exportconfig extends CommonDBTM
                 Session::addMessageAfterRedirect(
                     __('Invalid recipient email address.', 'autoexportsearches'),
                     false,
-                    ERROR
+                    ERROR,
                 );
                 return false;
             }
@@ -402,7 +400,6 @@ class Exportconfig extends CommonDBTM
     public function showForm($ID, $options = [])
     {
         global $CFG_GLPI;
-
 
         $this->initForm($ID, $options);
         $this->showFormHeader($options);
@@ -434,7 +431,7 @@ class Exportconfig extends CommonDBTM
                 'profiles_id'  => $this->fields["profiles_id"],
                 "rand"         => $rand_user,
                 "action"       => "loadProfiles",
-            ]
+            ],
         );
         Ajax::updateItemOnSelectEvent(
             "dropdown_users_id$rand_user",
@@ -447,7 +444,7 @@ class Exportconfig extends CommonDBTM
                 'exportconfigs_id' => $ID,
                 "rand"             => $rand_user,
                 "action"           => "loadSearches",
-            ]
+            ],
         );
 
         $rand_period = mt_rand();
@@ -462,7 +459,7 @@ class Exportconfig extends CommonDBTM
                 self::PERIODICITY_MINUTES => __('Every x minutes', 'autoexportsearches'),
                 self::PERIODICITY_HOURS   => __('Every x hours', 'autoexportsearches'),
             ],
-            ['value' => $this->fields['periodicity_type'], 'rand' => $rand_period]
+            ['value' => $this->fields['periodicity_type'], 'rand' => $rand_period],
         );
         $periodicity_dropdown = ob_get_clean();
 
@@ -477,7 +474,7 @@ class Exportconfig extends CommonDBTM
                 'periodicity_dropdown' => $periodicity_dropdown,
                 'periodicity_url'     => PLUGINAUTOEXPORTSEARCH_WEBDIR . '/ajax/periodicityfields.php',
                 'sendto'              => $this->fields['sendto'],
-            ]
+            ],
         );
 
         $this->showFormButtons($options);
@@ -499,16 +496,13 @@ class Exportconfig extends CommonDBTM
             $menu['links']['add'] = PLUGINAUTOEXPORTSEARCH_WEBDIR . "/front/exportconfig.form.php";
         }
 
-
         return $menu;
     }
-
 
     public static function getIcon()
     {
         return "ti ti-tags";
     }
-
 
     /**
      * Display datas extracted from DB
@@ -532,7 +526,6 @@ class Exportconfig extends CommonDBTM
         $headers = [];
         $metanames = [];
 
-
         foreach ($data['data']['cols'] as $col) {
             $name = $col['name'];
 
@@ -543,7 +536,6 @@ class Exportconfig extends CommonDBTM
                 }
                 $name = $col['groupname'] . ' - ' . $name;
             }
-
 
             if ($data['itemtype'] != $col['itemtype']) {
                 if (!isset($metanames[$col['itemtype']])) {
@@ -559,14 +551,11 @@ class Exportconfig extends CommonDBTM
             $headers[] = $name;
         }
 
-
         if (isset($CFG_GLPI["union_search_type"][$data['itemtype']])) {
             $headers[] = __('Item type');
         }
 
-
         fputcsv($file, $headers, ';');
-
 
         foreach ($data['data']['rows'] as $row) {
             $line = [];
@@ -574,7 +563,6 @@ class Exportconfig extends CommonDBTM
             foreach ($data['data']['cols'] as $col) {
                 $colkey = "{$col['itemtype']}_{$col['id']}";
                 $value = $row[$colkey]['displayname'] ?? '';
-
 
                 $value = html_entity_decode(strip_tags($value), ENT_QUOTES | ENT_HTML5, 'UTF-8');
                 $value = preg_replace("/[\r\n]+/", ' ', $value);
@@ -589,7 +577,6 @@ class Exportconfig extends CommonDBTM
 
                 $line[] = $value;
             }
-
 
             if (isset($CFG_GLPI["union_search_type"][$data['itemtype']])) {
                 $type = $row['TYPE'] ?? $data['itemtype'];
@@ -606,9 +593,6 @@ class Exportconfig extends CommonDBTM
         fclose($file);
         return true;
     }
-
-
-
 
     public static function executeExport($plugin_exportconfigs_id)
     {
@@ -639,7 +623,7 @@ class Exportconfig extends CommonDBTM
                     $monthYearString = date('F Y', $normalValue);
                     $newValue = strtotime(
                         Customsearchcriteria::CRITERIA_FIRST_DAY_OF_MONTH,
-                        strtotime($monthYearString)
+                        strtotime($monthYearString),
                     );
                     $criteria['value'] = date('Y-m-d', $newValue) . '00:00:00';
                 }
@@ -650,7 +634,7 @@ class Exportconfig extends CommonDBTM
                         $normalValue = strtotime($criteria['value']);
                         $newValue = strtotime(
                             Customsearchcriteria::CRITERIA_FIRST_DAY_OF_WEEK,
-                            $normalValue
+                            $normalValue,
                         );
                         $criteria['value'] = date('Y-m-d', $newValue) . '00:00:00';
                     }
@@ -670,16 +654,27 @@ class Exportconfig extends CommonDBTM
                 }
                 $name = $searchName . "_" . date('Y_m_d_H_i_s') . ".csv";
                 $titleMail = $name;
-                $dir = GLPI_PLUGIN_DOC_DIR . "/autoexportsearches";
+                // Files are isolated per owner: write into <base>/<users_id>/ so the
+                // accessfiles right never exposes one user's exports to another
+                // (see Files::getUserDir / Files::resolveOwnerId).
+                $owner_id = (int) $export->fields['users_id'];
+                $baseDir  = Files::getBaseDir();
+                $dir      = Files::getUserDir($owner_id);
+                // Create the per-user sub-directory if needed (executeExport used to
+                // abort when the target dir was missing); confine it under the base dir.
+                if (!is_dir($dir) && !mkdir($dir, 0777, true) && !is_dir($dir)) {
+                    return;
+                }
                 $filename = $dir . "/" . $name;
 
-                // Confine the resolved path to the export directory, mirroring the containment
-                // check used by Files::processFiles('delete'). Abort the export otherwise.
+                // Confine the resolved owner directory under the base export directory,
+                // mirroring the containment check used by Files::processFiles('delete').
+                // Abort the export otherwise.
+                $safeBase = realpath($baseDir);
                 $safeDir  = realpath($dir);
-                $safePath = realpath(dirname($filename));
-                if ($safeDir === false
-                    || $safePath === false
-                    || !str_starts_with($safePath . DIRECTORY_SEPARATOR, $safeDir . DIRECTORY_SEPARATOR)) {
+                if ($safeBase === false
+                    || $safeDir === false
+                    || !str_starts_with($safeDir . DIRECTORY_SEPARATOR, $safeBase . DIRECTORY_SEPARATOR)) {
                     return;
                 }
 
@@ -734,7 +729,7 @@ class Exportconfig extends CommonDBTM
             $results = $config->find(['name' => 'from_email']);
 
             foreach ($results as $result) {
-                $mail->from(new Address($result['value'],  $CFG_GLPI["from_email_name"]));
+                $mail->from(new Address($result['value'], $CFG_GLPI["from_email_name"]));
             }
         }
 
@@ -754,7 +749,7 @@ class Exportconfig extends CommonDBTM
                     $recipient,
                 ),
                 false,
-                ERROR
+                ERROR,
             );
             return false;
         } else {

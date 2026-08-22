@@ -1,30 +1,30 @@
 <?php
 
-/*
- -------------------------------------------------------------------------
- autoexportsearches plugin for GLPI
- Copyright (C) 2025-2026 by the autoexportsearches Development Team.
-
- https://github.com/InfotelGLPI/autoexportsearches
- -------------------------------------------------------------------------
-
- LICENSE
-
- This file is part of autoexportsearches.
-
- autoexportsearches is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation; either version 3 of the License, or
- (at your option) any later version.
-
- autoexportsearches is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
-
- You should have received a copy of the GNU General Public License
- along with autoexportsearches. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------
+/**
+ * -------------------------------------------------------------------------
+ * autoexportsearches plugin for GLPI
+ * Copyright (C) 2025-2026 by the autoexportsearches Development Team.
+ *
+ * https://github.com/InfotelGLPI/autoexportsearches
+ * -------------------------------------------------------------------------
+ *
+ * LICENSE
+ *
+ * This file is part of autoexportsearches.
+ *
+ * autoexportsearches is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * autoexportsearches is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with autoexportsearches. If not, see <http://www.gnu.org/licenses/>.
+ * --------------------------------------------------------------------------
  */
 
 use GlpiPlugin\Autoexportsearches\Config;
@@ -32,6 +32,7 @@ use GlpiPlugin\Autoexportsearches\Customsearchcriteria;
 use GlpiPlugin\Autoexportsearches\Exportconfig;
 use GlpiPlugin\Autoexportsearches\Files;
 use GlpiPlugin\Autoexportsearches\Profile;
+
 use function Safe\mkdir;
 
 function plugin_autoexportsearches_install()
@@ -55,9 +56,29 @@ function plugin_autoexportsearches_install()
 
     $migration->executeMigration();
 
-    $rep_files_autoexportsearches = GLPI_PLUGIN_DOC_DIR . "/autoexportsearches";
+    $rep_files_autoexportsearches = Files::getBaseDir();
     if (!is_dir($rep_files_autoexportsearches)) {
         mkdir($rep_files_autoexportsearches);
+    }
+
+    // Per-user isolation migration: exports used to be written directly under the base
+    // directory with no owner information, so the accessfiles right exposed every user's
+    // files to each other. Move any such legacy CSV into a "0" (unknown-owner)
+    // sub-directory that only elevated users (config UPDATE) can browse. Idempotent:
+    // already-isolated owner sub-directories are numeric folders and are skipped.
+    $legacy_dir = $rep_files_autoexportsearches . '/0';
+    foreach (scandir($rep_files_autoexportsearches) as $entry) {
+        if ($entry === '.' || $entry === '..') {
+            continue;
+        }
+        $path = $rep_files_autoexportsearches . '/' . $entry;
+        if (is_dir($path)) {
+            continue; // already-isolated owner sub-directories (including the "0" bucket)
+        }
+        if (!is_dir($legacy_dir)) {
+            mkdir($legacy_dir);
+        }
+        rename($path, $legacy_dir . '/' . $entry);
     }
 
     Profile::createFirstAccess($_SESSION['glpiactiveprofile']['id']);
@@ -72,6 +93,10 @@ function plugin_autoexportsearches_install()
  */
 function plugin_autoexportsearches_uninstall()
 {
+
+    // Capture the export folder before Config::uninstall() drops the config table
+    // (Files::getBaseDir() reads the folder from that table).
+    $export_base = Files::getBaseDir();
 
     Exportconfig::uninstall();
 
@@ -90,11 +115,21 @@ function plugin_autoexportsearches_uninstall()
         'plugin_autoexportsearches_configs',
     ]);
 
-    $rep_files_autoexportsearches = GLPI_PLUGIN_DOC_DIR . "/autoexportsearches";
-
-    if (is_dir($rep_files_autoexportsearches)) {
-        array_map('unlink', glob($rep_files_autoexportsearches . '/*'));
-        rmdir($rep_files_autoexportsearches);
+    // Recurse into the per-user owner sub-directories (glob('/*') + unlink only handled
+    // a flat directory and would fail on the sub-directories introduced by isolation).
+    if (is_dir($export_base)) {
+        $iterator = new RecursiveIteratorIterator(
+            new RecursiveDirectoryIterator($export_base, FilesystemIterator::SKIP_DOTS),
+            RecursiveIteratorIterator::CHILD_FIRST,
+        );
+        foreach ($iterator as $item) {
+            if ($item->isDir()) {
+                rmdir($item->getPathname());
+            } else {
+                unlink($item->getPathname());
+            }
+        }
+        rmdir($export_base);
     }
 
     return true;

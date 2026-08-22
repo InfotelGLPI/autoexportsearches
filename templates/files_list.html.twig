@@ -1,28 +1,28 @@
 {#
- -------------------------------------------------------------------------
- autoexportsearches plugin for GLPI
- Copyright (C) 2025-2026 by the autoexportsearches Development Team.
-
- https://github.com/InfotelGLPI/autoexportsearches
- -------------------------------------------------------------------------
-
- LICENSE
-
- This file is part of autoexportsearches.
-
- autoexportsearches is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation; either version 3 of the License, or
- (at your option) any later version.
-
- autoexportsearches is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
-
- You should have received a copy of the GNU General Public License
- along with autoexportsearches. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------
+ # -------------------------------------------------------------------------
+ # autoexportsearches plugin for GLPI
+ # Copyright (C) 2025-2026 by the autoexportsearches Development Team.
+ #
+ # https://github.com/InfotelGLPI/autoexportsearches
+ # -------------------------------------------------------------------------
+ #
+ # LICENSE
+ #
+ # This file is part of autoexportsearches.
+ #
+ # autoexportsearches is free software; you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation; either version 3 of the License, or
+ # (at your option) any later version.
+ #
+ # autoexportsearches is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with autoexportsearches. If not, see <http://www.gnu.org/licenses/>.
+ # --------------------------------------------------------------------------
  #}
 
 <div class="center">
@@ -56,12 +56,12 @@
                      </div>
                   </th>
                   <th>
-                     <a href="{{ base_url }}?type={{ type|url_encode }}&orderCol=name&orderType={{ order_toggle }}&start={{ start }}">
+                     <a href="{{ base_url }}?type={{ type|url_encode }}&users_id={{ owner_id }}&orderCol=name&orderType={{ order_toggle }}&start={{ start }}">
                         {{ __('File name', 'autoexportsearches') }}
                      </a>
                   </th>
                   <th>
-                     <a href="{{ base_url }}?type={{ type|url_encode }}&orderCol=date&orderType={{ order_toggle }}&start={{ start }}">
+                     <a href="{{ base_url }}?type={{ type|url_encode }}&users_id={{ owner_id }}&orderCol=date&orderType={{ order_toggle }}&start={{ start }}">
                         {{ __('Generation date', 'autoexportsearches') }}
                      </a>
                   </th>
@@ -75,7 +75,7 @@
                      </td>
                      <td>
                         {% if can_download %}
-                           <a href="{{ plugin_dir }}/front/document.send.php?file={{ file.name|url_encode }}" target="_blank">
+                           <a href="{{ plugin_dir }}/front/document.send.php?file={{ file.name|url_encode }}&users_id={{ owner_id }}" target="_blank">
                               {{ file.name }}
                            </a>
                         {% else %}
@@ -89,6 +89,8 @@
          </table>
 
          <br>
+         {# Carry the browsed owner sub-directory so the delete stays scoped to it. #}
+         <input type="hidden" name="filedelete_users_id" value="{{ owner_id }}">
          <input type="hidden" name="_glpi_csrf_token" value="{{ csrf_token() }}">
          <button type="submit" class="btn btn-primary"
                  onclick="return confirm('{{ __('Confirm the final deletion?') }}')">

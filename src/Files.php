@@ -1,30 +1,30 @@
 <?php
 
-/*
- -------------------------------------------------------------------------
- autoexportsearches plugin for GLPI
- Copyright (C) 2025-2026 by the autoexportsearches Development Team.
-
- https://github.com/InfotelGLPI/autoexportsearches
- -------------------------------------------------------------------------
-
- LICENSE
-
- This file is part of autoexportsearches.
-
- autoexportsearches is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation; either version 3 of the License, or
- (at your option) any later version.
-
- autoexportsearches is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
-
- You should have received a copy of the GNU General Public License
- along with autoexportsearches. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------
+/**
+ * -------------------------------------------------------------------------
+ * autoexportsearches plugin for GLPI
+ * Copyright (C) 2025-2026 by the autoexportsearches Development Team.
+ *
+ * https://github.com/InfotelGLPI/autoexportsearches
+ * -------------------------------------------------------------------------
+ *
+ * LICENSE
+ *
+ * This file is part of autoexportsearches.
+ *
+ * autoexportsearches is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * autoexportsearches is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with autoexportsearches. If not, see <http://www.gnu.org/licenses/>.
+ * --------------------------------------------------------------------------
  */
 
 namespace GlpiPlugin\Autoexportsearches;
@@ -34,7 +34,7 @@ use CronTask;
 use Glpi\Application\View\TemplateRenderer;
 use Html;
 use Migration;
-use ProfileRight;
+use Session;
 
 if (!defined('GLPI_ROOT')) {
     die("Sorry. You can't access directly to this file");
@@ -45,10 +45,9 @@ if (!defined('GLPI_ROOT')) {
  */
 class Files extends CommonDBTM
 {
+    public static $rightname = 'plugin_autoexportsearches_accessfiles';
 
-    static $rightname = 'plugin_autoexportsearches_accessfiles';
-
-    static function getTypeName($nb = 0)
+    public static function getTypeName($nb = 0)
     {
         return __('Download files', 'autoexportsearches');
     }
@@ -59,43 +58,112 @@ class Files extends CommonDBTM
             Files::class,
             'DeleteFile',
             MONTH_TIMESTAMP,
-            ['state' => CronTask::STATE_DISABLE]
+            ['state' => CronTask::STATE_DISABLE],
         );
     }
 
-    static function canDownload()
+    public static function canDownload(): bool
     {
-        return ProfileRight::getProfileRights(
-            $_SESSION['glpiactiveprofile']['id'],
-            ['plugin_autoexportsearches_accessfiles']
-        );
+        // Test the effective right value, not the mere existence of the profileright row.
+        // getProfileRights() returns an associative array that is always non-empty (every
+        // profile carries the row after install, possibly with value 0), so casting it to
+        // bool was always true regardless of the granted access. haveRight() checks the bit.
+        return Session::haveRight('plugin_autoexportsearches_accessfiles', READ);
     }
 
-    function showMenu()
+    /**
+     * Root export directory (shared parent of every per-user sub-directory).
+     * Read from the plugin Config so writers (Exportconfig::executeExport) and
+     * readers agree on the same location.
+     *
+     * @return string
+     */
+    public static function getBaseDir(): string
     {
+        $config = new Config();
+        $config->getFromDB(1);
+        return GLPI_PLUGIN_DOC_DIR . '/' . $config->getField('folder');
+    }
+
+    /**
+     * Per-user export sub-directory. Export files are isolated by owner so that
+     * the "accessfiles" right does not expose one user's exports to another; the
+     * owner id is the users_id that created the export config.
+     *
+     * @param int $users_id
+     * @return string
+     */
+    public static function getUserDir(int $users_id): string
+    {
+        return self::getBaseDir() . '/' . $users_id;
+    }
+
+    /**
+     * Only a plugin/global administrator (core config UPDATE right) may browse or
+     * download another user's export files; everyone else is confined to their own
+     * sub-directory. Mirrors the "elevated" notion used by
+     * Exportconfig::validateExportInput() and plugin_autoexportsearches_addDefaultWhere().
+     *
+     * @return bool
+     */
+    public static function canAccessAllUsersFiles(): bool
+    {
+        return (bool) Session::haveRight('config', UPDATE);
+    }
+
+    /**
+     * Resolve, and authorize, the owner sub-directory the caller may act on.
+     * A non-elevated caller is always forced back to their own id regardless of
+     * the requested value, so a forged users_id can never reach another user's files.
+     *
+     * @param mixed $requested requested owner id (from the request), may be null
+     * @return int
+     */
+    public static function resolveOwnerId($requested = null): int
+    {
+        $current = (int) Session::getLoginUserID();
+        if (!self::canAccessAllUsersFiles()) {
+            return $current;
+        }
+        // Elevated callers may target any owner sub-directory, including the "0"
+        // legacy bucket that holds pre-isolation files of unknown owner. A missing
+        // or negative request falls back to the caller's own id.
+        if ($requested === null || $requested === '') {
+            return $current;
+        }
+        $requested = (int) $requested;
+        return $requested >= 0 ? $requested : $current;
+    }
+
+    public function showMenu($owner_id = null)
+    {
+        $owner_id = self::resolveOwnerId($owner_id);
         TemplateRenderer::getInstance()->display(
             '@autoexportsearches/files_menu.html.twig',
             [
                 'type_name' => self::getTypeName(),
-                'types'     => array_values(self::getTypes()),
+                'types'     => array_values(self::getTypes($owner_id)),
                 'base_url'  => PLUGINAUTOEXPORTSEARCH_WEBDIR . '/front/files.php',
-            ]
+                'owner_id'  => $owner_id,
+            ],
         );
     }
 
-    function getTypes()
+    public function getTypes($owner_id = null)
     {
         $types = [];
-        $config = new Config();
-        $config->getFromDB(1);
-        $dir = GLPI_PLUGIN_DOC_DIR . '/'.$config->getField('folder');
+        $owner_id = self::resolveOwnerId($owner_id);
+        $dir = self::getUserDir($owner_id);
         //If the dir folder exist
         if (is_dir($dir)) {
             // Get all files in an array
             $files = scandir($dir);
             foreach ($files as $file) {
+                if ($file === '.' || $file === '..' || is_dir($dir . "/" . $file)) {
+                    continue;
+                }
                 $type = substr($file, 0, strpos($file, '_'));
-                if (!in_array($type, $types) && !is_dir($dir . "/" . $file)) {
+                if ($type !== '' && !in_array($type, $types)) {
                     array_push($types, $type);
                 }
             }
@@ -103,13 +171,16 @@ class Files extends CommonDBTM
         return $types;
     }
 
-    /** Show All files in a HTML table
-     * @param $dir
+    /** Show all files of an owner sub-directory in an HTML table
+     * @param string $type   folder/type prefix currently browsed
+     * @param mixed  $owner_id requested owner id (authorized via resolveOwnerId)
      */
-    function showListFiles($dir, $type)
+    public function showListFiles($type, $owner_id = null)
     {
+        $owner_id   = self::resolveOwnerId($owner_id);
+        $dir        = self::getUserDir($owner_id);
         $dir_exists = is_dir($dir);
-        $files      = $dir_exists ? $this->processFiles("get", "", $type) : [];
+        $files      = $dir_exists ? $this->processFiles("get", "", $type, $owner_id) : [];
 
         $limit_begin = (int) ($_GET['start'] ?? 0);
         $limit_nb    = (int) ($_SESSION['glpilist_limit'] ?? 0);
@@ -132,7 +203,8 @@ class Files extends CommonDBTM
             }
         }
 
-        $target     = PLUGINAUTOEXPORTSEARCH_WEBDIR . '/front/files.php?type=' . rawurlencode($type);
+        $target     = PLUGINAUTOEXPORTSEARCH_WEBDIR . '/front/files.php?type=' . rawurlencode($type)
+                      . '&users_id=' . $owner_id;
         $parameters = isset($_GET['orderType'])
             ? 'orderCol=' . rawurlencode($_GET['orderCol'] ?? '') . '&orderType=' . rawurlencode($_GET['orderType'])
             : '';
@@ -180,23 +252,26 @@ class Files extends CommonDBTM
                 'type'          => $type,
                 'order_toggle'  => $order_type,
                 'start'         => $start,
+                'owner_id'      => $owner_id,
                 'form_action'   => PLUGINAUTOEXPORTSEARCH_WEBDIR . '/front/files.php',
-            ]
+            ],
         );
     }
 
-    function sortArrayAsc($a, $b)
+    public function sortArrayAsc($a, $b)
     {
         $aMonth = substr($a, strpos($a, "_") + 5, 2);
         $bMonth = substr($b, strpos($b, "_") + 5, 2);
-        return $aMonth > $bMonth;
+        // usort() expects an int (-1/0/1); a bare boolean comparison never yields the
+        // negative case, producing an unstable sort. The spaceship operator is correct.
+        return $aMonth <=> $bMonth;
     }
 
-    function sortArrayDesc($a, $b)
+    public function sortArrayDesc($a, $b)
     {
         $aMonth = substr($a, strpos($a, "_") + 5, 2);
         $bMonth = substr($b, strpos($b, "_") + 5, 2);
-        return $aMonth < $bMonth;
+        return $bMonth <=> $aMonth;
     }
 
     /** Get date in file name
@@ -205,8 +280,13 @@ class Files extends CommonDBTM
      *
      * @return bool|string
      */
-    function getDateFile($file, $formatOut = "Ymd")
+    public function getDateFile($file, $formatOut = "Ymd")
     {
+        // Default so $out is always defined even when $formatOut matches no case
+        // below (the switch has no default branch). This also removes a
+        // variable.undefined PHPStan flag whose occurrence count would otherwise
+        // drift between the local and CI PHP versions.
+        $out = "";
         switch ($formatOut) {
             case "Y":
                 $out = substr($file, strpos($file, "_") + 1, 4);
@@ -235,20 +315,31 @@ class Files extends CommonDBTM
      *
      * @return array|bool
      */
-    function processFiles($action, $file = "", $type = "")
+    public function processFiles($action, $file = "", $type = "", $owner_id = null)
     {
-        $config = new Config();
-        $config->getFromDB(1);
-        $dir = GLPI_PLUGIN_DOC_DIR .'/'. $config->getField('folder');
+        // resolveOwnerId re-authorizes here too: a non-elevated caller can never
+        // reach another user's sub-directory even if this method is reached directly.
+        $owner_id = self::resolveOwnerId($owner_id);
+        $dir = self::getUserDir($owner_id);
 
+        $res = [];
         switch ($action) {
             case "get":
                 $res = [];
-                // Get files in defined dir
+                if (!is_dir($dir)) {
+                    return $res;
+                }
+                // Get files in the owner sub-directory
                 $files = scandir($dir);
                 foreach ($files as $file) {
+                    if ($file === '.' || $file === '..') {
+                        continue;
+                    }
                     // if the file is not a folder
-                    if ($type != "" && strpos($file, $type) > -1) {
+                    // Use str_contains(): strpos() returns false (cast to 0) when the
+                    // substring is absent, and "0 > -1" is always true, so the previous
+                    // test never actually excluded files missing $type.
+                    if ($type != "" && str_contains($file, $type)) {
                         if (!is_dir($dir . "/" . $file)) {
                             $res[] = $file;
                         }
@@ -273,18 +364,42 @@ class Files extends CommonDBTM
     /** Function for delete files after $nbMonths
      * @param $nbMonths
      */
-    function deleteByMonths($nbMonths)
+    public function deleteByMonths($nbMonths)
     {
         $today = date("Ymd");
-        $files = $this->processFiles("get");
-        if (is_array($files)) {
-            foreach ($files as $file) {
+        $base  = self::getBaseDir();
+        if (!is_dir($base)) {
+            return;
+        }
+        // The purge cron runs without a session, so it cannot be scoped to one
+        // owner: iterate every per-user sub-directory (plus the "0" legacy bucket).
+        foreach (scandir($base) as $entry) {
+            if ($entry === '.' || $entry === '..') {
+                continue;
+            }
+            $userDir = $base . '/' . $entry;
+            // Only numeric owner sub-directories hold export files.
+            if (!is_dir($userDir) || !ctype_digit((string) $entry)) {
+                continue;
+            }
+            $safeUserDir = realpath($userDir);
+            if ($safeUserDir === false) {
+                continue;
+            }
+            foreach (scandir($userDir) as $file) {
+                if ($file === '.' || $file === '..' || is_dir($userDir . '/' . $file)) {
+                    continue;
+                }
                 $dateFile = strtotime($this->getDateFile($file));
                 $nbMonthsToAdd = "+" . $nbMonths . " months";
                 $dateDiff = strtotime($nbMonthsToAdd, $dateFile);
                 $dateToDelete = date('Ymd', $dateDiff);
                 if ($today > $dateToDelete) {
-                    $this->processFiles("delete", $file);
+                    $safePath = realpath($userDir . '/' . $file);
+                    if ($safePath !== false
+                        && str_starts_with($safePath, $safeUserDir . DIRECTORY_SEPARATOR)) {
+                        unlink($safePath);
+                    }
                 }
             }
         }
@@ -297,12 +412,12 @@ class Files extends CommonDBTM
      *
      * @return array
      */
-    static function cronInfo($name)
+    public static function cronInfo($name)
     {
         switch ($name) {
             case 'DeleteFile':
                 return [
-                    'description' => __('Delete export files', 'autoexportsearches')
+                    'description' => __('Delete export files', 'autoexportsearches'),
                 ];   // Optional
                 break;
         }
@@ -317,7 +432,7 @@ class Files extends CommonDBTM
      *
      * @global $DB
      */
-    static function cronDeleteFile($task = null)
+    public static function cronDeleteFile($task = null)
     {
         $CronTask = new CronTask();
         if ($CronTask->getFromDBbyName(Files::class, "DeleteFile")) {

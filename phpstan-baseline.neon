@@ -67,12 +67,6 @@ parameters:
 			path: src/Exportconfig.php
 
 		-
-			message: '#^Variable \$user might not be defined\.$#'
-			identifier: variable.undefined
-			count: 2
-			path: src/Exportconfig.php
-
-		-
 			message: '#^You should not use the `die` function\. It prevents the execution of post\-request/post\-command routines\.$#'
 			identifier: glpi.forbidExit
 			count: 1
@@ -81,18 +75,6 @@ parameters:
 		-
 			message: '#^Unreachable statement \- code above always terminates\.$#'
 			identifier: deadCode.unreachable
-			count: 1
-			path: src/Files.php
-
-		-
-			message: '#^Variable \$out might not be defined\.$#'
-			identifier: variable.undefined
-			count: 1
-			path: src/Files.php
-
-		-
-			message: '#^Variable \$res might not be defined\.$#'
-			identifier: variable.undefined
 			count: 1
 			path: src/Files.php
 

@@ -1,6 +1,31 @@
 #!/bin/bash
 
-# Only strings with domain specified are extracted (use Xt args of keyword param to set number of args needed)
+#
+# -------------------------------------------------------------------------
+# autoexportsearches plugin for GLPI
+# Copyright (C) 2025-2026 by the autoexportsearches Development Team.
+#
+# https://github.com/InfotelGLPI/autoexportsearches
+# -------------------------------------------------------------------------
+#
+# LICENSE
+#
+# This file is part of autoexportsearches.
+#
+# autoexportsearches is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 3 of the License, or
+# (at your option) any later version.
+#
+# autoexportsearches is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with autoexportsearches. If not, see <http://www.gnu.org/licenses/>.
+# --------------------------------------------------------------------------
+#
 
 xgettext *.php */*.php */*.php --copyright-holder='AutoExportSearches Development Team' --package-name='GLPI - AutoExportSearches plugin' -o locales/glpi.pot -L PHP --add-comments=TRANS --from-code=UTF-8 --force-po  \
 	--keyword=_n:1,2,4t --keyword=__s:1,2t --keyword=__:1,2t --keyword=_e:1,2t --keyword=_x:1c,2,3t \
