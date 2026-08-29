@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - AutoExportSearches plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-22 13:09+0000\n"
+"POT-Creation-Date: 2026-08-29 10:34+0000\n"
 "PO-Revision-Date: 2025-02-21 16:08+0000\n"
 "Last-Translator: Xavier CAILLAUD <thetsmr@gmail.com>, 2026\n"
 "Language-Team: French (France) (https://app.transifex.com/infotelGLPI/teams/205440/fr_FR/)\n"
@@ -28,6 +28,26 @@ msgid_plural "Auto exports searches"
 msgstr[0] "Export automatique de recherches"
 msgstr[1] "Exports automatiques de recherches"
 msgstr[2] "Exports automatiques de recherches"
+
+#: ajax/periodicityfields.php:126
+msgid ""
+"For months having less days than the selected day, the export will be done "
+"on the last day of the month."
+msgstr ""
+"Pour les mois plus court que le jour sélectionné, l'export sera fait le "
+"dernier jour du mois."
+
+#: ajax/periodicityfields.php:136
+msgid "If this option is checked, the export will be done only on worked day"
+msgstr "Si cette option est coché, l'export ne sera fait que les jours ouvrés"
+
+#: ajax/periodicityfields.php:141
+msgid ""
+"If this option is checked, the export will be done the first work day from "
+"the selected day"
+msgstr ""
+"Si cette option est cochée, l'export sera fait le jour premier ouvré à "
+"partir du jour sélectionné"
 
 #: ajax/periodicityfields.php:155
 msgid "Work day only"
