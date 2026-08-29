@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - AutoExportSearches plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-22 13:09+0000\n"
+"POT-Creation-Date: 2026-08-29 10:34+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -23,6 +23,22 @@ msgid "Auto export searches"
 msgid_plural "Auto exports searches"
 msgstr[0] ""
 msgstr[1] ""
+
+#: ajax/periodicityfields.php:126
+msgid ""
+"For months having less days than the selected day, the export will be done "
+"on the last day of the month."
+msgstr ""
+
+#: ajax/periodicityfields.php:136
+msgid "If this option is checked, the export will be done only on worked day"
+msgstr ""
+
+#: ajax/periodicityfields.php:141
+msgid ""
+"If this option is checked, the export will be done the first work day from "
+"the selected day"
+msgstr ""
 
 #: ajax/periodicityfields.php:155
 msgid "Work day only"
