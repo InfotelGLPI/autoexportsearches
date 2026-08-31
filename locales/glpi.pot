@@ -1,14 +1,14 @@
 # SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR AutoExportSearches Development Team
-# This file is distributed under the same license as the GLPI - AutoExportSearches plugin package.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: GLPI - AutoExportSearches plugin\n"
+"Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-29 10:34+0000\n"
+"POT-Creation-Date: 2026-08-31 14:49+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,16 +18,119 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 
+#: src/Profile.php:211
+msgid "Access export files"
+msgstr ""
+
+#: templates/profile.html.twig:37
+msgid "Access to download files"
+msgstr ""
+
+#: templates/exportconfig_form.html.twig:30
+msgid "Active"
+msgstr ""
+
+#: src/Menu.php:50
+msgid "Auto export"
+msgid_plural "Auto exports"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/Exportconfig.php:80 src/Profile.php:204
+msgid "Auto export config"
+msgstr ""
+
 #: setup.php:95
 msgid "Auto export searches"
 msgid_plural "Auto exports searches"
 msgstr[0] ""
 msgstr[1] ""
 
+#: templates/files_list.html.twig:52
+msgid "Check all"
+msgstr ""
+
+#: src/Profile.php:216 templates/profile.html.twig:44
+msgid "Configuration"
+msgstr ""
+
+#: templates/files_list.html.twig:96
+msgid "Confirm the final deletion?"
+msgstr ""
+
+#: templates/customsearchcriterias.html.twig:37
+msgid "Criterion"
+msgstr ""
+
+#: templates/customsearchcriterias.html.twig:39
+msgid "Customise"
+msgstr ""
+
+#: templates/customsearchcriterias.html.twig:33
+msgid "Customise the export of"
+msgstr ""
+
+#: templates/periodicityfields.html.twig:44
+msgid "Day of the month"
+msgstr ""
+
+#: templates/files_list.html.twig:44 templates/files_list.html.twig:97
+msgid "Delete"
+msgstr ""
+
+#: src/Files.php:420
+msgid "Delete export files"
+msgstr ""
+
+#: src/Files.php:52
+msgid "Download files"
+msgstr ""
+
+#: src/Exportconfig.php:456
+msgid "Every x days"
+msgstr ""
+
+#: src/Exportconfig.php:460
+msgid "Every x hours"
+msgstr ""
+
+#: src/Exportconfig.php:459
+msgid "Every x minutes"
+msgstr ""
+
+#: src/Menu.php:107
+msgid "Export config list to export"
+msgstr ""
+
+#: src/Exportconfig.php:710
+msgid "Export saved searches"
+msgstr ""
+
+#: src/Exportconfig.php:748
+#, php-format
+msgid "Failed to send email to %s"
+msgstr ""
+
+#: templates/files_list.html.twig:60
+msgid "File name"
+msgstr ""
+
+#: front/files.php:74
+msgid "File successfully deleted"
+msgstr ""
+
+#: templates/files_list.html.twig:29
+msgid "Files"
+msgstr ""
+
 #: ajax/periodicityfields.php:126
 msgid ""
 "For months having less days than the selected day, the export will be done "
 "on the last day of the month."
+msgstr ""
+
+#: templates/files_list.html.twig:65
+msgid "Generation date"
 msgstr ""
 
 #: ajax/periodicityfields.php:136
@@ -40,36 +143,101 @@ msgid ""
 "the selected day"
 msgstr ""
 
-#: ajax/periodicityfields.php:155
-msgid "Work day only"
+#: src/Config.php:79
+msgid "Invalid folder name."
 msgstr ""
 
-#: front/files.php:74
-msgid "File successfully deleted"
+#: src/Exportconfig.php:389
+msgid "Invalid recipient email address."
+msgstr ""
+
+#: src/Exportconfig.php:262
+msgid "Last export"
+msgstr ""
+
+#: src/Menu.php:114
+msgid "List of export files"
+msgstr ""
+
+#: src/Exportconfig.php:736
+msgid "Mail autoexportsearches"
+msgstr ""
+
+#: src/Exportconfig.php:757
+#, php-format
+msgid "Mail send to %s"
+msgstr ""
+
+#: src/Menu.php:119
+msgid "Menu"
+msgstr ""
+
+#: templates/files_menu.html.twig:36
+msgid "No export files available"
 msgstr ""
 
 #: front/files.php:76
 msgid "No file selected"
 msgstr ""
 
-#: src/Config.php:79
-msgid "Invalid folder name."
+#: templates/files_list.html.twig:34
+msgid "No file to download in the directory"
 msgstr ""
 
-#: src/Exportconfig.php:80 src/Profile.php:204
-msgid "Auto export config"
+#: templates/config.html.twig:35
+msgid "Number of months before purge files"
 msgstr ""
 
-#: src/Exportconfig.php:237
-msgid "User who owns the saved search"
+#: templates/exportconfig_form.html.twig:89
+msgid "Options"
 msgstr ""
 
-#: src/Exportconfig.php:245
+#: templates/exportconfig_form.html.twig:64
+msgid "Periodicity"
+msgstr ""
+
+#: templates/periodicityfields.html.twig:35
+msgid "Periodicity (in days)"
+msgstr ""
+
+#: templates/periodicityfields.html.twig:32
+msgid "Periodicity (in hours)"
+msgstr ""
+
+#: templates/periodicityfields.html.twig:29
+msgid "Periodicity (in minutes)"
+msgstr ""
+
+#: templates/exportconfig_form.html.twig:68
+msgid "Periodicity type"
+msgstr ""
+
+#: templates/config_not_activated.html.twig:32
+msgid "Please activate the plugin"
+msgstr ""
+
+#: templates/config.html.twig:46 templates/profile.html.twig:56
+msgid "Save"
+msgstr ""
+
+#: src/Exportconfig.php:245 templates/exportconfig_form.html.twig:49
 msgid "Saved search to export"
 msgstr ""
 
-#: src/Exportconfig.php:262
-msgid "Last export"
+#: templates/exportconfig_form.html.twig:35
+msgid "Search to export"
+msgstr ""
+
+#: templates/exportconfig_form.html.twig:93
+msgid "Send mail to"
+msgstr ""
+
+#: templates/config.html.twig:33
+msgid "Setup"
+msgstr ""
+
+#: templates/files_list.html.twig:32
+msgid "The folder doesn't exist"
 msgstr ""
 
 #: src/Exportconfig.php:363
@@ -80,70 +248,26 @@ msgstr ""
 msgid "The selected saved search does not belong to this user."
 msgstr ""
 
-#: src/Exportconfig.php:389
-msgid "Invalid recipient email address."
+#: templates/exportconfig_form.html.twig:44
+msgid "Used profile"
 msgstr ""
 
-#: src/Exportconfig.php:456
-msgid "Every x days"
+#: src/Exportconfig.php:237 templates/exportconfig_form.html.twig:39
+msgid "User who owns the saved search"
 msgstr ""
 
-#: src/Exportconfig.php:459
-msgid "Every x minutes"
+#: templates/customsearchcriterias.html.twig:38
+msgid "Value"
 msgstr ""
 
-#: src/Exportconfig.php:460
-msgid "Every x hours"
+#: templates/config_not_activated.html.twig:30
+msgid "Warning"
 msgstr ""
 
-#: src/Exportconfig.php:710
-msgid "Export saved searches"
+#: templates/periodicityfields.html.twig:41
+msgid "Weekday"
 msgstr ""
 
-#: src/Exportconfig.php:736
-msgid "Mail autoexportsearches"
-msgstr ""
-
-#: src/Exportconfig.php:748
-#, php-format
-msgid "Failed to send email to %s"
-msgstr ""
-
-#: src/Exportconfig.php:757
-#, php-format
-msgid "Mail send to %s"
-msgstr ""
-
-#: src/Files.php:52
-msgid "Download files"
-msgstr ""
-
-#: src/Files.php:420
-msgid "Delete export files"
-msgstr ""
-
-#: src/Menu.php:50
-msgid "Auto export"
-msgid_plural "Auto exports"
-msgstr[0] ""
-msgstr[1] ""
-
-#: src/Menu.php:107
-msgid "Export config list to export"
-msgstr ""
-
-#: src/Menu.php:114
-msgid "List of export files"
-msgstr ""
-
-#: src/Menu.php:119
-msgid "Menu"
-msgstr ""
-
-#: src/Profile.php:211
-msgid "Access export files"
-msgstr ""
-
-#: src/Profile.php:216
-msgid "Configuration"
+#: ajax/periodicityfields.php:155
+msgid "Work day only"
 msgstr ""
