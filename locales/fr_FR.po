@@ -1,28 +1,26 @@
 # SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR AutoExportSearches Development Team
-# This file is distributed under the same license as the GLPI - AutoExportSearches plugin package.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
+# 
 # Translators:
 # Edison Jaçe, 2025
 # Xavier CAILLAUD <thetsmr@gmail.com>, 2026
-#
+# 
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: GLPI - AutoExportSearches plugin\n"
+"Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-31 14:49+0000\n"
 "PO-Revision-Date: 2025-02-21 16:08+0000\n"
 "Last-Translator: Xavier CAILLAUD <thetsmr@gmail.com>, 2026\n"
-"Language-Team: French (France) (https://app.transifex.com/infotelGLPI/"
-"teams/205440/fr_FR/)\n"
-"Language: fr_FR\n"
+"Language-Team: French (France) (https://app.transifex.com/infotelGLPI/teams/205440/fr_FR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % "
-"1000000 == 0 ? 1 : 2;\n"
+"Language: fr_FR\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #: src/Profile.php:211
 msgid "Access export files"
@@ -30,11 +28,11 @@ msgstr "Accès aux fichiers exportés"
 
 #: templates/profile.html.twig:37
 msgid "Access to download files"
-msgstr ""
+msgstr "Accès aux fichiers exportés"
 
 #: templates/exportconfig_form.html.twig:30
 msgid "Active"
-msgstr ""
+msgstr "Actif"
 
 #: src/Menu.php:50
 msgid "Auto export"
@@ -56,7 +54,7 @@ msgstr[2] "Exports automatiques de recherches"
 
 #: templates/files_list.html.twig:52
 msgid "Check all"
-msgstr ""
+msgstr "Tout sélectionner"
 
 #: src/Profile.php:216 templates/profile.html.twig:44
 msgid "Configuration"
@@ -64,27 +62,27 @@ msgstr "Configuration"
 
 #: templates/files_list.html.twig:96
 msgid "Confirm the final deletion?"
-msgstr ""
+msgstr "Confirmez-vous la suppression définitive ?"
 
 #: templates/customsearchcriterias.html.twig:37
 msgid "Criterion"
-msgstr ""
+msgstr "Critères"
 
 #: templates/customsearchcriterias.html.twig:39
 msgid "Customise"
-msgstr ""
+msgstr "Personnaliser"
 
 #: templates/customsearchcriterias.html.twig:33
 msgid "Customise the export of"
-msgstr ""
+msgstr "Personnaliser l'export de"
 
 #: templates/periodicityfields.html.twig:44
 msgid "Day of the month"
-msgstr ""
+msgstr "Jour du mois"
 
 #: templates/files_list.html.twig:44 templates/files_list.html.twig:97
 msgid "Delete"
-msgstr ""
+msgstr "Supprimer"
 
 #: src/Files.php:420
 msgid "Delete export files"
@@ -121,7 +119,7 @@ msgstr "Échec de l'envoi du courriel à %s"
 
 #: templates/files_list.html.twig:60
 msgid "File name"
-msgstr ""
+msgstr "Nom du fichier"
 
 #: front/files.php:74
 msgid "File successfully deleted"
@@ -129,7 +127,7 @@ msgstr "Fichier supprimé avec succès"
 
 #: templates/files_list.html.twig:29
 msgid "Files"
-msgstr ""
+msgstr "Fichiers"
 
 #: ajax/periodicityfields.php:126
 msgid ""
@@ -141,7 +139,7 @@ msgstr ""
 
 #: templates/files_list.html.twig:65
 msgid "Generation date"
-msgstr ""
+msgstr "Date de génération"
 
 #: ajax/periodicityfields.php:136
 msgid "If this option is checked, the export will be done only on worked day"
@@ -186,7 +184,7 @@ msgstr "Menu"
 
 #: templates/files_menu.html.twig:36
 msgid "No export files available"
-msgstr ""
+msgstr "Pas de fichiers exportés disponibles"
 
 #: front/files.php:76
 msgid "No file selected"
@@ -194,43 +192,43 @@ msgstr "Pas de fichier sélectionné"
 
 #: templates/files_list.html.twig:34
 msgid "No file to download in the directory"
-msgstr ""
+msgstr "Pas de fichier à télécharger dans le dossier"
 
 #: templates/config.html.twig:35
 msgid "Number of months before purge files"
-msgstr ""
+msgstr "Nombre de mois avant la purge des fichiers"
 
 #: templates/exportconfig_form.html.twig:89
 msgid "Options"
-msgstr ""
+msgstr "Options"
 
 #: templates/exportconfig_form.html.twig:64
 msgid "Periodicity"
-msgstr ""
+msgstr "Périodicité"
 
 #: templates/periodicityfields.html.twig:35
 msgid "Periodicity (in days)"
-msgstr ""
+msgstr "Périodicité ( en jours)"
 
 #: templates/periodicityfields.html.twig:32
 msgid "Periodicity (in hours)"
-msgstr ""
+msgstr "Périodicité (en heures)"
 
 #: templates/periodicityfields.html.twig:29
 msgid "Periodicity (in minutes)"
-msgstr ""
+msgstr "Périodicité (en minutes)"
 
 #: templates/exportconfig_form.html.twig:68
 msgid "Periodicity type"
-msgstr ""
+msgstr "Type de périodicité"
 
 #: templates/config_not_activated.html.twig:32
 msgid "Please activate the plugin"
-msgstr ""
+msgstr "Veuillez activer le plugin"
 
 #: templates/config.html.twig:46 templates/profile.html.twig:56
 msgid "Save"
-msgstr ""
+msgstr "Sauver"
 
 #: src/Exportconfig.php:245 templates/exportconfig_form.html.twig:49
 msgid "Saved search to export"
@@ -238,19 +236,19 @@ msgstr "Recherche sauvegardée à exporter"
 
 #: templates/exportconfig_form.html.twig:35
 msgid "Search to export"
-msgstr ""
+msgstr "Recherche sauvegardée à exporter"
 
 #: templates/exportconfig_form.html.twig:93
 msgid "Send mail to"
-msgstr ""
+msgstr "Envoyé par mail à l'adresse"
 
 #: templates/config.html.twig:33
 msgid "Setup"
-msgstr ""
+msgstr "Configuration"
 
 #: templates/files_list.html.twig:32
 msgid "The folder doesn't exist"
-msgstr ""
+msgstr "Le dossier n'existe pas"
 
 #: src/Exportconfig.php:363
 msgid "The selected profile is not assigned to this user."
@@ -263,7 +261,7 @@ msgstr ""
 
 #: templates/exportconfig_form.html.twig:44
 msgid "Used profile"
-msgstr ""
+msgstr "Profil utilisé"
 
 #: src/Exportconfig.php:237 templates/exportconfig_form.html.twig:39
 msgid "User who owns the saved search"
@@ -271,15 +269,15 @@ msgstr "Utilisateur ayant la vue à exporter"
 
 #: templates/customsearchcriterias.html.twig:38
 msgid "Value"
-msgstr ""
+msgstr "Valeur"
 
 #: templates/config_not_activated.html.twig:30
 msgid "Warning"
-msgstr ""
+msgstr "Attention"
 
 #: templates/periodicityfields.html.twig:41
 msgid "Weekday"
-msgstr ""
+msgstr "Jour de la semaine"
 
 #: ajax/periodicityfields.php:155
 msgid "Work day only"
