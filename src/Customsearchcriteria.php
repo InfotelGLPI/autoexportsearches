@@ -33,10 +33,6 @@ use CommonDBTM;
 use DBConnection;
 use Migration;
 
-if (!defined('GLPI_ROOT')) {
-    die("Sorry. You can't access directly to this file");
-}
-
 class Customsearchcriteria extends CommonDBTM
 {
     public const CRITERIA_FIRST_DAY_OF_MONTH = 'first day of ';
