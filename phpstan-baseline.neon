@@ -19,20 +19,8 @@ parameters:
 			path: hook.php
 
 		-
-			message: '#^You should not use the `die` function\. It prevents the execution of post\-request/post\-command routines\.$#'
-			identifier: glpi.forbidExit
-			count: 1
-			path: src/Config.php
-
-		-
 			message: '#^Class GlpiPlugin\\Autoexportsearches\\Exportconfig referenced with incorrect case\: GlpiPlugin\\Autoexportsearches\\ExportConfig\.$#'
 			identifier: class.nameCase
-			count: 1
-			path: src/Customsearchcriteria.php
-
-		-
-			message: '#^You should not use the `die` function\. It prevents the execution of post\-request/post\-command routines\.$#'
-			identifier: glpi.forbidExit
 			count: 1
 			path: src/Customsearchcriteria.php
 
@@ -67,20 +55,8 @@ parameters:
 			path: src/Exportconfig.php
 
 		-
-			message: '#^You should not use the `die` function\. It prevents the execution of post\-request/post\-command routines\.$#'
-			identifier: glpi.forbidExit
-			count: 1
-			path: src/Exportconfig.php
-
-		-
 			message: '#^Unreachable statement \- code above always terminates\.$#'
 			identifier: deadCode.unreachable
-			count: 1
-			path: src/Files.php
-
-		-
-			message: '#^You should not use the `die` function\. It prevents the execution of post\-request/post\-command routines\.$#'
-			identifier: glpi.forbidExit
 			count: 1
 			path: src/Files.php
 
@@ -99,11 +75,5 @@ parameters:
 		-
 			message: '#^Parameter \#2 \$openform \(bool\) of method GlpiPlugin\\Autoexportsearches\\Profile\:\:showForm\(\) should be compatible with parameter \$options \(array\<string, mixed\>\) of method Profile\:\:showForm\(\)$#'
 			identifier: method.childParameterType
-			count: 1
-			path: src/Profile.php
-
-		-
-			message: '#^You should not use the `die` function\. It prevents the execution of post\-request/post\-command routines\.$#'
-			identifier: glpi.forbidExit
 			count: 1
 			path: src/Profile.php
