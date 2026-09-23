@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-01 14:10+0000\n"
+"POT-Creation-Date: 2026-09-23 15:55+0000\n"
 "PO-Revision-Date: 2025-02-21 16:08+0000\n"
 "Last-Translator: Xavier CAILLAUD <thetsmr@gmail.com>, 2026\n"
 "Language-Team: French (France) (https://app.transifex.com/infotelGLPI/"
@@ -24,7 +24,7 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % "
 "1000000 == 0 ? 1 : 2;\n"
 
-#: src/Profile.php:211
+#: src/Profile.php:207
 msgid "Access export files"
 msgstr "Accès aux fichiers exportés"
 
@@ -43,7 +43,7 @@ msgstr[0] "Export automatique"
 msgstr[1] "Exports automatiques"
 msgstr[2] "Exports automatiques"
 
-#: src/Exportconfig.php:80 src/Profile.php:204
+#: src/Exportconfig.php:76 src/Profile.php:200
 msgid "Auto export config"
 msgstr "Configuration de l'export automatique"
 
@@ -58,7 +58,7 @@ msgstr[2] "Exports automatiques de recherches"
 msgid "Check all"
 msgstr "Tout sélectionner"
 
-#: src/Profile.php:216 templates/profile.html.twig:44
+#: src/Profile.php:212 templates/profile.html.twig:44
 msgid "Configuration"
 msgstr "Configuration"
 
@@ -86,23 +86,23 @@ msgstr "Jour du mois"
 msgid "Delete"
 msgstr "Supprimer"
 
-#: src/Files.php:420
+#: src/Files.php:416
 msgid "Delete export files"
 msgstr "Supprimer les fichiers exportés"
 
-#: src/Files.php:52
+#: src/Files.php:48
 msgid "Download files"
 msgstr "Téléchargements des fichiers"
 
-#: src/Exportconfig.php:456
+#: src/Exportconfig.php:452
 msgid "Every x days"
 msgstr "Tout les x jours"
 
-#: src/Exportconfig.php:460
+#: src/Exportconfig.php:456
 msgid "Every x hours"
 msgstr "Toutes les x heures"
 
-#: src/Exportconfig.php:459
+#: src/Exportconfig.php:455
 msgid "Every x minutes"
 msgstr "Toutes les x minutes"
 
@@ -110,11 +110,11 @@ msgstr "Toutes les x minutes"
 msgid "Export config list to export"
 msgstr "Liste des configurations d'export à exporter"
 
-#: src/Exportconfig.php:710
+#: src/Exportconfig.php:706
 msgid "Export saved searches"
 msgstr "Recherches sauvegardées exportées"
 
-#: src/Exportconfig.php:748
+#: src/Exportconfig.php:744
 #, php-format
 msgid "Failed to send email to %s"
 msgstr "Échec de l'envoi du courriel à %s"
@@ -155,15 +155,15 @@ msgstr ""
 "Si cette option est cochée, l'export sera fait le jour premier ouvré à "
 "partir du jour sélectionné"
 
-#: src/Config.php:79
+#: src/Config.php:75
 msgid "Invalid folder name."
 msgstr "Nom de dossier invalide."
 
-#: src/Exportconfig.php:389
+#: src/Exportconfig.php:385
 msgid "Invalid recipient email address."
 msgstr "Adresse e-mail du destinataire invalide."
 
-#: src/Exportconfig.php:262
+#: src/Exportconfig.php:258
 msgid "Last export"
 msgstr "Dernier export"
 
@@ -171,11 +171,11 @@ msgstr "Dernier export"
 msgid "List of export files"
 msgstr "Liste des fichiers exportés"
 
-#: src/Exportconfig.php:736
+#: src/Exportconfig.php:732
 msgid "Mail autoexportsearches"
 msgstr "Notification autoexportsearches"
 
-#: src/Exportconfig.php:757
+#: src/Exportconfig.php:753
 #, php-format
 msgid "Mail send to %s"
 msgstr "Envoi du courriel à %s"
@@ -232,7 +232,7 @@ msgstr "Veuillez activer le plugin"
 msgid "Save"
 msgstr "Sauver"
 
-#: src/Exportconfig.php:245 templates/exportconfig_form.html.twig:49
+#: src/Exportconfig.php:241 templates/exportconfig_form.html.twig:49
 msgid "Saved search to export"
 msgstr "Recherche sauvegardée à exporter"
 
@@ -252,11 +252,11 @@ msgstr "Configuration"
 msgid "The folder doesn't exist"
 msgstr "Le dossier n'existe pas"
 
-#: src/Exportconfig.php:363
+#: src/Exportconfig.php:359
 msgid "The selected profile is not assigned to this user."
 msgstr "Le profil sélectionné n'est pas affecté à cet utilisateur."
 
-#: src/Exportconfig.php:377
+#: src/Exportconfig.php:373
 msgid "The selected saved search does not belong to this user."
 msgstr ""
 "La recherche sauvegardée sélectionnée n'appartient pas à cet utilisateur."
@@ -265,7 +265,7 @@ msgstr ""
 msgid "Used profile"
 msgstr "Profil utilisé"
 
-#: src/Exportconfig.php:237 templates/exportconfig_form.html.twig:39
+#: src/Exportconfig.php:233 templates/exportconfig_form.html.twig:39
 msgid "User who owns the saved search"
 msgstr "Utilisateur ayant la vue à exporter"
 
