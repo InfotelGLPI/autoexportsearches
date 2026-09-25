@@ -59,8 +59,10 @@ if (isset($_GET["file"]) && $check_download) { // for other file
             ResponseHeaderBag::DISPOSITION_ATTACHMENT,
             $filename,
         );
-        $response->send();
-        exit;
+        // Returned to LegacyFileLoadController instead of ->send() + exit: send() closes the
+        // output buffer the controller opened ("output buffer has been unexpectedly closed"),
+        // and exit bypasses the kernel termination.
+        return $response;
     } else {
         throw new BadRequestHttpException('Invalid filename');
     }
