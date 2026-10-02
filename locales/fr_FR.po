@@ -2,27 +2,25 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
+# 
 # Translators:
 # Edison Jaçe, 2025
 # Xavier CAILLAUD <thetsmr@gmail.com>, 2026
-#
+# 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-23 15:55+0000\n"
+"POT-Creation-Date: 2026-09-25 06:44+0000\n"
 "PO-Revision-Date: 2025-02-21 16:08+0000\n"
 "Last-Translator: Xavier CAILLAUD <thetsmr@gmail.com>, 2026\n"
-"Language-Team: French (France) (https://app.transifex.com/infotelGLPI/"
-"teams/205440/fr_FR/)\n"
-"Language: fr_FR\n"
+"Language-Team: French (France) (https://app.transifex.com/infotelGLPI/teams/205440/fr_FR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % "
-"1000000 == 0 ? 1 : 2;\n"
+"Language: fr_FR\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #: src/Profile.php:207
 msgid "Access export files"
@@ -228,9 +226,9 @@ msgstr "Type de périodicité"
 msgid "Please activate the plugin"
 msgstr "Veuillez activer le plugin"
 
-#: templates/config.html.twig:46 templates/profile.html.twig:56
+#: templates/profile.html.twig:56 templates/config.html.twig:46
 msgid "Save"
-msgstr "Sauver"
+msgstr "Sauvegarder"
 
 #: src/Exportconfig.php:241 templates/exportconfig_form.html.twig:49
 msgid "Saved search to export"
