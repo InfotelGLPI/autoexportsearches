@@ -30,11 +30,12 @@
 global $CFG_GLPI;
 
 use Glpi\Exception\Http\AccessDeniedHttpException;
+use GlpiPlugin\Autoexportsearches\Exportconfig;
 
 header("Content-Type: text/html; charset=UTF-8");
 Html::header_nocache();
 
-if (Session::haveRight("plugin_autoexportsearches_exportconfigs", READ)) {
+if (Session::haveRight(Exportconfig::$rightname, READ)) {
     switch ($_POST['action']) {
         case 'loadSearches':
             if (isset($_POST["users_id"])) {
@@ -42,7 +43,7 @@ if (Session::haveRight("plugin_autoexportsearches_exportconfigs", READ)) {
                 // searches; everyone else is forced to their own identity, mirroring
                 // Exportconfig::validateExportInput().
                 $users_id = (int) $_POST["users_id"];
-                if ($users_id !== Session::getLoginUserID() && !Session::haveRight('config', UPDATE)) {
+                if ($users_id !== Session::getLoginUserID() && !Session::haveRight(\Config::$rightname, UPDATE)) {
                     $users_id = Session::getLoginUserID();
                 }
                 $val = $_POST['savedsearches_id'];
@@ -80,7 +81,7 @@ if (Session::haveRight("plugin_autoexportsearches_exportconfigs", READ)) {
                 // everyone else is forced to their own identity, mirroring
                 // Exportconfig::validateExportInput().
                 $users_id = (int) $_POST["users_id"];
-                if ($users_id !== Session::getLoginUserID() && !Session::haveRight('config', UPDATE)) {
+                if ($users_id !== Session::getLoginUserID() && !Session::haveRight(\Config::$rightname, UPDATE)) {
                     $users_id = Session::getLoginUserID();
                 }
                 $val = $_POST['profiles_id'] ?? 0;

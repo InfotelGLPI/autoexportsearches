@@ -32,7 +32,7 @@ use GlpiPlugin\Autoexportsearches\Files;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 
-Session::checkRight('plugin_autoexportsearches_accessfiles', READ);
+Session::checkRight(Files::$rightname, READ);
 
 $files = new Files();
 

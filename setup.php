@@ -32,6 +32,7 @@ use GlpiPlugin\Autoexportsearches\Customsearchcriteria;
 use GlpiPlugin\Autoexportsearches\Exportconfig;
 use GlpiPlugin\Autoexportsearches\Menu;
 use GlpiPlugin\Autoexportsearches\Profile;
+use GlpiPlugin\Autoexportsearches\Files;
 
 define('PLUGIN_AUTOEXPORTSEARCH_VERSION', '2.2.5');
 
@@ -52,9 +53,9 @@ function plugin_init_autoexportsearches()
 
     if (Session::getLoginUserID()) {
         if (Session::haveRightsOr(
-            'plugin_autoexportsearches_exportconfigs',
+            Exportconfig::$rightname,
             [READ, CREATE, UPDATE],
-        ) || Session::haveRightsOr('plugin_autoexportsearches_accessfiles', [READ, CREATE, UPDATE])) {
+        ) || Session::haveRightsOr(Files::$rightname, [READ, CREATE, UPDATE])) {
             $PLUGIN_HOOKS[Hooks::MENU_TOADD]['autoexportsearches'] = ['tools' => Menu::class];
         }
         Plugin::registerClass(Profile::class, ['addtabon' => 'Profile']);
@@ -78,7 +79,7 @@ function plugin_init_autoexportsearches()
             Exportconfig::class => fn($item) => plugin_autoexportsearches_item_purge($item),
         ];
 
-        if (Session::haveRight("config", READ)) {
+        if (Session::haveRight(\Config::$rightname, READ)) {
             $PLUGIN_HOOKS[Hooks::CONFIG_PAGE]['autoexportsearches'] = 'front/config.form.php';
         }
     }
@@ -99,8 +100,8 @@ function plugin_version_autoexportsearches()
         'homepage' => '',
         'requirements' => [
             'glpi' => [
-                'min' => '11.0',
-                'max' => '12.0',
+                'min' => '11.0.99',
+                'max' => '12.0.99',
                 'dev' => false,
             ],
         ],

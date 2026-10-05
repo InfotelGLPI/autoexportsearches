@@ -41,7 +41,7 @@ use Session;
  */
 class Files extends CommonDBTM
 {
-    public static $rightname = 'plugin_autoexportsearches_accessfiles';
+    public static string $rightname = 'plugin_autoexportsearches_accessfiles';
 
     public static function getTypeName($nb = 0)
     {
@@ -64,7 +64,7 @@ class Files extends CommonDBTM
         // getProfileRights() returns an associative array that is always non-empty (every
         // profile carries the row after install, possibly with value 0), so casting it to
         // bool was always true regardless of the granted access. haveRight() checks the bit.
-        return Session::haveRight('plugin_autoexportsearches_accessfiles', READ);
+        return Session::haveRight(Files::$rightname, READ);
     }
 
     /**
@@ -104,7 +104,7 @@ class Files extends CommonDBTM
      */
     public static function canAccessAllUsersFiles(): bool
     {
-        return (bool) Session::haveRight('config', UPDATE);
+        return (bool) Session::haveRight(\Config::$rightname, UPDATE);
     }
 
     /**

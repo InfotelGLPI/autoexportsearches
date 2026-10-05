@@ -29,6 +29,7 @@
 
 use Glpi\Exception\Http\AccessDeniedHttpException;
 use GlpiPlugin\Autoexportsearches\Menu;
+use GlpiPlugin\Autoexportsearches\Exportconfig;
 
 //central or helpdesk access
 if (Session::getCurrentInterface() == 'central') {
@@ -37,7 +38,7 @@ if (Session::getCurrentInterface() == 'central') {
     Html::helpHeader(Menu::getTypeName(2));
 }
 
-if (Session::haveRight("plugin_autoexportsearches_exportconfigs", READ)) {
+if (Session::haveRight(Exportconfig::$rightname, READ)) {
     Menu::showMenu();
 } else {
     throw new AccessDeniedHttpException();

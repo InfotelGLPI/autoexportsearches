@@ -38,7 +38,7 @@ use Session;
  */
 class Menu extends CommonDBTM
 {
-    public static $rightname = '';
+    public static string $rightname = '';
 
     /**
      * @param int $nb
@@ -100,14 +100,14 @@ class Menu extends CommonDBTM
     public static function showMenu()
     {
         $items = [];
-        if (Session::haveRight("plugin_autoexportsearches_exportconfigs", READ)) {
+        if (Session::haveRight(Exportconfig::$rightname, READ)) {
             $items[] = [
                 'url'   => '../front/exportconfig.php',
                 'icon'  => 'fas fa-list fa-4x',
                 'label' => __('Export config list to export', 'autoexportsearches'),
             ];
         }
-        if (Session::haveRight("plugin_autoexportsearches_accessfiles", READ)) {
+        if (Session::haveRight(Files::$rightname, READ)) {
             $items[] = [
                 'url'   => '../front/files.php',
                 'icon'  => 'fas fa-folder-open fa-4x',

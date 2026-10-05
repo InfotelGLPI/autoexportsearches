@@ -60,7 +60,7 @@ class Exportconfig extends CommonDBTM
     public const PERIODICITY_WEEKLY = 1;
     public const PERIODICITY_MONTHLY = 2;
 
-    public static $rightname = 'plugin_autoexportsearches_exportconfigs';
+    public static string $rightname = 'plugin_autoexportsearches_exportconfigs';
     //   static $rightname = 'ticket';
 
     /**
@@ -293,7 +293,7 @@ class Exportconfig extends CommonDBTM
      */
     private function isOwnedByCurrentUser(): bool
     {
-        if (Session::haveRight('config', UPDATE)) {
+        if (Session::haveRight(\Config::$rightname, UPDATE)) {
             return true;
         }
         return (int) ($this->fields['users_id'] ?? 0) === (int) Session::getLoginUserID();
@@ -337,7 +337,7 @@ class Exportconfig extends CommonDBTM
     {
         // Only elevated users (config UPDATE) may schedule an export on behalf of another
         // user; everyone else is forced to their own identity.
-        if (!Session::haveRight('config', UPDATE)) {
+        if (!Session::haveRight(\Config::$rightname, UPDATE)) {
             $input['users_id'] = Session::getLoginUserID();
         }
 

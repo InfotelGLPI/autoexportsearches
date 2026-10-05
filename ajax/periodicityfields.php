@@ -34,14 +34,14 @@ use GlpiPlugin\Autoexportsearches\Exportconfig;
 header("Content-Type: text/html; charset=UTF-8");
 Html::header_nocache();
 
-Session::checkRight('plugin_autoexportsearches_exportconfigs', UPDATE);
+Session::checkRight(Exportconfig::$rightname, UPDATE);
 
 $id = 0;
 if (isset($_POST['id']) && $_POST['id']) {
     $id = $_POST['id'];
 }
-if (Session::haveRight("plugin_autoexportsearches_exportconfigs", READ)
-    && Session::haveRight("plugin_autoexportsearches_exportconfigs", UPDATE)) {
+if (Session::haveRight(Exportconfig::$rightname, READ)
+    && Session::haveRight(Exportconfig::$rightname, UPDATE)) {
     $exportConfig = null;
     if ($id > 0) {
         $exportConfig = new Exportconfig();
@@ -54,7 +54,7 @@ if (Session::haveRight("plugin_autoexportsearches_exportconfigs", READ)
             // back its periodicity / worked-days flag. config UPDATE keeps the
             // export-on-behalf capability.
             if ((int) $exportConfig->fields['users_id'] !== Session::getLoginUserID()
-                && !Session::haveRight('config', UPDATE)) {
+                && !Session::haveRight(\Config::$rightname, UPDATE)) {
                 throw new AccessDeniedHttpException();
             }
         } else {

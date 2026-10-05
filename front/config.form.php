@@ -34,7 +34,7 @@ use GlpiPlugin\Autoexportsearches\Config;
 use GlpiPlugin\Autoexportsearches\Files;
 use GlpiPlugin\Autoexportsearches\Menu;
 
-Session::checkRight("config", UPDATE);
+Session::checkRight(\Config::$rightname, UPDATE);
 
 $plugin = new Plugin();
 

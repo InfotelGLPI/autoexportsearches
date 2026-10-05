@@ -91,7 +91,6 @@
          <br>
          {# Carry the browsed owner sub-directory so the delete stays scoped to it. #}
          <input type="hidden" name="filedelete_users_id" value="{{ owner_id }}">
-         <input type="hidden" name="_glpi_csrf_token" value="{{ csrf_token() }}">
          <button type="submit" class="btn btn-primary"
                  onclick="return confirm('{{ __('Confirm the final deletion?') }}')">
             {{ __('Delete') }}

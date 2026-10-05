@@ -30,6 +30,7 @@
 use Glpi\Application\View\TemplateRenderer;
 use Glpi\Exception\Http\AccessDeniedHttpException;
 use GlpiPlugin\Autoexportsearches\Customsearchcriteria;
+use GlpiPlugin\Autoexportsearches\Exportconfig;
 
 header("Content-Type: text/html; charset=UTF-8");
 
@@ -39,7 +40,7 @@ $savedSearchId = null;
 if (isset($_POST['savedsearches_id']) && $_POST['savedsearches_id']) {
     $savedSearchId = (int) $_POST['savedsearches_id'];
 }
-if (Session::haveRight("plugin_autoexportsearches_exportconfigs", READ)) {
+if (Session::haveRight(Exportconfig::$rightname, READ)) {
     if ($savedSearchId) {
         $translations = [
             'equals'      => __('is'),
@@ -62,7 +63,7 @@ if (Session::haveRight("plugin_autoexportsearches_exportconfigs", READ)) {
             // fields, relative offsets) of other users' saved searches by iterating
             // savedsearches_id.
             if ((int) $search->fields['users_id'] !== Session::getLoginUserID()
-                && !Session::haveRight('config', UPDATE)) {
+                && !Session::haveRight(\Config::$rightname, UPDATE)) {
                 throw new AccessDeniedHttpException();
             }
 

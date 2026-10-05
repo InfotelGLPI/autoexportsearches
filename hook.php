@@ -145,15 +145,14 @@ function plugin_autoexportsearches_uninstall()
  * Mirrors Exportconfig::validateExportInput() and the canXItem() ownership guards.
  *
  * @param string $itemtype
- * @return string SQL WHERE fragment (empty string = no restriction)
+ * @return array WHERE criteria (empty array = no restriction)
  */
 function plugin_autoexportsearches_addDefaultWhere($itemtype)
 {
-    if ($itemtype === Exportconfig::class && !Session::haveRight('config', UPDATE)) {
-        $table = Exportconfig::getTable();
-        return "`$table`.`users_id` = " . (int) Session::getLoginUserID();
+    if ($itemtype === Exportconfig::class && !Session::haveRight(\Config::$rightname, UPDATE)) {
+        return [Exportconfig::getTableField('users_id') => (int) Session::getLoginUserID()];
     }
-    return '';
+    return [];
 }
 
 // Define dropdown relations

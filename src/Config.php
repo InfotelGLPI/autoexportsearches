@@ -39,7 +39,7 @@ use Toolbox;
 
 class Config extends CommonDBTM
 {
-    public static $rightname = 'plugin_autoexportsearches_configs';
+    public static string $rightname = 'plugin_autoexportsearches_configs';
 
     public function prepareInputForAdd($input)
     {
