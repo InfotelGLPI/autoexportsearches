@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-05 13:07+0000\n"
+"POT-Creation-Date: 2026-10-05 13:24+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -22,11 +22,11 @@ msgstr ""
 msgid "Access export files"
 msgstr ""
 
-#: templates/profile.html.twig:37
+#: templates/profile.html.twig:47
 msgid "Access to download files"
 msgstr ""
 
-#: templates/exportconfig_form.html.twig:30
+#: templates/exportconfig_form.html.twig:35
 msgid "Active"
 msgstr ""
 
@@ -46,35 +46,35 @@ msgid_plural "Auto exports searches"
 msgstr[0] ""
 msgstr[1] ""
 
-#: templates/files_list.html.twig:52
+#: templates/files_list.html.twig:41
+msgid "Back"
+msgstr ""
+
+#: templates/files_list.html.twig:68
 msgid "Check all"
 msgstr ""
 
-#: src/Profile.php:212 templates/profile.html.twig:44
+#: src/Profile.php:212 templates/profile.html.twig:57
 msgid "Configuration"
 msgstr ""
 
-#: templates/files_list.html.twig:95
+#: templates/files_list.html.twig:112
 msgid "Confirm the final deletion?"
 msgstr ""
 
-#: templates/customsearchcriterias.html.twig:37
+#: templates/customsearchcriterias.html.twig:41
 msgid "Criterion"
 msgstr ""
 
-#: templates/customsearchcriterias.html.twig:39
+#: templates/customsearchcriterias.html.twig:43
 msgid "Customise"
 msgstr ""
 
-#: templates/customsearchcriterias.html.twig:33
+#: templates/customsearchcriterias.html.twig:34
 msgid "Customise the export of"
 msgstr ""
 
-#: templates/periodicityfields.html.twig:44
-msgid "Day of the month"
-msgstr ""
-
-#: templates/files_list.html.twig:44 templates/files_list.html.twig:96
+#: templates/files_list.html.twig:113
 msgid "Delete"
 msgstr ""
 
@@ -86,15 +86,15 @@ msgstr ""
 msgid "Download files"
 msgstr ""
 
-#: src/Exportconfig.php:452
+#: src/Exportconfig.php:454
 msgid "Every x days"
 msgstr ""
 
-#: src/Exportconfig.php:456
+#: src/Exportconfig.php:458
 msgid "Every x hours"
 msgstr ""
 
-#: src/Exportconfig.php:455
+#: src/Exportconfig.php:457
 msgid "Every x minutes"
 msgstr ""
 
@@ -102,16 +102,16 @@ msgstr ""
 msgid "Export config list to export"
 msgstr ""
 
-#: src/Exportconfig.php:706
+#: src/Exportconfig.php:692
 msgid "Export saved searches"
 msgstr ""
 
-#: src/Exportconfig.php:744
+#: src/Exportconfig.php:730
 #, php-format
 msgid "Failed to send email to %s"
 msgstr ""
 
-#: templates/files_list.html.twig:60
+#: templates/files_list.html.twig:74
 msgid "File name"
 msgstr ""
 
@@ -119,7 +119,7 @@ msgstr ""
 msgid "File successfully deleted"
 msgstr ""
 
-#: templates/files_list.html.twig:29
+#: templates/files_list.html.twig:34 templates/config.html.twig:41
 msgid "Files"
 msgstr ""
 
@@ -129,7 +129,7 @@ msgid ""
 "on the last day of the month."
 msgstr ""
 
-#: templates/files_list.html.twig:65
+#: templates/files_list.html.twig:80
 msgid "Generation date"
 msgstr ""
 
@@ -159,11 +159,11 @@ msgstr ""
 msgid "List of export files"
 msgstr ""
 
-#: src/Exportconfig.php:732
+#: src/Exportconfig.php:718
 msgid "Mail autoexportsearches"
 msgstr ""
 
-#: src/Exportconfig.php:753
+#: src/Exportconfig.php:739
 #, php-format
 msgid "Mail send to %s"
 msgstr ""
@@ -172,7 +172,7 @@ msgstr ""
 msgid "Menu"
 msgstr ""
 
-#: templates/files_menu.html.twig:36
+#: templates/files_menu.html.twig:35
 msgid "No export files available"
 msgstr ""
 
@@ -180,63 +180,56 @@ msgstr ""
 msgid "No file selected"
 msgstr ""
 
-#: templates/files_list.html.twig:34
+#: templates/files_list.html.twig:54
 msgid "No file to download in the directory"
 msgstr ""
 
-#: templates/config.html.twig:35
+#: templates/menu.html.twig:47
+msgid "No item found"
+msgstr ""
+
+#: templates/config.html.twig:44
 msgid "Number of months before purge files"
 msgstr ""
 
-#: templates/exportconfig_form.html.twig:89
+#: templates/exportconfig_form.html.twig:58
 msgid "Options"
 msgstr ""
 
-#: templates/exportconfig_form.html.twig:64
+#: templates/exportconfig_form.html.twig:51
 msgid "Periodicity"
 msgstr ""
 
-#: templates/periodicityfields.html.twig:35
-msgid "Periodicity (in days)"
-msgstr ""
-
-#: templates/periodicityfields.html.twig:32
-msgid "Periodicity (in hours)"
-msgstr ""
-
-#: templates/periodicityfields.html.twig:29
-msgid "Periodicity (in minutes)"
-msgstr ""
-
-#: templates/exportconfig_form.html.twig:68
+#: templates/exportconfig_form.html.twig:53
 msgid "Periodicity type"
 msgstr ""
 
-#: templates/config_not_activated.html.twig:32
+#: templates/config_not_activated.html.twig:30
 msgid "Please activate the plugin"
 msgstr ""
 
-#: templates/profile.html.twig:55 templates/config.html.twig:45
+#: templates/profile.html.twig:67 templates/config.html.twig:54
+msgctxt "button"
 msgid "Save"
 msgstr ""
 
-#: src/Exportconfig.php:241 templates/exportconfig_form.html.twig:49
+#: src/Exportconfig.php:241 templates/exportconfig_form.html.twig:45
 msgid "Saved search to export"
 msgstr ""
 
-#: templates/exportconfig_form.html.twig:35
+#: templates/exportconfig_form.html.twig:37
 msgid "Search to export"
 msgstr ""
 
-#: templates/exportconfig_form.html.twig:93
+#: templates/exportconfig_form.html.twig:60
 msgid "Send mail to"
 msgstr ""
 
-#: templates/config.html.twig:33
+#: templates/config.html.twig:35
 msgid "Setup"
 msgstr ""
 
-#: templates/files_list.html.twig:32
+#: templates/files_list.html.twig:48
 msgid "The folder doesn't exist"
 msgstr ""
 
@@ -248,7 +241,7 @@ msgstr ""
 msgid "The selected saved search does not belong to this user."
 msgstr ""
 
-#: templates/exportconfig_form.html.twig:44
+#: templates/exportconfig_form.html.twig:42
 msgid "Used profile"
 msgstr ""
 
@@ -256,16 +249,8 @@ msgstr ""
 msgid "User who owns the saved search"
 msgstr ""
 
-#: templates/customsearchcriterias.html.twig:38
+#: templates/customsearchcriterias.html.twig:42
 msgid "Value"
-msgstr ""
-
-#: templates/config_not_activated.html.twig:30
-msgid "Warning"
-msgstr ""
-
-#: templates/periodicityfields.html.twig:41
-msgid "Weekday"
 msgstr ""
 
 #: ajax/periodicityfields.php:155
