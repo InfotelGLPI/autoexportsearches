@@ -25,28 +25,29 @@
  # --------------------------------------------------------------------------
  #}
 
-{% if periodicity_type == PERIODICITY_MINUTES %}
-   <td>{{ __('Periodicity (in minutes)', 'autoexportsearches') }}</td>
-   <td><div>{{ dropdown|raw }}</div></td>
-{% elseif periodicity_type == PERIODICITY_HOURS %}
-   <td>{{ __('Periodicity (in hours)', 'autoexportsearches') }}</td>
-   <td><div>{{ dropdown|raw }}</div></td>
-{% elseif periodicity_type == PERIODICITY_DAYS %}
-   <td>{{ __('Periodicity (in days)', 'autoexportsearches') }}</td>
-   <td>
-      <div>{{ dropdown|raw }}</div>
-      {{ include('@autoexportsearches/periodicity_open_days.html.twig') }}
-   </td>
-{% elseif periodicity_type == PERIODICITY_WEEKLY %}
-   <td>{{ __('Weekday', 'autoexportsearches') }}</td>
-   <td>{{ dropdown|raw }}</td>
-{% elseif periodicity_type == PERIODICITY_MONTHLY %}
-   <td>{{ __('Day of the month', 'autoexportsearches') }}</td>
-   <td>
-      <div>
-         {{ dropdown|raw }}
-         <small class="ms-2">{{ monthly_note }}</small>
-      </div>
-      {{ include('@autoexportsearches/periodicity_open_days.html.twig') }}
-   </td>
+{# Periodicity value fields (ajax/periodicityfields.php), loaded into #periodicity_value of
+   the export form #}
+{% set labels = {
+    (PERIODICITY_MINUTES): __('Periodicity (in minutes)', 'autoexportsearches'),
+    (PERIODICITY_HOURS): __('Periodicity (in hours)', 'autoexportsearches'),
+    (PERIODICITY_DAYS): __('Periodicity (in days)', 'autoexportsearches'),
+    (PERIODICITY_WEEKLY): __('Weekday', 'autoexportsearches'),
+    (PERIODICITY_MONTHLY): __('Day of the month', 'autoexportsearches'),
+} %}
+
+{% if labels[periodicity_type] is defined %}
+    <div class="form-field row align-items-center mb-2">
+        <label class="col-form-label col-xxl-5 text-xxl-end">{{ labels[periodicity_type] }}</label>
+        <div class="col-xxl-7 field-container">
+            <div class="d-flex align-items-center flex-wrap gap-2">
+                {{ dropdown|raw }}
+                {% if periodicity_type == PERIODICITY_MONTHLY and monthly_note %}
+                    <small class="text-secondary">{{ monthly_note }}</small>
+                {% endif %}
+            </div>
+            {% if periodicity_type in [PERIODICITY_DAYS, PERIODICITY_MONTHLY] %}
+                {{ include('@autoexportsearches/periodicity_open_days.html.twig') }}
+            {% endif %}
+        </div>
+    </div>
 {% endif %}

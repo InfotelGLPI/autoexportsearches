@@ -395,16 +395,9 @@ class Exportconfig extends CommonDBTM
 
     public function showForm($ID, $options = [])
     {
-        global $CFG_GLPI;
-
         $this->initForm($ID, $options);
-        $this->showFormHeader($options);
 
         $rand_user = mt_rand();
-
-        ob_start();
-        Dropdown::showYesNo("is_active", $this->fields['is_active']);
-        $yesno_active = ob_get_clean();
 
         ob_start();
         User::dropdown([
@@ -412,11 +405,15 @@ class Exportconfig extends CommonDBTM
             'value' => $this->fields["users_id"],
             'right' => 'own_ticket',
             'rand'  => $rand_user,
+            'width' => '100%',
         ]);
         $user_dropdown = ob_get_clean();
 
         $ajax_url = PLUGINAUTOEXPORTSEARCH_WEBDIR . "/ajax/dropdownsavedsearches.php";
 
+        // updateItemOnSelectEvent() echoes its script: capture it so the template places it
+        // after the users dropdown it binds to
+        ob_start();
         Ajax::updateItemOnSelectEvent(
             "dropdown_users_id$rand_user",
             "savedProfile",
@@ -442,38 +439,27 @@ class Exportconfig extends CommonDBTM
                 "action"           => "loadSearches",
             ],
         );
-
-        $rand_period = mt_rand();
-
-        ob_start();
-        Dropdown::showFromArray(
-            'periodicity_type',
-            [
-                self::PERIODICITY_DAYS    => __('Every x days', 'autoexportsearches'),
-                self::PERIODICITY_WEEKLY  => _x('periodicity', 'Weekly'),
-                self::PERIODICITY_MONTHLY => _x('periodicity', 'Monthly'),
-                self::PERIODICITY_MINUTES => __('Every x minutes', 'autoexportsearches'),
-                self::PERIODICITY_HOURS   => __('Every x hours', 'autoexportsearches'),
-            ],
-            ['value' => $this->fields['periodicity_type'], 'rand' => $rand_period],
-        );
-        $periodicity_dropdown = ob_get_clean();
+        $user_events = ob_get_clean();
 
         TemplateRenderer::getInstance()->display(
             '@autoexportsearches/exportconfig_form.html.twig',
             [
+                'item'                => $this,
+                'params'              => $options,
                 'rand'                => $rand_user,
-                'rand_period'         => $rand_period,
-                'item_id'             => (int) $ID,
-                'yesno_active'        => $yesno_active,
+                'rand_period'         => mt_rand(),
                 'user_dropdown'       => $user_dropdown,
-                'periodicity_dropdown' => $periodicity_dropdown,
+                'user_events'         => $user_events,
+                'periodicity_types'   => [
+                    self::PERIODICITY_DAYS    => __('Every x days', 'autoexportsearches'),
+                    self::PERIODICITY_WEEKLY  => _x('periodicity', 'Weekly'),
+                    self::PERIODICITY_MONTHLY => _x('periodicity', 'Monthly'),
+                    self::PERIODICITY_MINUTES => __('Every x minutes', 'autoexportsearches'),
+                    self::PERIODICITY_HOURS   => __('Every x hours', 'autoexportsearches'),
+                ],
                 'periodicity_url'     => PLUGINAUTOEXPORTSEARCH_WEBDIR . '/ajax/periodicityfields.php',
-                'sendto'              => $this->fields['sendto'],
             ],
         );
-
-        $this->showFormButtons($options);
 
         return true;
     }

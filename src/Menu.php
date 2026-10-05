@@ -103,14 +103,14 @@ class Menu extends CommonDBTM
         if (Session::haveRight(Exportconfig::$rightname, READ)) {
             $items[] = [
                 'url'   => '../front/exportconfig.php',
-                'icon'  => 'fas fa-list fa-4x',
+                'icon'  => 'ti-list-details',
                 'label' => __('Export config list to export', 'autoexportsearches'),
             ];
         }
         if (Session::haveRight(Files::$rightname, READ)) {
             $items[] = [
                 'url'   => '../front/files.php',
-                'icon'  => 'fas fa-folder-open fa-4x',
+                'icon'  => 'ti-folder-open',
                 'label' => __('List of export files', 'autoexportsearches'),
             ];
         }

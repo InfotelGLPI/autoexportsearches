@@ -25,33 +25,30 @@
  # --------------------------------------------------------------------------
  #}
 
-<div class="center">
-   <table class="tab_cadre" cellpadding="5" height="150">
-      <tr>
-         <th colspan="6">{{ type_name }}</th>
-      </tr>
-      {% if types is empty %}
-         <tr>
-            <td class="center tab_bg_1" colspan="6">
-               {{ __('No export files available', 'autoexportsearches') }}
-            </td>
-         </tr>
-      {% else %}
-         {% set chunk_size = 3 %}
-         {% for chunk in types|batch(chunk_size) %}
-            <tr>
-               {% set count = chunk|length %}
-               {% set colspan = count == 1 ? 6 : (count == 2 ? 3 : 2) %}
-               {% for type in chunk %}
-                  <td class="center" colspan="{{ colspan }}">
-                     <a href="{{ base_url }}?type={{ type|url_encode }}&users_id={{ owner_id }}">
-                        <i class="fas fa-folder-open fa-4x"></i>
-                        <br>{{ type }}
-                     </a>
-                  </td>
-               {% endfor %}
-            </tr>
-         {% endfor %}
-      {% endif %}
-   </table>
+{# Export folders of the browsed owner (Files::showMenu()): one clickable card per folder #}
+<div class="container-lg my-3">
+    <h2 class="mb-3">
+        <i class="ti ti-folders me-2"></i>{{ type_name }}
+    </h2>
+    {% if types is empty %}
+        <div class="alert alert-info">
+            <i class="ti ti-info-circle me-2"></i>{{ __('No export files available', 'autoexportsearches') }}
+        </div>
+    {% else %}
+        <div class="row row-cards g-3">
+            {% for type in types %}
+                <div class="col-12 col-sm-6 col-lg-4">
+                    <a href="{{ base_url }}?type={{ type|url_encode }}&users_id={{ owner_id }}"
+                       class="card card-link card-link-pop h-100 text-reset text-decoration-none">
+                        <div class="card-body d-flex align-items-center gap-3">
+                            <span class="avatar avatar-md bg-yellow-lt flex-shrink-0">
+                                <i class="ti ti-folder-open fs-2"></i>
+                            </span>
+                            <div class="fw-bold text-truncate" title="{{ type }}">{{ type }}</div>
+                        </div>
+                    </a>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
 </div>

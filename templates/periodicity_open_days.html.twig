@@ -25,27 +25,14 @@
  # --------------------------------------------------------------------------
  #}
 
-<div id="periodicity_open_days">
-   <div style="position:relative">
-      <label for="periodicity_open_days" class="me-2">
-         {{ open_days_label }} <span class="fas fa-info fa-fw info-icon"></span>
-         <small class="info-text">{{ open_days_explanation }}</small>
-      </label>
-      <input name="periodicity_open_days" type="checkbox" class="form-check-input" value="1"
-             {{ open_days_checked ? 'checked' : '' }}>
-   </div>
+<div id="periodicity_open_days" class="mt-2">
+    <label class="form-check form-switch mb-0">
+        <input name="periodicity_open_days" type="checkbox" class="form-check-input" value="1"
+               {{ open_days_checked ? 'checked' : '' }}>
+        <span class="form-check-label">
+            {{ open_days_label }}
+            <span class="form-help" tabindex="0" aria-label="{{ open_days_explanation }}"
+                  data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="{{ open_days_explanation }}">?</span>
+        </span>
+    </label>
 </div>
-<style>
-   .info-text {
-      display: none;
-      position: absolute;
-      top: 0;
-      right: 0;
-      background-color: white;
-      padding: 5px;
-      border: 1px solid #ccc;
-   }
-   .info-icon:hover + .info-text {
-      display: block;
-   }
-</style>

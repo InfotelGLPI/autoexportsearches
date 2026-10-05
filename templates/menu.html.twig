@@ -25,20 +25,27 @@
  # --------------------------------------------------------------------------
  #}
 
-<div class="center">
-   <table class="tab_cadre" width="30%" cellpadding="5">
-      <tr>
-         <th colspan="6">{{ title }}</th>
-      </tr>
-      <tr>
-         {% for item in items %}
-            <td class="center" colspan="3">
-               <a href="{{ item.url }}">
-                  <i class="{{ item.icon }}"></i>
-                  <br>{{ item.label }}
-               </a>
-            </td>
-         {% endfor %}
-      </tr>
-   </table>
+{# Plugin menu (Menu::showMenu()): one clickable card per entry #}
+<div class="container-lg my-3">
+    <h2 class="mb-3">
+        <i class="ti ti-file-export me-2"></i>{{ title }}
+    </h2>
+    <div class="row row-cards g-3">
+        {% for item in items %}
+            <div class="col-12 col-sm-6 col-lg-4">
+                <a href="{{ item.url }}" class="card card-link card-link-pop h-100 text-reset text-decoration-none">
+                    <div class="card-body text-center py-4">
+                        <span class="avatar avatar-xl bg-secondary-lt mb-3">
+                            <i class="ti {{ item.icon }} fs-1"></i>
+                        </span>
+                        <h3 class="card-title mb-0">{{ item.label }}</h3>
+                    </div>
+                </a>
+            </div>
+        {% else %}
+            <div class="col-12">
+                <div class="alert alert-info mb-0">{{ __('No item found') }}</div>
+            </div>
+        {% endfor %}
+    </div>
 </div>

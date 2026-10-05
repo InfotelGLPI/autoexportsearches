@@ -27,8 +27,6 @@
  * --------------------------------------------------------------------------
  */
 
-global $CFG_GLPI;
-
 use Glpi\Application\View\TemplateRenderer;
 use GlpiPlugin\Autoexportsearches\Config;
 use GlpiPlugin\Autoexportsearches\Files;
@@ -61,7 +59,5 @@ if ($plugin->isActivated("autoexportsearches")) {
 
 } else {
     Html::header(__('Setup'), '', "config", "plugin");
-    TemplateRenderer::getInstance()->display('@autoexportsearches/config_not_activated.html.twig', [
-        'root_doc' => $CFG_GLPI["root_doc"],
-    ]);
+    TemplateRenderer::getInstance()->display('@autoexportsearches/config_not_activated.html.twig');
 }

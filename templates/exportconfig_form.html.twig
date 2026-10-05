@@ -25,73 +25,51 @@
  # --------------------------------------------------------------------------
  #}
 
-{# Rows rendered between showFormHeader() and showFormButtons() #}
-<tr class="tab_bg_1">
-   <td>{{ __('Active') }}</td>
-   <td>{{ yesno_active|raw }}</td>
-</tr>
+{# Export configuration form (Exportconfig::showForm()). The core generic form provides the
+   card, the header and the action buttons; the saved search, profile, custom criteria and
+   periodicity value parts are loaded through ajax/ into the containers below. #}
+{% extends 'generic_show_form.html.twig' %}
+{% import 'components/form/fields_macros.html.twig' as fields %}
 
-<tr class="tab_bg_1">
-   <td colspan="2"><h3>{{ __('Search to export', 'autoexportsearches') }}</h3></td>
-</tr>
+{% block form_fields %}
+    {{ fields.dropdownYesNo('is_active', item.fields['is_active'], __('Active')) }}
 
-<tr class="tab_bg_1">
-   <td>{{ __('User who owns the saved search', 'autoexportsearches') }}</td>
-   <td>{{ user_dropdown|raw }}</td>
-</tr>
+    {{ fields.largeTitle(__('Search to export', 'autoexportsearches'), 'ti ti-search') }}
 
-<tr class="tab_bg_1">
-   <td>{{ __('Used profile', 'autoexportsearches') }}</td>
-   <td id="savedProfile"></td>
-</tr>
+    {{ fields.htmlField('users_id', user_dropdown ~ user_events, __('User who owns the saved search', 'autoexportsearches'), {
+        'wrapper_class': '',
+    }) }}
+    {{ fields.htmlField('', '<div id="savedProfile"></div>', __('Used profile', 'autoexportsearches'), {
+        'wrapper_class': '',
+    }) }}
+    {{ fields.htmlField('', '<div id="savedSearches"></div>', __('Saved search to export', 'autoexportsearches'), {
+        'wrapper_class': '',
+    }) }}
 
-<tr class="tab_bg_1">
-   <td>{{ __('Saved search to export', 'autoexportsearches') }}</td>
-   <td id="savedSearches"></td>
-</tr>
+    <div class="col-12 mb-2" id="custom_search_criterias"></div>
 
-<script>
-$(document).ready(function () {
-   $('#dropdown_users_id{{ rand }}').trigger('change');
-});
-</script>
+    {{ fields.largeTitle(__('Periodicity'), 'ti ti-calendar-repeat') }}
 
-<tr class="tab_bg_1">
-   <td id="custom_search_criterias" colspan="2"></td>
-</tr>
+    {{ fields.dropdownArrayField('periodicity_type', item.fields['periodicity_type'], periodicity_types, __('Periodicity type', 'autoexportsearches'), {
+        'rand': rand_period,
+    }) }}
+    <div class="col-12 col-sm-6 mb-2" id="periodicity_value"></div>
 
-<tr class="tab_bg_1">
-   <td colspan="2"><h3>{{ __('Periodicity') }}</h3></td>
-</tr>
+    {{ fields.largeTitle(__('Options', 'autoexportsearches'), 'ti ti-mail') }}
 
-<tr class="tab_bg_1">
-   <td>{{ __('Periodicity type', 'autoexportsearches') }}</td>
-   <td>{{ periodicity_dropdown|raw }}</td>
-</tr>
+    {{ fields.emailField('sendto', item.fields['sendto'], __('Send mail to', 'autoexportsearches')) }}
 
-<tr class="tab_bg_1" id="periodicity_value"></tr>
+    <script>
+    $(function () {
+        $('#dropdown_users_id{{ rand }}').trigger('change');
 
-<script>
-$(document).ready(function () {
-   var selectType = $('#dropdown_periodicity_type{{ rand_period }}');
-   var periodicityRow = $('#periodicity_value');
-   selectType.change(function (e) {
-      periodicityRow.load('{{ periodicity_url }}', {
-         'id': {{ item_id }},
-         'periodicity_type': e.target.selectedIndex
-      });
-   });
-   selectType.trigger('change');
-});
-</script>
-
-<tr class="tab_bg_1">
-   <td colspan="2"><h3>{{ __('Options', 'autoexportsearches') }}</h3></td>
-</tr>
-
-<tr class="tab_bg_1">
-   <td>{{ __('Send mail to', 'autoexportsearches') }}</td>
-   <td>
-      <input type="email" name="sendto" value="{{ sendto }}" class="form-control">
-   </td>
-</tr>
+        const periodicity_type = $('#dropdown_periodicity_type{{ rand_period }}');
+        periodicity_type.on('change', function () {
+            $('#periodicity_value').load('{{ periodicity_url|e('js') }}', {
+                'id': {{ item.getID() > 0 ? item.getID() : 0 }},
+                'periodicity_type': $(this).val()
+            });
+        }).trigger('change');
+    });
+    </script>
+{% endblock %}

@@ -25,36 +25,47 @@
  # --------------------------------------------------------------------------
  #}
 
+{# Custom criteria of the selected saved search (ajax/customsearchcriterias.php), loaded into
+   #custom_search_criterias of the export form #}
 {% if rows is not empty %}
-<table style="width:100%">
-   <tbody style="width:100%">
-      <tr class="tab_bg_1">
-         <td colspan="3">
-            <h4>{{ __('Customise the export of', 'autoexportsearches') }} {{ itemtype_label }}</h4>
-         </td>
-      </tr>
-      <tr class="tab_bg_1 text-center">
-         <td><h5>{{ __('Criterion') }}</h5></td>
-         <td><h5>{{ __('Value', 'autoexportsearches') }}</h5></td>
-         <td><h5>{{ __('Customise', 'autoexportsearches') }}</h5></td>
-      </tr>
-      {% for row in rows %}
-         <tr class="tab_bg_1 text-center">
-            <td><label>{{ row.field_name }}</label></td>
-            <td class="text-center">{{ row.search_value }}</td>
-            <td>
-               <label for="custom_criterias[{{ row.index }}][criteria_value]">{{ row.label }}</label>
-               <input type="hidden" name="custom_criterias[{{ row.index }}][savedsearches_id]"
-                      value="{{ row.savedsearches_id }}">
-               <input type="hidden" name="custom_criterias[{{ row.index }}][criteria_field]"
-                      value="{{ row.criteria_field }}">
-               <input type="hidden" name="custom_criterias[{{ row.index }}][criteria_searchtype]"
-                      value="{{ row.criteria_searchtype }}">
-               <input type="checkbox" name="custom_criterias[{{ row.index }}][criteria_value]"
-                      value="{{ row.input_value }}"{% if row.checked %} checked{% endif %}>
-            </td>
-         </tr>
-      {% endfor %}
-   </tbody>
-</table>
+    <div class="card card-sm border mt-2">
+        <div class="card-header">
+            <h4 class="card-title">
+                <i class="ti ti-adjustments me-2"></i>{{ __('Customise the export of', 'autoexportsearches') }} {{ itemtype_label }}
+            </h4>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-vcenter card-table mb-0">
+                <thead>
+                    <tr>
+                        <th>{{ __('Criterion') }}</th>
+                        <th>{{ __('Value', 'autoexportsearches') }}</th>
+                        <th>{{ __('Customise', 'autoexportsearches') }}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in rows %}
+                        <tr>
+                            <td class="fw-bold">{{ row.field_name }}</td>
+                            <td class="text-secondary">{{ row.search_value }}</td>
+                            <td>
+                                <input type="hidden" name="custom_criterias[{{ row.index }}][savedsearches_id]"
+                                       value="{{ row.savedsearches_id }}">
+                                <input type="hidden" name="custom_criterias[{{ row.index }}][criteria_field]"
+                                       value="{{ row.criteria_field }}">
+                                <input type="hidden" name="custom_criterias[{{ row.index }}][criteria_searchtype]"
+                                       value="{{ row.criteria_searchtype }}">
+                                <label class="form-check form-switch mb-0">
+                                    <input type="checkbox" class="form-check-input"
+                                           name="custom_criterias[{{ row.index }}][criteria_value]"
+                                           value="{{ row.input_value }}"{% if row.checked %} checked{% endif %}>
+                                    <span class="form-check-label">{{ row.label }}</span>
+                                </label>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
 {% endif %}
