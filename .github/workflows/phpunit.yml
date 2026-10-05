@@ -88,7 +88,7 @@ jobs:
 
       - name: Install GLPI test database
         run: >
-          php bin/console glpi:database:install
+          php bin/console database:install
           --no-interaction --force
           --env=testing
           --db-host=127.0.0.1
@@ -99,8 +99,8 @@ jobs:
 
       - name: Install autoexportsearches plugin
         run: |
-          php bin/console glpi:plugin:install  --no-interaction --env=testing autoexportsearches
-          php bin/console glpi:plugin:activate --no-interaction --env=testing autoexportsearches
+          php bin/console plugin:install  --no-interaction --env=testing autoexportsearches
+          php bin/console plugin:activate --no-interaction --env=testing autoexportsearches
         working-directory: glpi
 
       - name: Run integration tests
