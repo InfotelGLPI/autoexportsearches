@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-02 10:09+0000\n"
+"POT-Creation-Date: 2026-10-05 12:56+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -40,7 +40,7 @@ msgstr[1] ""
 msgid "Auto export config"
 msgstr ""
 
-#: setup.php:95
+#: setup.php:96
 msgid "Auto export searches"
 msgid_plural "Auto exports searches"
 msgstr[0] ""
@@ -54,7 +54,7 @@ msgstr ""
 msgid "Configuration"
 msgstr ""
 
-#: templates/files_list.html.twig:96
+#: templates/files_list.html.twig:95
 msgid "Confirm the final deletion?"
 msgstr ""
 
@@ -74,7 +74,7 @@ msgstr ""
 msgid "Day of the month"
 msgstr ""
 
-#: templates/files_list.html.twig:44 templates/files_list.html.twig:97
+#: templates/files_list.html.twig:44 templates/files_list.html.twig:96
 msgid "Delete"
 msgstr ""
 
@@ -216,7 +216,7 @@ msgstr ""
 msgid "Please activate the plugin"
 msgstr ""
 
-#: templates/profile.html.twig:56 templates/config.html.twig:46
+#: templates/profile.html.twig:55 templates/config.html.twig:45
 msgid "Save"
 msgstr ""
 
