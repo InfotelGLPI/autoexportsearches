@@ -140,7 +140,7 @@ class Exportconfig extends CommonDBTM
         }
 
         if (!$DB->fieldExists($table, "profiles_id")) {
-            $migration->addField($table, "profiles_id", "int NOT NULL DEFAULT '0'");
+            $migration->addField($table, "profiles_id", "fkey");
             $migration->migrationOneTable($table);
         }
 

@@ -261,6 +261,10 @@ class Profile extends \Profile
                 ProfileRight::addProfileRights([$data['field']]);
             }
         }
+        // No session when installed from the console without --username
+        if (!isset($_SESSION['glpiactiveprofile']['id'])) {
+            return;
+        }
         $profileId = $_SESSION['glpiactiveprofile']['id'];
 
         foreach ($DB->request([

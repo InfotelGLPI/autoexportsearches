@@ -40,11 +40,16 @@ function plugin_autoexportsearches_install()
 
     $migration = new Migration(PLUGIN_AUTOEXPORTSEARCH_VERSION);
 
+    // Grants full access to the profiles that can update the core configuration (super-admins).
+    // Done before initProfile(), which creates the rights with no access for every profile:
+    // addRight() only fills the profiles that do not have the right yet, so that an update
+    // keeps the profiles settings.
+    $migration->addRight(Exportconfig::$rightname, ALLSTANDARDRIGHT, [\Config::$rightname => UPDATE]);
+    $migration->addRight(Files::$rightname, READ, [\Config::$rightname => UPDATE]);
+    $migration->addRight(Config::$rightname, READ, [\Config::$rightname => UPDATE]);
+
     // Adds the right(s) to all pre-existing profiles with no access by default
     Profile::initProfile();
-
-    // Grants full access to profiles that can update the Config (super-admins)
-    $migration->addRight(Exportconfig::$rightname, ALLSTANDARDRIGHT, [Config::$rightname => UPDATE]);
 
     Exportconfig::install($migration);
 
@@ -81,7 +86,9 @@ function plugin_autoexportsearches_install()
         rename($path, $legacy_dir . '/' . $entry);
     }
 
-    Profile::createFirstAccess($_SESSION['glpiactiveprofile']['id']);
+    if (isset($_SESSION['glpiactiveprofile']['id'])) {
+        Profile::createFirstAccess($_SESSION['glpiactiveprofile']['id']);
+    }
 
     return true;
 }
