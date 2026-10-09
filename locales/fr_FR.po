@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-05 15:05+0000\n"
+"POT-Creation-Date: 2026-10-09 10:41+0000\n"
 "PO-Revision-Date: 2025-02-21 16:08+0000\n"
 "Last-Translator: Xavier CAILLAUD <thetsmr@gmail.com>, 2026\n"
 "Language-Team: French (France) (https://app.transifex.com/infotelGLPI/"
@@ -81,6 +81,10 @@ msgstr "Personnaliser"
 #: templates/customsearchcriterias.html.twig:34
 msgid "Customise the export of"
 msgstr "Personnaliser l'export de"
+
+#: templates/periodicityfields.html.twig:35
+msgid "Day of the month"
+msgstr ""
 
 #: templates/files_list.html.twig:113
 msgid "Delete"
@@ -212,6 +216,18 @@ msgstr "Options"
 msgid "Periodicity"
 msgstr "Périodicité"
 
+#: templates/periodicityfields.html.twig:33
+msgid "Periodicity (in days)"
+msgstr ""
+
+#: templates/periodicityfields.html.twig:32
+msgid "Periodicity (in hours)"
+msgstr ""
+
+#: templates/periodicityfields.html.twig:31
+msgid "Periodicity (in minutes)"
+msgstr ""
+
 #: templates/exportconfig_form.html.twig:53
 msgid "Periodicity type"
 msgstr "Type de périodicité"
@@ -265,6 +281,10 @@ msgstr "Utilisateur ayant la vue à exporter"
 #: templates/customsearchcriterias.html.twig:42
 msgid "Value"
 msgstr "Valeur"
+
+#: templates/periodicityfields.html.twig:34
+msgid "Weekday"
+msgstr ""
 
 #: ajax/periodicityfields.php:155
 msgid "Work day only"
