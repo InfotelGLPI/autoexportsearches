@@ -2,35 +2,37 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# 
+#
 # Translators:
 # Edison Jaçe, 2025
 # Xavier CAILLAUD <thetsmr@gmail.com>, 2026
-# 
+#
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-09 10:41+0000\n"
+"POT-Creation-Date: 2026-11-05 08:09+0000\n"
 "PO-Revision-Date: 2025-02-21 16:08+0000\n"
 "Last-Translator: Xavier CAILLAUD <thetsmr@gmail.com>, 2026\n"
-"Language-Team: French (France) (https://app.transifex.com/infotelGLPI/teams/205440/fr_FR/)\n"
+"Language-Team: French (France) (https://app.transifex.com/infotelGLPI/teams/"
+"205440/fr_FR/)\n"
+"Language: fr_FR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: fr_FR\n"
-"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % "
+"1000000 == 0 ? 1 : 2;\n"
 
 #: src/Profile.php:207
 msgid "Access export files"
 msgstr "Accès aux fichiers exportés"
 
-#: templates/profile.html.twig:47
+#: ⁨standard input⁩:47
 msgid "Access to download files"
 msgstr "Accès aux fichiers exportés"
 
-#: templates/exportconfig_form.html.twig:35
+#: ⁨standard input⁩:35
 msgid "Active"
 msgstr "Actif"
 
@@ -52,39 +54,39 @@ msgstr[0] "Export automatique de recherches"
 msgstr[1] "Exports automatiques de recherches"
 msgstr[2] "Exports automatiques de recherches"
 
-#: templates/files_list.html.twig:41
+#: ⁨standard input⁩:41
 msgid "Back"
 msgstr "Retour"
 
-#: templates/files_list.html.twig:68
+#: ⁨standard input⁩:68
 msgid "Check all"
 msgstr "Tout sélectionner"
 
-#: src/Profile.php:212 templates/profile.html.twig:57
+#: src/Profile.php:212 ⁨standard input⁩:57
 msgid "Configuration"
 msgstr "Configuration"
 
-#: templates/files_list.html.twig:112
+#: ⁨standard input⁩:112
 msgid "Confirm the final deletion?"
 msgstr "Confirmez-vous la suppression définitive ?"
 
-#: templates/customsearchcriterias.html.twig:41
+#: ⁨standard input⁩:41
 msgid "Criterion"
 msgstr "Critères"
 
-#: templates/customsearchcriterias.html.twig:43
+#: ⁨standard input⁩:43
 msgid "Customise"
 msgstr "Personnaliser"
 
-#: templates/customsearchcriterias.html.twig:34
+#: ⁨standard input⁩:34
 msgid "Customise the export of"
 msgstr "Personnaliser l'export de"
 
-#: templates/periodicityfields.html.twig:35
+#: ⁨standard input⁩:35
 msgid "Day of the month"
 msgstr "Jour du mois"
 
-#: templates/files_list.html.twig:113
+#: ⁨standard input⁩:113
 msgid "Delete"
 msgstr "Supprimer"
 
@@ -121,7 +123,7 @@ msgstr "Recherches sauvegardées exportées"
 msgid "Failed to send email to %s"
 msgstr "Échec de l'envoi du courriel à %s"
 
-#: templates/files_list.html.twig:74
+#: ⁨standard input⁩:74
 msgid "File name"
 msgstr "Nom du fichier"
 
@@ -129,7 +131,7 @@ msgstr "Nom du fichier"
 msgid "File successfully deleted"
 msgstr "Fichier supprimé avec succès"
 
-#: templates/files_list.html.twig:34 templates/config.html.twig:41
+#: ⁨standard input⁩:34 ⁨standard input⁩:41
 msgid "Files"
 msgstr "Fichiers"
 
@@ -141,7 +143,7 @@ msgstr ""
 "Pour les mois plus court que le jour sélectionné, l'export sera fait le "
 "dernier jour du mois."
 
-#: templates/files_list.html.twig:80
+#: ⁨standard input⁩:80
 msgid "Generation date"
 msgstr "Date de génération"
 
@@ -186,7 +188,7 @@ msgstr "Envoi du courriel à %s"
 msgid "Menu"
 msgstr "Menu"
 
-#: templates/files_menu.html.twig:35
+#: ⁨standard input⁩:35
 msgid "No export files available"
 msgstr "Pas de fichiers exportés disponibles"
 
@@ -194,68 +196,68 @@ msgstr "Pas de fichiers exportés disponibles"
 msgid "No file selected"
 msgstr "Pas de fichier sélectionné"
 
-#: templates/files_list.html.twig:54
+#: ⁨standard input⁩:54
 msgid "No file to download in the directory"
 msgstr "Pas de fichier à télécharger dans le dossier"
 
-#: templates/menu.html.twig:47
+#: ⁨standard input⁩:47
 msgid "No item found"
 msgstr "Pas d'objet trouvé"
 
-#: templates/config.html.twig:44
+#: ⁨standard input⁩:44
 msgid "Number of months before purge files"
 msgstr "Nombre de mois avant la purge des fichiers"
 
-#: templates/exportconfig_form.html.twig:58
+#: ⁨standard input⁩:58
 msgid "Options"
 msgstr "Options"
 
-#: templates/exportconfig_form.html.twig:51
+#: ⁨standard input⁩:51
 msgid "Periodicity"
 msgstr "Périodicité"
 
-#: templates/periodicityfields.html.twig:33
+#: ⁨standard input⁩:33
 msgid "Periodicity (in days)"
 msgstr "Périodicité (en jours)"
 
-#: templates/periodicityfields.html.twig:32
+#: ⁨standard input⁩:32
 msgid "Periodicity (in hours)"
 msgstr "Périodicité (en heures)"
 
-#: templates/periodicityfields.html.twig:31
+#: ⁨standard input⁩:31
 msgid "Periodicity (in minutes)"
 msgstr "Périodicité (en minutes)"
 
-#: templates/exportconfig_form.html.twig:53
+#: ⁨standard input⁩:53
 msgid "Periodicity type"
 msgstr "Type de périodicité"
 
-#: templates/config_not_activated.html.twig:30
+#: ⁨standard input⁩:30
 msgid "Please activate the plugin"
 msgstr "Veuillez activer le plugin"
 
-#: templates/profile.html.twig:67 templates/config.html.twig:54
+#: ⁨standard input⁩:67 ⁨standard input⁩:54
 msgctxt "button"
 msgid "Save"
 msgstr "Sauvegarder"
 
-#: src/Exportconfig.php:241 templates/exportconfig_form.html.twig:45
+#: src/Exportconfig.php:241 ⁨standard input⁩:45
 msgid "Saved search to export"
 msgstr "Recherche sauvegardée à exporter"
 
-#: templates/exportconfig_form.html.twig:37
+#: ⁨standard input⁩:37
 msgid "Search to export"
 msgstr "Recherche sauvegardée à exporter"
 
-#: templates/exportconfig_form.html.twig:60
+#: ⁨standard input⁩:60
 msgid "Send mail to"
 msgstr "Envoyé par mail à l'adresse"
 
-#: templates/config.html.twig:35
+#: ⁨standard input⁩:35
 msgid "Setup"
 msgstr "Configuration"
 
-#: templates/files_list.html.twig:48
+#: ⁨standard input⁩:48
 msgid "The folder doesn't exist"
 msgstr "Le dossier n'existe pas"
 
@@ -268,19 +270,19 @@ msgid "The selected saved search does not belong to this user."
 msgstr ""
 "La recherche sauvegardée sélectionnée n'appartient pas à cet utilisateur."
 
-#: templates/exportconfig_form.html.twig:42
+#: ⁨standard input⁩:42
 msgid "Used profile"
 msgstr "Profil utilisé"
 
-#: src/Exportconfig.php:233 templates/exportconfig_form.html.twig:39
+#: src/Exportconfig.php:233 ⁨standard input⁩:39
 msgid "User who owns the saved search"
 msgstr "Utilisateur ayant la vue à exporter"
 
-#: templates/customsearchcriterias.html.twig:42
+#: ⁨standard input⁩:42
 msgid "Value"
 msgstr "Valeur"
 
-#: templates/periodicityfields.html.twig:34
+#: ⁨standard input⁩:34
 msgid "Weekday"
 msgstr "Jour de la semaine"
 
