@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-05 08:09+0000\n"
+"POT-Creation-Date: 2026-11-16 10:30+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -58,7 +58,7 @@ msgstr ""
 msgid "Configuration"
 msgstr ""
 
-#: ⁨standard input⁩:112
+#: ⁨standard input⁩:111
 msgid "Confirm the final deletion?"
 msgstr ""
 
@@ -78,7 +78,7 @@ msgstr ""
 msgid "Day of the month"
 msgstr ""
 
-#: ⁨standard input⁩:113
+#: ⁨standard input⁩:112
 msgid "Delete"
 msgstr ""
 
@@ -115,7 +115,7 @@ msgstr ""
 msgid "Failed to send email to %s"
 msgstr ""
 
-#: ⁨standard input⁩:74
+#: ⁨standard input⁩:73
 msgid "File name"
 msgstr ""
 
@@ -133,7 +133,7 @@ msgid ""
 "on the last day of the month."
 msgstr ""
 
-#: ⁨standard input⁩:80
+#: ⁨standard input⁩:79
 msgid "Generation date"
 msgstr ""
 
