@@ -59,8 +59,9 @@ if (Session::haveRight(Exportconfig::$rightname, READ)) {
                     'rand' => $rand,
                 ]);
                 $url = PLUGINAUTOEXPORTSEARCH_WEBDIR . "/ajax/customsearchcriterias.php";
-                echo "
-            <script>
+                // Html::scriptBlock() adds the nonce of the Content Security Policy, which a
+                // <script> tag echoed by hand lacks
+                echo Html::scriptBlock("
                 if (!window.autoexportsearches) window.autoexportsearches = {};
                 autoexportsearches.searchSelect = $('#dropdown_savedsearches_id{$rand}');
                 autoexportsearches.searchSelect.change(e => {
@@ -70,8 +71,7 @@ if (Session::haveRight(Exportconfig::$rightname, READ)) {
                     })
                 })
                 autoexportsearches.searchSelect.trigger('change');
-            </script>
-         ";
+            ");
             }
             break;
 
