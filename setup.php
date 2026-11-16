@@ -97,6 +97,9 @@ function plugin_version_autoexportsearches()
         'author' => "<a href='https://blogglpi.infotel.com'>Infotel</a>, Alban LESELLIER",
         'license' => 'GPLv3+',
         'homepage' => '',
+        // No inline event handler, javascript: URL nor script without nonce: the plugin works
+        // under the Content Security Policy of GLPI
+        'csp_compliant' => true,
         'requirements' => [
             'glpi' => [
                 'min' => '11.0',

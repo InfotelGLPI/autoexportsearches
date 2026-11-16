@@ -42,12 +42,15 @@
                   <th>
                      <div class="form-group-checkbox">
                         <input title="{{ __('Delete') }}" type="checkbox" class="new_checkbox"
-                               name="checkall_delete" id="checkall_delete"
-                               onclick="checkAll(this.checked);">
+                               name="checkall_delete" id="checkall_delete">
                         <script>
                            function checkAll(state) {
                               document.querySelectorAll('input[type=checkbox]').forEach(cb => cb.checked = state);
                            }
+                           // Bound here rather than through an inline handler (Content Security Policy)
+                           document.getElementById('checkall_delete').addEventListener('click', function () {
+                              checkAll(this.checked);
+                           });
                         </script>
                         <label class="label-checkbox" for="checkall_delete" title="{{ __('Check all') }}">
                            <span class="check"></span>
@@ -92,10 +95,18 @@
          {# Carry the browsed owner sub-directory so the delete stays scoped to it. #}
          <input type="hidden" name="filedelete_users_id" value="{{ owner_id }}">
          <input type="hidden" name="_glpi_csrf_token" value="{{ csrf_token() }}">
-         <button type="submit" class="btn btn-primary"
-                 onclick="return confirm('{{ __('Confirm the final deletion?') }}')">
+         <button type="submit" class="btn btn-primary" id="delete_files"
+                 data-autoexportsearches-confirm="{{ __('Confirm the final deletion?') }}">
             {{ __('Delete') }}
          </button>
       </form>
+      {# Bound here rather than through an inline handler, blocked by the Content Security Policy #}
+      <script>
+         document.getElementById('delete_files').addEventListener('click', (event) => {
+            if (!window.confirm(event.currentTarget.dataset.autoexportsearchesConfirm)) {
+               event.preventDefault();
+            }
+         });
+      </script>
    {% endif %}
 </div>
